@@ -31,7 +31,7 @@
 
     <style>
     :root {
-        --slider-pos: 50%; /* Suwak startuje na środku */
+        --slider-pos: 50%; 
         --primary-yellow: #FFC107;
         --dark-bg: #0a0a0a;
         --text-light: #ffffff;
@@ -67,7 +67,6 @@
         margin-bottom: 20px;
     }
     
-    /* Przyciski sterujące */
     .slider-buttons-injected {
         display: flex;
         justify-content: center;
@@ -115,10 +114,12 @@
         0%, 100% { transform: translateX(0); }
         50% { transform: translateX(-5px); }
     }
+
+    /* GŁÓWNY KONTENER SUWAKA */
     .comparison-slider-injected {
         position: relative;
         width: 100%;
-        aspect-ratio: 412 / 1024;
+        aspect-ratio: 412 / 1024; /* Zachowujemy proporcje pionowe */
         overflow: hidden;
         border-radius: 24px;
         box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
@@ -128,6 +129,7 @@
         background: #111;
         touch-action: none;
     }
+
     .comparison-slider-injected .image-injected {
         position: absolute;
         top: 0;
@@ -138,16 +140,33 @@
         background-position: center;
         background-repeat: no-repeat;
     }
-    /* Zdjęcie "Po" jest w tle */
+
+    /* ZDJĘCIE PRZED (NA WIERZCHU) */
+    .before-image-injected {
+        z-index: 2;
+        /* Używamy clip-path dla idealnego odsłaniania bez przesuwania tła */
+        clip-path: inset(0 calc(100% - var(--slider-pos)) 0 0);
+    }
+
+    /* ZDJĘCIE PO (W TLE) */
     .after-image-injected {
         z-index: 1;
     }
-    /* Zdjęcie "Przed" jest na wierzchu i jest przycinane suwakiem */
-    .before-image-injected {
-        z-index: 2;
-        width: var(--slider-pos);
-        border-right: 4px solid var(--primary-yellow); /* Wyraźny pasek rozdzielający */
+
+    /* PASEK ROZDZIELAJĄCY */
+    .slider-divider-injected {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: var(--slider-pos);
+        width: 4px;
+        background-color: var(--primary-yellow);
+        z-index: 3;
+        transform: translateX(-50%);
+        box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
     }
+
+    /* UCHWYT SUWAKA */
     .slider-handle-injected {
         position: absolute;
         top: 50%;
@@ -157,20 +176,12 @@
         height: 52px;
         background-color: var(--primary-yellow);
         border-radius: 50%;
-        z-index: 3;
+        z-index: 4;
         display: flex;
         align-items: center;
         justify-content: center;
         box-shadow: 0 0 30px rgba(255, 193, 7, 0.7);
         pointer-events: none;
-        transition: left 0.1s ease-out;
-    }
-    .comparison-slider-injected.sliding .slider-handle-injected,
-    .comparison-slider-injected.sliding .before-image-injected {
-        transition: none !important;
-    }
-    .before-image-injected {
-        transition: width 0.1s ease-out;
     }
 
     .slider-handle-injected::before, .slider-handle-injected::after {
@@ -181,7 +192,8 @@
     }
     .slider-handle-injected::before { border-right: 10px solid #000; margin-right: 4px; }
     .slider-handle-injected::after { border-left: 10px solid #000; margin-left: 4px; }
-    
+
+    /* ETYKIETY */
     .label-injected {
         position: absolute;
         bottom: 30px;
@@ -191,7 +203,7 @@
         font-weight: 700;
         border-radius: 12px;
         font-size: 12px;
-        z-index: 4;
+        z-index: 5;
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255,255,255,0.1);
         text-transform: uppercase;
@@ -200,6 +212,13 @@
     .label-before-injected { left: 20px; opacity: 0.9; }
     .label-after-injected { right: 20px; opacity: 0.9; }
     .label-highlight-injected { color: var(--primary-yellow); }
+
+    /* Animacja płynnego przejścia przy klikaniu przycisków */
+    .comparison-slider-injected:not(.sliding) .before-image-injected,
+    .comparison-slider-injected:not(.sliding) .slider-divider-injected,
+    .comparison-slider-injected:not(.sliding) .slider-handle-injected {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
     </style>
   </head>
   <body>
@@ -212,6 +231,7 @@
 
     <script>
         (function() {
+            // SPRAWDŹ CZY TE NAZWY SĄ POPRAWNE NA TWOIM SERWERZE
             const img_przed = "przed7cm.png";
             const img_po = "po7cm.png";
 
@@ -230,10 +250,19 @@
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                             Przesuń suwak, aby porównać
                         </div>
+                        
                         <div class="comparison-slider-injected" id="slider-root-injected">
+                            <!-- Zdjęcie PO (Tło) -->
                             <div class="image-injected after-image-injected" style="background-image: url('${img_po}')"></div>
+                            
+                            <!-- Zdjęcie PRZED (Odsłaniane) -->
                             <div class="image-injected before-image-injected" style="background-image: url('${img_przed}')"></div>
+                            
+                            <!-- Elementy suwaka -->
+                            <div class="slider-divider-injected"></div>
                             <div class="slider-handle-injected"></div>
+                            
+                            <!-- Etykiety -->
                             <div class="label-injected label-before-injected">Bez wkładek</div>
                             <div class="label-injected label-after-injected">Po <span class="label-highlight-injected">+7CM</span></div>
                         </div>
@@ -278,16 +307,14 @@
                 const btnAfter = document.getElementById('btn-after');
                 if (!s) return;
 
-                let sliding = false;
-
                 const setPos = (p) => {
                     s.style.setProperty('--slider-pos', p + '%');
                     
-                    // Aktualizacja stanu przycisków
-                    if (p >= 95) {
+                    // Aktywacja przycisków
+                    if (p >= 90) {
                         btnBefore.classList.add('active');
                         btnAfter.classList.remove('active');
-                    } else if (p <= 5) {
+                    } else if (p <= 10) {
                         btnAfter.classList.add('active');
                         btnBefore.classList.remove('active');
                     } else {
@@ -298,41 +325,47 @@
 
                 const update = (e) => {
                     const r = s.getBoundingClientRect();
-                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
                     let p = ((clientX - r.left) / r.width) * 100;
                     p = Math.max(0, Math.min(p, 100));
                     setPos(p);
                 };
 
                 const start = (e) => { 
-                    sliding = true; 
                     s.classList.add('sliding');
                     update(e); 
-                };
-                const move = (e) => { if (sliding) update(e); };
-                const end = () => { 
-                    sliding = false; 
-                    s.classList.remove('sliding');
+                    
+                    const moveHandler = (moveEvent) => {
+                        update(moveEvent);
+                    };
+                    
+                    const endHandler = () => {
+                        s.classList.remove('sliding');
+                        window.removeEventListener('mousemove', moveHandler);
+                        window.removeEventListener('mouseup', endHandler);
+                        window.removeEventListener('touchmove', moveHandler);
+                        window.removeEventListener('touchend', endHandler);
+                    };
+
+                    window.addEventListener('mousemove', moveHandler);
+                    window.addEventListener('mouseup', endHandler);
+                    window.addEventListener('touchmove', moveHandler, { passive: false });
+                    window.addEventListener('touchend', endHandler);
                 };
 
-                // Eventy myszy i dotyku
                 s.addEventListener('mousedown', start);
-                window.addEventListener('mousemove', move);
-                window.addEventListener('mouseup', end);
-                
-                s.addEventListener('touchstart', start, {passive: false});
-                window.addEventListener('touchmove', (e) => { if(sliding) { e.preventDefault(); update(e); } }, {passive: false});
-                window.addEventListener('touchend', end);
+                s.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    start(e);
+                }, { passive: false });
 
-                // Obsługa przycisków
                 btnBefore.addEventListener('click', () => setPos(100));
                 btnAfter.addEventListener('click', () => setPos(0));
 
-                // Wymuszenie pozycji startowej na środku
+                // Inicjalizacja środka
                 setPos(50);
             }
 
-            // Uruchomienie wstrzykiwania
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', doInjection);
             } else {
