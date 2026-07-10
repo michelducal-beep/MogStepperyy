@@ -38,13 +38,16 @@
         --text-gray: #999999;
         --border-color: #1a1a1a;
     }
-    .transformation-section-injected {
+    #injected-slider-section {
         width: 100%;
         background-color: var(--dark-bg);
         padding: 60px 20px;
         font-family: 'Space Grotesk', sans-serif;
         border-top: 1px solid var(--border-color);
         border-bottom: 1px solid var(--border-color);
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     .transformation-container-injected {
         max-width: 700px;
@@ -330,27 +333,43 @@
                 const root = document.getElementById('root');
                 if (!root) return;
 
-                const observer = new MutationObserver(() => {
+                const checkAndInject = () => {
                     if (document.getElementById('injected-slider-section')) return;
 
                     const allElements = root.querySelectorAll('*');
                     let target = null;
+                    
+                    // Search strategy 1: Layers text
                     for (let el of allElements) {
-                        if (el.textContent === 'Warstwa 1+2+3 → +7 cm — pełna moc') {
+                        if (el.textContent.includes('Warstwa 1+2+3') || el.textContent.includes('pełna moc')) {
                             target = el.closest('section') || el.parentElement.parentElement;
                             break;
                         }
                     }
 
+                    // Search strategy 2: Benefits title
+                    if (!target) {
+                        for (let el of allElements) {
+                            if (el.textContent.includes('KORZYŚCI') || el.textContent.includes('Przemyślane od początku')) {
+                                let benefitsSection = el.closest('section') || el.parentElement.parentElement;
+                                if (benefitsSection) {
+                                    benefitsSection.insertAdjacentHTML('beforebegin', sliderHTML);
+                                    setupSlider();
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
                     if (target) {
-                        const div = document.createElement('div');
-                        div.innerHTML = sliderHTML;
-                        target.after(div.firstElementChild);
+                        target.insertAdjacentHTML('afterend', sliderHTML);
                         setupSlider();
                     }
-                });
+                };
 
-                observer.observe(root, { childList: true, subtree: true });
+                // Check periodically to ensure React rendering is caught
+                const interval = setInterval(checkAndInject, 500);
+                setTimeout(() => clearInterval(interval), 10000); // Stop after 10s
             }
 
             function setupSlider() {
@@ -378,10 +397,10 @@
                 window.ontouchend = () => sliding = false;
             }
 
-            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', doInjection);
-            else doInjection();
+            doInjection();
         })();
     </script>
 </body>
 </html>
+
 
