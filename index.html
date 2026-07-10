@@ -31,7 +31,7 @@
 
     <style>
     :root {
-        --slider-pos: 100%; /* Startujemy od 100%, aby widzieć całe zdjęcie "Przed" */
+        --slider-pos: 50%; /* Suwak startuje na środku */
         --primary-yellow: #FFC107;
         --dark-bg: #0a0a0a;
         --text-light: #ffffff;
@@ -64,8 +64,38 @@
     .transformation-subtitle-injected {
         color: var(--text-gray);
         font-size: 15px;
-        margin-bottom: 12px;
+        margin-bottom: 20px;
     }
+    
+    /* Przyciski sterujące */
+    .slider-buttons-injected {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+    .btn-injected {
+        padding: 12px 20px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        background: #111;
+        color: var(--text-light);
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .btn-injected:hover {
+        border-color: var(--primary-yellow);
+        background: #1a1a1a;
+    }
+    .btn-injected.active {
+        background: var(--primary-yellow);
+        color: #000;
+        border-color: var(--primary-yellow);
+    }
+
     .instruction-text-injected {
         color: var(--primary-yellow);
         font-size: 13px;
@@ -133,7 +163,17 @@
         justify-content: center;
         box-shadow: 0 0 25px rgba(255, 193, 7, 0.6);
         pointer-events: none;
+        transition: left 0.1s ease-out; /* Delikatne wygładzenie przy klikaniu przycisków */
     }
+    /* Wyłączamy transition podczas przeciągania myszką, żeby nie było laga */
+    .comparison-slider-injected.sliding .slider-handle-injected,
+    .comparison-slider-injected.sliding .before-image-injected {
+        transition: none;
+    }
+    .before-image-injected {
+        transition: width 0.1s ease-out;
+    }
+
     .slider-handle-injected::before, .slider-handle-injected::after {
         content: '';
         width: 0; height: 0;
@@ -156,6 +196,7 @@
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255,255,255,0.1);
         text-transform: uppercase;
+        pointer-events: none;
     }
     .label-before-injected { left: 20px; opacity: 0.9; }
     .label-after-injected { right: 20px; opacity: 0.9; }
@@ -180,6 +221,12 @@
                     <div class="transformation-container-injected">
                         <h2 class="transformation-title-injected">Zobacz różnicę na demo</h2>
                         <p class="transformation-subtitle-injected">Porównanie sylwetki bez wkładek i z MogSteppery</p>
+                        
+                        <div class="slider-buttons-injected">
+                            <button class="btn-injected" id="btn-before">Bez wkładek</button>
+                            <button class="btn-injected" id="btn-after">Po +7 cm</button>
+                        </div>
+
                         <div class="instruction-text-injected">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                             Przesuń w lewo, aby zobaczyć różnicę
@@ -228,21 +275,48 @@
 
             function setupSlider() {
                 const s = document.getElementById('slider-root-injected');
+                const btnBefore = document.getElementById('btn-before');
+                const btnAfter = document.getElementById('btn-after');
                 if (!s) return;
 
                 let sliding = false;
+
+                const setPos = (p) => {
+                    s.style.setProperty('--slider-pos', p + '%');
+                    
+                    // Aktualizacja stanu przycisków
+                    if (p >= 95) {
+                        btnBefore.classList.add('active');
+                        btnAfter.classList.remove('active');
+                    } else if (p <= 5) {
+                        btnAfter.classList.add('active');
+                        btnBefore.classList.remove('active');
+                    } else {
+                        btnBefore.classList.remove('active');
+                        btnAfter.classList.remove('active');
+                    }
+                };
+
                 const update = (e) => {
                     const r = s.getBoundingClientRect();
                     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                     let p = ((clientX - r.left) / r.width) * 100;
                     p = Math.max(0, Math.min(p, 100));
-                    s.style.setProperty('--slider-pos', p + '%');
+                    setPos(p);
                 };
 
-                const start = (e) => { sliding = true; update(e); };
+                const start = (e) => { 
+                    sliding = true; 
+                    s.classList.add('sliding');
+                    update(e); 
+                };
                 const move = (e) => { if (sliding) update(e); };
-                const end = () => sliding = false;
+                const end = () => { 
+                    sliding = false; 
+                    s.classList.remove('sliding');
+                };
 
+                // Eventy myszy i dotyku
                 s.addEventListener('mousedown', start);
                 window.addEventListener('mousemove', move);
                 window.addEventListener('mouseup', end);
@@ -250,6 +324,13 @@
                 s.addEventListener('touchstart', start, {passive: false});
                 window.addEventListener('touchmove', (e) => { if(sliding) { e.preventDefault(); update(e); } }, {passive: false});
                 window.addEventListener('touchend', end);
+
+                // Obsługa przycisków
+                btnBefore.addEventListener('click', () => setPos(100));
+                btnAfter.addEventListener('click', () => setPos(0));
+
+                // Inicjalizacja środkowej pozycji
+                setPos(50);
             }
 
             doInjection();
