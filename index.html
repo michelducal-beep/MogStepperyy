@@ -138,7 +138,7 @@
         background-position: center;
         background-repeat: no-repeat;
     }
-    /* Zdjęcie "Po" jest w tle (zawsze widoczne tam, gdzie nie ma zdjęcia "Przed") */
+    /* Zdjęcie "Po" jest w tle */
     .after-image-injected {
         z-index: 1;
     }
@@ -146,29 +146,28 @@
     .before-image-injected {
         z-index: 2;
         width: var(--slider-pos);
-        border-right: 3px solid var(--primary-yellow);
+        border-right: 4px solid var(--primary-yellow); /* Wyraźny pasek rozdzielający */
     }
     .slider-handle-injected {
         position: absolute;
         top: 50%;
         left: var(--slider-pos);
         transform: translate(-50%, -50%);
-        width: 48px;
-        height: 48px;
+        width: 52px;
+        height: 52px;
         background-color: var(--primary-yellow);
         border-radius: 50%;
         z-index: 3;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 0 25px rgba(255, 193, 7, 0.6);
+        box-shadow: 0 0 30px rgba(255, 193, 7, 0.7);
         pointer-events: none;
-        transition: left 0.1s ease-out; /* Delikatne wygładzenie przy klikaniu przycisków */
+        transition: left 0.1s ease-out;
     }
-    /* Wyłączamy transition podczas przeciągania myszką, żeby nie było laga */
     .comparison-slider-injected.sliding .slider-handle-injected,
     .comparison-slider-injected.sliding .before-image-injected {
-        transition: none;
+        transition: none !important;
     }
     .before-image-injected {
         transition: width 0.1s ease-out;
@@ -177,11 +176,11 @@
     .slider-handle-injected::before, .slider-handle-injected::after {
         content: '';
         width: 0; height: 0;
-        border-top: 6px solid transparent;
-        border-bottom: 6px solid transparent;
+        border-top: 7px solid transparent;
+        border-bottom: 7px solid transparent;
     }
-    .slider-handle-injected::before { border-right: 9px solid #000; margin-right: 4px; }
-    .slider-handle-injected::after { border-left: 9px solid #000; margin-left: 4px; }
+    .slider-handle-injected::before { border-right: 10px solid #000; margin-right: 4px; }
+    .slider-handle-injected::after { border-left: 10px solid #000; margin-left: 4px; }
     
     .label-injected {
         position: absolute;
@@ -229,7 +228,7 @@
 
                         <div class="instruction-text-injected">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                            Przesuń w lewo, aby zobaczyć różnicę
+                            Przesuń suwak, aby porównać
                         </div>
                         <div class="comparison-slider-injected" id="slider-root-injected">
                             <div class="image-injected after-image-injected" style="background-image: url('${img_po}')"></div>
@@ -329,11 +328,16 @@
                 btnBefore.addEventListener('click', () => setPos(100));
                 btnAfter.addEventListener('click', () => setPos(0));
 
-                // Inicjalizacja środkowej pozycji
+                // Wymuszenie pozycji startowej na środku
                 setPos(50);
             }
 
-            doInjection();
+            // Uruchomienie wstrzykiwania
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', doInjection);
+            } else {
+                doInjection();
+            }
         })();
     </script>
   </body>
