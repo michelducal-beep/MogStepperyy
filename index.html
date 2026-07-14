@@ -373,5 +373,28 @@
             }
         })();
     </script>
+    <script>
+  // Automatyczna podmiana danych Shopify na nowe
+  window.ShopifyBuyData = {
+    domain: 'haxif6-uz.myshopify.com',
+    token: 'a1248dd39ee4f72637d6023e518fdde1',
+    productId: '15897628770636'
+  };
+
+  // Ten skrypt nadpisuje stare ustawienia w Twoim pliku JS
+  var originalBuildClient = null;
+  var checkShopify = setInterval(function() {
+    if (window.ShopifyBuy && window.ShopifyBuy.buildClient) {
+      originalBuildClient = window.ShopifyBuy.buildClient;
+      window.ShopifyBuy.buildClient = function(config) {
+        config.domain = window.ShopifyBuyData.domain;
+        config.storefrontAccessToken = window.ShopifyBuyData.token;
+        return originalBuildClient.apply(this, arguments);
+      };
+      clearInterval(checkShopify);
+    }
+  }, 50);
+</script>
+
   </body>
 </html>
