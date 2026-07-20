@@ -196,66 +196,36 @@
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ============ REGULAMINY / STOPKA PRAWNA (INJECTED) ============ */
-#injected-legal-footer {
-  width: 100%;
-  background-color: var(--dark-bg);
-  border-top: 1px solid var(--border-color);
-  padding: 40px 20px 30px;
-  font-family: 'Space Grotesk', sans-serif;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+/* ============ NAPRAWA POZIOMEGO SCROLLA ============ */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
 }
-.legal-footer-inner-injected {
-  max-width: 700px;
-  margin: 0 auto;
-  text-align: center;
+
+/* ============ REGULAMINY — TYLKO OKNO Z TREŚCIĄ (bez nowej stopki) ============ */
+.legal-native-link-injected {
+  cursor: pointer !important;
+  text-decoration: none;
 }
-.legal-footer-brand-injected {
-  color: var(--text-light);
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -0.3px;
-  margin-bottom: 4px;
+.legal-native-link-injected:hover {
+  color: var(--primary-yellow) !important;
 }
-.legal-footer-brand-injected span { color: var(--primary-yellow); }
-.legal-footer-tagline-injected {
-  color: var(--text-gray);
-  font-size: 13px;
-  margin-bottom: 22px;
-}
-.legal-footer-links-injected {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.legal-link-btn-injected {
+/* dodatkowe linki, jeśli któregoś dokumentu nie znaleziono natywnie na stronie */
+.legal-extra-link-injected {
+  display: inline-block;
   background: transparent;
-  border: 1px solid var(--border-color);
+  border: none;
   color: var(--text-gray);
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12.5px;
-  font-weight: 600;
-  padding: 9px 16px;
-  border-radius: 10px;
+  font-size: inherit;
+  font-weight: inherit;
+  padding: 0;
+  margin: 6px 10px 0 0;
   cursor: pointer;
-  transition: all 0.25s ease;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
-.legal-link-btn-injected:hover {
-  border-color: var(--primary-yellow);
-  color: var(--primary-yellow);
-  background: #131313;
-}
-.legal-footer-bottom-injected {
-  color: #666;
-  font-size: 11.5px;
-  border-top: 1px solid var(--border-color);
-  padding-top: 16px;
-  margin-top: 6px;
-}
+.legal-extra-link-injected:hover { color: var(--primary-yellow); }
 
 /* Overlay z treścią regulaminów */
 #injected-legal-overlay {
@@ -488,24 +458,7 @@
     address: "al. Wilanowska 364B"
   };
 
-  const footerHTML = `
-  <footer id="injected-legal-footer">
-    <div class="legal-footer-inner-injected">
-      <div class="legal-footer-brand-injected">Mog<span>Steppery</span></div>
-      <div class="legal-footer-tagline-injected">Wkładki podwyższające premium</div>
-      <div class="legal-footer-links-injected">
-        <button class="legal-link-btn-injected" data-doc="regulamin">Regulamin sklepu</button>
-        <button class="legal-link-btn-injected" data-doc="prywatnosc">Polityka prywatności</button>
-        <button class="legal-link-btn-injected" data-doc="cookies">Polityka cookies</button>
-        <button class="legal-link-btn-injected" data-doc="zwroty">Zwroty i reklamacje</button>
-        <button class="legal-link-btn-injected" data-doc="dane">Dane sprzedawcy</button>
-      </div>
-      <div class="legal-footer-bottom-injected">
-        &copy; ${new Date().getFullYear()} ${SELLER.name}. Wszelkie prawa zastrzeżone.
-      </div>
-    </div>
-  </footer>
-
+  const overlayHTML = `
   <div id="injected-legal-overlay">
     <div class="legal-modal-injected">
       <button class="legal-modal-close-injected" id="injected-legal-close">✕</button>
@@ -633,20 +586,79 @@
     document.body.style.overflow = '';
   }
 
-  function inject() {
-    if (document.getElementById('injected-legal-footer')) return;
-    document.body.insertAdjacentHTML('beforeend', footerHTML);
+  // Warianty tekstu, po których szukamy JUŻ ISTNIEJĄCYCH linków na stronie
+  const MATCHERS = [
+    { key: 'regulamin',  patterns: ['regulamin sklepu', 'regulamin'] },
+    { key: 'prywatnosc', patterns: ['polityka prywatności', 'prywatność', 'prywatnosci'] },
+    { key: 'zwroty',     patterns: ['zwroty i odstąpienie od umowy', 'zwroty i reklamacje', 'zwroty', 'odstąpienie od umowy', 'reklamacje'] },
+    { key: 'cookies',    patterns: ['polityka cookies', 'cookies'] },
+    { key: 'dane',       patterns: ['dane sprzedawcy', 'dane firmy'] }
+  ];
 
-    document.querySelectorAll('.legal-link-btn-injected').forEach(btn => {
-      btn.addEventListener('click', () => openDoc(btn.getAttribute('data-doc')));
-    });
+  function ensureOverlay() {
+    if (document.getElementById('injected-legal-overlay')) return;
+    document.body.insertAdjacentHTML('beforeend', overlayHTML);
     document.getElementById('injected-legal-close').addEventListener('click', closeDoc);
     document.getElementById('injected-legal-overlay').addEventListener('click', (e) => {
       if (e.target.id === 'injected-legal-overlay') closeDoc();
     });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeDoc();
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDoc(); });
+  }
+
+  // Znajduje najgłębsze elementy (bez dzieci-elementów) - realne "liście" tekstowe strony
+  function getLeafElements() {
+    return Array.from(document.querySelectorAll('a, button, span, div, li, p, h1, h2, h3, h4, h5, h6'))
+      .filter(el => el.children.length === 0 && el.textContent.trim().length > 0 && el.textContent.trim().length < 60);
+  }
+
+  function bindExistingLinks() {
+    const leaves = getLeafElements();
+    const foundKeys = new Set();
+    let lastMatchedEl = null;
+
+    leaves.forEach(el => {
+      if (el.dataset.legalBound) return;
+      const text = el.textContent.trim().toLowerCase();
+      for (const matcher of MATCHERS) {
+        if (foundKeys.has(matcher.key)) continue;
+        if (matcher.patterns.some(p => text === p || text.includes(p))) {
+          el.dataset.legalBound = '1';
+          el.classList.add('legal-native-link-injected');
+          el.addEventListener('click', (e) => {
+            e.preventDefault();
+            openDoc(matcher.key);
+          });
+          foundKeys.add(matcher.key);
+          lastMatchedEl = el;
+          break;
+        }
+      }
     });
+
+    // Dla dokumentów, których nie ma jeszcze na stronie, dopisujemy mały link
+    // tuż obok istniejących linków prawnych (bez duplikowania loga/copyrightu)
+    const missing = MATCHERS.filter(m => !foundKeys.has(m.key));
+    if (missing.length && lastMatchedEl && !document.getElementById('injected-extra-legal-links')) {
+      const extraHTML = missing.map(m => {
+        const label = DOCS[m.key] ? DOCS[m.key].title : m.key;
+        return `<button class="legal-extra-link-injected" data-doc="${m.key}">${label}</button>`;
+      }).join('');
+      lastMatchedEl.insertAdjacentHTML('afterend', `<span id="injected-extra-legal-links">${extraHTML}</span>`);
+      document.querySelectorAll('#injected-extra-legal-links .legal-extra-link-injected').forEach(btn => {
+        btn.addEventListener('click', () => openDoc(btn.getAttribute('data-doc')));
+      });
+    }
+
+    return foundKeys.size;
+  }
+
+  function inject() {
+    ensureOverlay();
+    const interval = setInterval(() => {
+      const count = bindExistingLinks();
+      if (count >= 3) clearInterval(interval); // regulamin, prywatność, zwroty znalezione
+    }, 500);
+    setTimeout(() => clearInterval(interval), 6000);
   }
 
   if (document.readyState === 'loading') {
@@ -654,8 +666,6 @@
   } else {
     inject();
   }
-  // dodatkowe zabezpieczenie na wypadek, gdyby #root renderował się z opóźnieniem
-  window.addEventListener('load', inject);
 })();
 </script>
 
