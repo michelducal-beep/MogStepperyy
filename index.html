@@ -211,19 +211,33 @@ html, body {
   color: var(--primary-yellow) !important;
 }
 /* dodatkowe linki, jeśli któregoś dokumentu nie znaleziono natywnie na stronie */
+#injected-legal-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 18px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 22px 16px;
+  background-color: var(--dark-bg);
+  border-top: 1px solid var(--border-color);
+  font-family: 'Space Grotesk', sans-serif;
+}
 .legal-extra-link-injected {
   display: inline-block;
   background: transparent;
   border: none;
   color: var(--text-gray);
   font-family: 'Space Grotesk', sans-serif;
-  font-size: inherit;
-  font-weight: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
   padding: 0;
-  margin: 6px 10px 0 0;
+  margin: 0;
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 3px;
+  white-space: nowrap;
 }
 .legal-extra-link-injected:hover { color: var(--primary-yellow); }
 
@@ -614,51 +628,65 @@ html, body {
   function bindExistingLinks() {
     const leaves = getLeafElements();
     const foundKeys = new Set();
-    let lastMatchedEl = null;
+    let lastHiddenEl = null;
 
     leaves.forEach(el => {
-      if (el.dataset.legalBound) return;
+      if (el.dataset.legalHidden) return;
       const text = el.textContent.trim().toLowerCase();
       for (const matcher of MATCHERS) {
-        if (foundKeys.has(matcher.key)) continue;
         if (matcher.patterns.some(p => text === p || text.includes(p))) {
-          el.dataset.legalBound = '1';
-          el.classList.add('legal-native-link-injected');
-          el.addEventListener('click', (e) => {
-            e.preventDefault();
-            openDoc(matcher.key);
-          });
+          // Ta natywna wersja jest zepsuta (nic nie robi po kliknięciu) - ukrywamy ją
+          el.dataset.legalHidden = '1';
+          el.style.display = 'none';
           foundKeys.add(matcher.key);
-          lastMatchedEl = el;
+          lastHiddenEl = el;
           break;
         }
       }
     });
 
-    // Dla dokumentów, których nie ma jeszcze na stronie, dopisujemy mały link
-    // tuż obok istniejących linków prawnych (bez duplikowania loga/copyrightu)
-    const missing = MATCHERS.filter(m => !foundKeys.has(m.key));
-    if (missing.length && lastMatchedEl && !document.getElementById('injected-extra-legal-links')) {
-      const extraHTML = missing.map(m => {
-        const label = DOCS[m.key] ? DOCS[m.key].title : m.key;
-        return `<button class="legal-extra-link-injected" data-doc="${m.key}">${label}</button>`;
-      }).join('');
-      lastMatchedEl.insertAdjacentHTML('afterend', `<span id="injected-extra-legal-links">${extraHTML}</span>`);
-      document.querySelectorAll('#injected-extra-legal-links .legal-extra-link-injected').forEach(btn => {
-        btn.addEventListener('click', () => openDoc(btn.getAttribute('data-doc')));
-      });
+    return { count: foundKeys.size, anchor: lastHiddenEl };
+  }
+
+  function addOwnLegalBar(anchorEl) {
+    if (document.getElementById('injected-legal-bar')) return;
+
+    const barHTML = `
+    <div id="injected-legal-bar">
+      <button class="legal-extra-link-injected" data-doc="regulamin">Regulamin sklepu</button>
+      <button class="legal-extra-link-injected" data-doc="prywatnosc">Polityka prywatności</button>
+      <button class="legal-extra-link-injected" data-doc="cookies">Polityka cookies</button>
+      <button class="legal-extra-link-injected" data-doc="zwroty">Zwroty i reklamacje</button>
+      <button class="legal-extra-link-injected" data-doc="dane">Dane sprzedawcy</button>
+    </div>`;
+
+    if (anchorEl && anchorEl.parentElement) {
+      anchorEl.insertAdjacentHTML('afterend', barHTML);
+    } else {
+      document.body.insertAdjacentHTML('beforeend', barHTML);
     }
 
-    return foundKeys.size;
+    document.querySelectorAll('#injected-legal-bar .legal-extra-link-injected').forEach(btn => {
+      btn.addEventListener('click', () => openDoc(btn.getAttribute('data-doc')));
+    });
   }
 
   function inject() {
     ensureOverlay();
+    let barAdded = false;
+    let attempts = 0;
     const interval = setInterval(() => {
-      const count = bindExistingLinks();
-      if (count >= 3) clearInterval(interval); // regulamin, prywatność, zwroty znalezione
+      attempts++;
+      const result = bindExistingLinks();
+      if (!barAdded && (result.count > 0 || attempts >= 6)) {
+        // Dodajemy własny pasek gdy tylko znaleźliśmy i ukryliśmy przynajmniej
+        // jeden zepsuty link, albo po ~3s jeśli nic nie znaleziono (fallback na dół strony)
+        addOwnLegalBar(result.anchor);
+        barAdded = true;
+      }
+      if (barAdded) clearInterval(interval);
     }, 500);
-    setTimeout(() => clearInterval(interval), 6000);
+    setTimeout(() => clearInterval(interval), 8000);
   }
 
   if (document.readyState === 'loading') {
@@ -666,6 +694,7 @@ html, body {
   } else {
     inject();
   }
+  window.addEventListener('load', inject);
 })();
 </script>
 
