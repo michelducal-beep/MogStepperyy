@@ -600,15 +600,6 @@ html, body {
     document.body.style.overflow = '';
   }
 
-  // Warianty tekstu, po których szukamy JUŻ ISTNIEJĄCYCH linków na stronie
-  const MATCHERS = [
-    { key: 'regulamin',  patterns: ['regulamin sklepu', 'regulamin'] },
-    { key: 'prywatnosc', patterns: ['polityka prywatności', 'prywatność', 'prywatnosci'] },
-    { key: 'zwroty',     patterns: ['zwroty i odstąpienie od umowy', 'zwroty i reklamacje', 'zwroty', 'odstąpienie od umowy', 'reklamacje'] },
-    { key: 'cookies',    patterns: ['polityka cookies', 'cookies'] },
-    { key: 'dane',       patterns: ['dane sprzedawcy', 'dane firmy'] }
-  ];
-
   function ensureOverlay() {
     if (document.getElementById('injected-legal-overlay')) return;
     document.body.insertAdjacentHTML('beforeend', overlayHTML);
@@ -619,36 +610,7 @@ html, body {
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDoc(); });
   }
 
-  // Znajduje najgłębsze elementy (bez dzieci-elementów) - realne "liście" tekstowe strony
-  function getLeafElements() {
-    return Array.from(document.querySelectorAll('a, button, span, div, li, p, h1, h2, h3, h4, h5, h6'))
-      .filter(el => el.children.length === 0 && el.textContent.trim().length > 0 && el.textContent.trim().length < 60);
-  }
-
-  function bindExistingLinks() {
-    const leaves = getLeafElements();
-    const foundKeys = new Set();
-    let lastHiddenEl = null;
-
-    leaves.forEach(el => {
-      if (el.dataset.legalHidden) return;
-      const text = el.textContent.trim().toLowerCase();
-      for (const matcher of MATCHERS) {
-        if (matcher.patterns.some(p => text === p || text.includes(p))) {
-          // Ta natywna wersja jest zepsuta (nic nie robi po kliknięciu) - ukrywamy ją
-          el.dataset.legalHidden = '1';
-          el.style.display = 'none';
-          foundKeys.add(matcher.key);
-          lastHiddenEl = el;
-          break;
-        }
-      }
-    });
-
-    return { count: foundKeys.size, anchor: lastHiddenEl };
-  }
-
-  function addOwnLegalBar(anchorEl) {
+  function addOwnLegalBar() {
     if (document.getElementById('injected-legal-bar')) return;
 
     const barHTML = `
@@ -660,11 +622,7 @@ html, body {
       <button class="legal-extra-link-injected" data-doc="dane">Dane sprzedawcy</button>
     </div>`;
 
-    if (anchorEl && anchorEl.parentElement) {
-      anchorEl.insertAdjacentHTML('afterend', barHTML);
-    } else {
-      document.body.insertAdjacentHTML('beforeend', barHTML);
-    }
+    document.body.insertAdjacentHTML('beforeend', barHTML);
 
     document.querySelectorAll('#injected-legal-bar .legal-extra-link-injected').forEach(btn => {
       btn.addEventListener('click', () => openDoc(btn.getAttribute('data-doc')));
@@ -673,26 +631,14 @@ html, body {
 
   function inject() {
     ensureOverlay();
-    let barAdded = false;
-    let attempts = 0;
-    const interval = setInterval(() => {
-      attempts++;
-      const result = bindExistingLinks();
-      if (!barAdded && (result.count > 0 || attempts >= 6)) {
-        // Dodajemy własny pasek gdy tylko znaleźliśmy i ukryliśmy przynajmniej
-        // jeden zepsuty link, albo po ~3s jeśli nic nie znaleziono (fallback na dół strony)
-        addOwnLegalBar(result.anchor);
-        barAdded = true;
-      }
-      if (barAdded) clearInterval(interval);
-    }, 500);
-    setTimeout(() => clearInterval(interval), 8000);
+    addOwnLegalBar();
   }
 
+  // Uruchamiamy natychmiast, niezależnie od stanu strony - nic tu nie czeka
+  // na wyrenderowanie reszty strony przez React, więc pasek pojawi się zawsze.
+  inject();
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', inject);
-  } else {
-    inject();
   }
   window.addEventListener('load', inject);
 })();
