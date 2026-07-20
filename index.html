@@ -26,167 +26,166 @@
 <link rel="apple-touch-icon" href="favicon.webp">
 <style>
 :root {
---slider-pos: 50%;
---primary-yellow: #FFC107;
---dark-bg: #0a0a0a;
---text-light: #ffffff;
---text-gray: #999999;
---border-color: #1a1a1a;
+  --slider-pos: 50%;
+  --primary-yellow: #FFC107;
+  --dark-bg: #0a0a0a;
+  --text-light: #ffffff;
+  --text-gray: #999999;
+  --border-color: #1a1a1a;
 }
 #injected-slider-section {
-width: 100%;
-background-color: var(--dark-bg);
-padding: 60px 20px;
-font-family: 'Space Grotesk', sans-serif;
-border-top: 1px solid var(--border-color);
-border-bottom: 1px solid var(--border-color);
-display: block !important;
-visibility: visible !important;
-opacity: 1 !important;
+  width: 100%;
+  background-color: var(--dark-bg);
+  padding: 60px 20px;
+  font-family: 'Space Grotesk', sans-serif;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 .transformation-container-injected {
-max-width: 500px;
-margin: 0 auto;
-text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
 }
 .transformation-title-injected {
-color: var(--text-light);
-font-size: clamp(22px, 5vw, 30px);
-font-weight: 700;
-margin-bottom: 8px;
-letter-spacing: -0.5px;
+  color: var(--text-light);
+  font-size: clamp(22px, 5vw, 30px);
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
 }
 .transformation-subtitle-injected {
-color: var(--text-gray);
-font-size: 15px;
-margin-bottom: 20px;
+  color: var(--text-gray);
+  font-size: 15px;
+  margin-bottom: 20px;
 }
 .slider-buttons-injected {
-display: flex;
-justify-content: center;
-gap: 10px;
-margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 25px;
 }
 .btn-injected {
-padding: 12px 20px;
-border-radius: 12px;
-border: 1px solid var(--border-color);
-background: #111;
-color: var(--text-light);
-font-family: 'Space Grotesk', sans-serif;
-font-weight: 600;
-font-size: 14px;
-cursor: pointer;
-transition: all 0.3s ease;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: #111;
+  color: var(--text-light);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 .btn-injected:hover {
-border-color: var(--primary-yellow);
-background: #1a1a1a;
+  border-color: var(--primary-yellow);
+  background: #1a1a1a;
 }
 .btn-injected.active {
-background: var(--primary-yellow);
-color: #000;
-border-color: var(--primary-yellow);
+  background: var(--primary-yellow);
+  color: #000;
+  border-color: var(--primary-yellow);
 }
 .instruction-text-injected {
-color: var(--primary-yellow);
-font-size: 13px;
-font-weight: 600;
-margin-bottom: 25px;
-text-transform: uppercase;
-letter-spacing: 1px;
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 8px;
+  color: var(--primary-yellow);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 .instruction-text-injected svg {
-animation: slideLeft 1.5s infinite;
+  animation: slideLeft 1.5s infinite;
 }
 @keyframes slideLeft {
-0%, 100% { transform: translateX(0); }
-50% { transform: translateX(-5px); }
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-5px); }
 }
-/* GŁÓWNY KONTENER SUWAKA */
 .comparison-slider-injected {
-position: relative;
-width: 100%;
-aspect-ratio: 412 / 1024;
-overflow: hidden;
-border-radius: 24px;
-box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
-cursor: ew-resize;
-user-select: none;
-border: 1px solid var(--border-color);
-background: #111;
-touch-action: none;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 412 / 1024;
+  overflow: hidden;
+  border-radius: 24px;
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
+  cursor: ew-resize;
+  user-select: none;
+  border: 1px solid var(--border-color);
+  background: #111;
+  touch-action: none;
 }
 .comparison-slider-injected .image-injected {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-size: cover;
-background-position: center;
-background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .before-image-injected {
-z-index: 2;
-clip-path: inset(0 calc(100% - var(--slider-pos)) 0 0);
+  z-index: 2;
+  clip-path: inset(0 calc(100% - var(--slider-pos)) 0 0);
 }
 .after-image-injected {
-z-index: 1;
+  z-index: 1;
 }
 .slider-divider-injected {
-position: absolute;
-top: 0;
-bottom: 0;
-left: var(--slider-pos);
-width: 4px;
-background-color: var(--primary-yellow);
-z-index: 3;
-transform: translateX(-50%);
-box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--slider-pos);
+  width: 4px;
+  background-color: var(--primary-yellow);
+  z-index: 3;
+  transform: translateX(-50%);
+  box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
 }
 .slider-handle-injected {
-position: absolute;
-top: 50%;
-left: var(--slider-pos);
-transform: translate(-50%, -50%);
-width: 52px;
-height: 52px;
-background-color: var(--primary-yellow);
-border-radius: 50%;
-z-index: 4;
-display: flex;
-align-items: center;
-justify-content: center;
-box-shadow: 0 0 30px rgba(255, 193, 7, 0.7);
-pointer-events: none;
+  position: absolute;
+  top: 50%;
+  left: var(--slider-pos);
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  background-color: var(--primary-yellow);
+  border-radius: 50%;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(255, 193, 7, 0.7);
+  pointer-events: none;
 }
 .slider-handle-injected::before, .slider-handle-injected::after {
-content: '';
-width: 0; height: 0;
-border-top: 7px solid transparent;
-border-bottom: 7px solid transparent;
+  content: '';
+  width: 0; height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
 }
 .slider-handle-injected::before { border-right: 10px solid #000; margin-right: 4px; }
 .slider-handle-injected::after { border-left: 10px solid #000; margin-left: 4px; }
 .label-injected {
-position: absolute;
-bottom: 30px;
-padding: 10px 18px;
-background: rgba(0, 0, 0, 0.8);
-color: var(--text-light);
-font-weight: 700;
-border-radius: 12px;
-font-size: 12px;
-z-index: 5;
-backdrop-filter: blur(12px);
-border: 1px solid rgba(255,255,255,0.1);
-text-transform: uppercase;
-pointer-events: none;
+  position: absolute;
+  bottom: 30px;
+  padding: 10px 18px;
+  background: rgba(0, 0, 0, 0.8);
+  color: var(--text-light);
+  font-weight: 700;
+  border-radius: 12px;
+  font-size: 12px;
+  z-index: 5;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  text-transform: uppercase;
+  pointer-events: none;
 }
 .label-before-injected { left: 20px; opacity: 0.9; }
 .label-after-injected { right: 20px; opacity: 0.9; }
@@ -194,210 +193,471 @@ pointer-events: none;
 .comparison-slider-injected:not(.sliding) .before-image-injected,
 .comparison-slider-injected:not(.sliding) .slider-divider-injected,
 .comparison-slider-injected:not(.sliding) .slider-handle-injected {
-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* --- STOPKA PRAWNA (regulamin/RODO) --- */
+/* ============ REGULAMINY / STOPKA PRAWNA (INJECTED) ============ */
 #injected-legal-footer {
-width: 100%;
-background-color: var(--dark-bg);
-border-top: 1px solid var(--border-color);
-padding: 30px 20px 40px;
-font-family: 'Inter', sans-serif;
-text-align: center;
+  width: 100%;
+  background-color: var(--dark-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 40px 20px 30px;
+  font-family: 'Space Grotesk', sans-serif;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+.legal-footer-inner-injected {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+.legal-footer-brand-injected {
+  color: var(--text-light);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+.legal-footer-brand-injected span { color: var(--primary-yellow); }
+.legal-footer-tagline-injected {
+  color: var(--text-gray);
+  font-size: 13px;
+  margin-bottom: 22px;
 }
 .legal-footer-links-injected {
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-gap: 8px 22px;
-margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
-.legal-footer-links-injected a {
-color: var(--text-gray);
-text-decoration: none;
-font-size: 13px;
-transition: color 0.2s ease;
+.legal-link-btn-injected {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-gray);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
-.legal-footer-links-injected a:hover {
-color: var(--primary-yellow);
+.legal-link-btn-injected:hover {
+  border-color: var(--primary-yellow);
+  color: var(--primary-yellow);
+  background: #131313;
 }
-.legal-footer-copy-injected {
-color: #555555;
-font-size: 12px;
+.legal-footer-bottom-injected {
+  color: #666;
+  font-size: 11.5px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 16px;
+  margin-top: 6px;
 }
+
+/* Overlay z treścią regulaminów */
+#injected-legal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+  font-family: 'Inter', sans-serif;
+}
+#injected-legal-overlay.open { display: flex; }
+.legal-modal-injected {
+  background: #0f0f0f;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  max-width: 720px;
+  width: 100%;
+  padding: 32px 28px 36px;
+  color: var(--text-light);
+  position: relative;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+}
+.legal-modal-close-injected {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: #1a1a1a;
+  border: 1px solid var(--border-color);
+  color: var(--text-light);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.legal-modal-close-injected:hover { border-color: var(--primary-yellow); color: var(--primary-yellow); }
+.legal-modal-injected h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--primary-yellow);
+  font-size: 22px;
+  margin: 0 0 4px;
+  padding-right: 30px;
+}
+.legal-modal-injected .legal-updated-injected {
+  color: var(--text-gray);
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+.legal-modal-injected h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--text-light);
+  font-size: 15px;
+  margin: 22px 0 8px;
+}
+.legal-modal-injected p, .legal-modal-injected li {
+  color: #cfcfcf;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+.legal-modal-injected ul, .legal-modal-injected ol {
+  margin: 6px 0 6px 18px;
+  padding: 0;
+}
+.legal-modal-injected strong { color: var(--text-light); }
+.legal-modal-injected a { color: var(--primary-yellow); text-decoration: none; }
+.legal-modal-injected a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script>
-window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script>
 (function() {
-// SPRAWDŹ CZY TE NAZWY SĄ POPRAWNE NA TWOIM SERWERZE
-const img_przed = "przed7cm.png";
-const img_po = "po7cm.png";
-const sliderHTML = `
-<section class="transformation-section-injected" id="injected-slider-section">
-<div class="transformation-container-injected">
-<h2 class="transformation-title-injected">Zobacz różnicę na demo</h2>
-<p class="transformation-subtitle-injected">Porównanie sylwetki bez wkładek i z MogSteppery</p>
-<div class="slider-buttons-injected">
-<button class="btn-injected" id="btn-before">Bez wkładek</button>
-<button class="btn-injected" id="btn-after">Po +7 cm</button>
-</div>
-<div class="instruction-text-injected">
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-Przesuń suwak, aby porównać
-</div>
-<div class="comparison-slider-injected" id="slider-root-injected">
-<div class="image-injected after-image-injected" style="background-image: url('${img_po}')"></div>
-<div class="image-injected before-image-injected" style="background-image: url('${img_przed}')"></div>
-<div class="slider-divider-injected"></div>
-<div class="slider-handle-injected"></div>
-<div class="label-injected label-before-injected">Bez wkładek</div>
-<div class="label-injected label-after-injected">Po <span class="label-highlight-injected">+7CM</span></div>
-</div>
-</div>
-</section>
-`;
-function doInjection() {
-const checkAndInject = () => {
-if (document.getElementById('injected-slider-section')) return;
-const allElements = Array.from(document.querySelectorAll('section, div'));
-let target = null;
-for (let el of allElements) {
-if (el.textContent.includes('KORZYŚCI') || el.textContent.includes('Przemyślane od początku')) {
-target = el.closest('section') || el.parentElement;
-break;
-}
-}
-if (!target) {
-const sections = document.querySelectorAll('section');
-if (sections.length > 0) {
-target = sections[Math.floor(sections.length / 2)];
-}
-}
-if (target) {
-target.insertAdjacentHTML('afterend', sliderHTML);
-setupSlider();
-}
-};
-const interval = setInterval(checkAndInject, 500);
-setTimeout(() => clearInterval(interval), 5000);
-}
-function setupSlider() {
-const s = document.getElementById('slider-root-injected');
-const btnBefore = document.getElementById('btn-before');
-const btnAfter = document.getElementById('btn-after');
-if (!s) return;
-const setPos = (p) => {
-s.style.setProperty('--slider-pos', p + '%');
-if (p >= 90) {
-btnBefore.classList.add('active');
-btnAfter.classList.remove('active');
-} else if (p <= 10) {
-btnAfter.classList.add('active');
-btnBefore.classList.remove('active');
-} else {
-btnBefore.classList.remove('active');
-btnAfter.classList.remove('active');
-}
-};
-const update = (e) => {
-const r = s.getBoundingClientRect();
-const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
-let p = ((clientX - r.left) / r.width) * 100;
-p = Math.max(0, Math.min(p, 100));
-setPos(p);
-};
-const start = (e) => {
-s.classList.add('sliding');
-update(e);
-const moveHandler = (moveEvent) => {
-update(moveEvent);
-};
-const endHandler = () => {
-s.classList.remove('sliding');
-window.removeEventListener('mousemove', moveHandler);
-window.removeEventListener('mouseup', endHandler);
-window.removeEventListener('touchmove', moveHandler);
-window.removeEventListener('touchend', endHandler);
-};
-window.addEventListener('mousemove', moveHandler);
-window.addEventListener('mouseup', endHandler);
-window.addEventListener('touchmove', moveHandler, { passive: false });
-window.addEventListener('touchend', endHandler);
-};
-s.addEventListener('mousedown', start);
-s.addEventListener('touchstart', (e) => {
-e.preventDefault();
-start(e);
-}, { passive: false });
-btnBefore.addEventListener('click', () => setPos(100));
-btnAfter.addEventListener('click', () => setPos(0));
-setPos(50);
-}
-if (document.readyState === 'loading') {
-document.addEventListener('DOMContentLoaded', doInjection);
-} else {
-doInjection();
-}
+  // SPRAWDŹ CZY TE NAZWY SĄ POPRAWNE NA TWOIM SERWERZE
+  const img_przed = "przed7cm.png";
+  const img_po = "po7cm.png";
+
+  const sliderHTML = `
+  <section class="transformation-section-injected" id="injected-slider-section">
+    <div class="transformation-container-injected">
+      <h2 class="transformation-title-injected">Zobacz różnicę na demo</h2>
+      <p class="transformation-subtitle-injected">Porównanie sylwetki bez wkładek i z MogSteppery</p>
+      <div class="slider-buttons-injected">
+        <button class="btn-injected" id="btn-before">Bez wkładek</button>
+        <button class="btn-injected" id="btn-after">Po +7 cm</button>
+      </div>
+      <div class="instruction-text-injected">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Przesuń suwak, aby porównać
+      </div>
+      <div class="comparison-slider-injected" id="slider-root-injected">
+        <div class="image-injected after-image-injected" style="background-image: url('${img_po}')"></div>
+        <div class="image-injected before-image-injected" style="background-image: url('${img_przed}')"></div>
+        <div class="slider-divider-injected"></div>
+        <div class="slider-handle-injected"></div>
+        <div class="label-injected label-before-injected">Bez wkładek</div>
+        <div class="label-injected label-after-injected">Po <span class="label-highlight-injected">+7CM</span></div>
+      </div>
+    </div>
+  </section>
+  `;
+
+  function doInjection() {
+    const checkAndInject = () => {
+      if (document.getElementById('injected-slider-section')) return;
+      const allElements = Array.from(document.querySelectorAll('section, div'));
+      let target = null;
+      for (let el of allElements) {
+        if (el.textContent.includes('KORZYŚCI') || el.textContent.includes('Przemyślane od początku')) {
+          target = el.closest('section') || el.parentElement;
+          break;
+        }
+      }
+      if (!target) {
+        const sections = document.querySelectorAll('section');
+        if (sections.length > 0) {
+          target = sections[Math.floor(sections.length / 2)];
+        }
+      }
+      if (target) {
+        target.insertAdjacentHTML('afterend', sliderHTML);
+        setupSlider();
+      }
+    };
+    const interval = setInterval(checkAndInject, 500);
+    setTimeout(() => clearInterval(interval), 5000);
+  }
+
+  function setupSlider() {
+    const s = document.getElementById('slider-root-injected');
+    const btnBefore = document.getElementById('btn-before');
+    const btnAfter = document.getElementById('btn-after');
+    if (!s) return;
+
+    const setPos = (p) => {
+      s.style.setProperty('--slider-pos', p + '%');
+      if (p >= 90) {
+        btnBefore.classList.add('active');
+        btnAfter.classList.remove('active');
+      } else if (p <= 10) {
+        btnAfter.classList.add('active');
+        btnBefore.classList.remove('active');
+      } else {
+        btnBefore.classList.remove('active');
+        btnAfter.classList.remove('active');
+      }
+    };
+
+    const update = (e) => {
+      const r = s.getBoundingClientRect();
+      const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
+      let p = ((clientX - r.left) / r.width) * 100;
+      p = Math.max(0, Math.min(p, 100));
+      setPos(p);
+    };
+
+    const start = (e) => {
+      s.classList.add('sliding');
+      update(e);
+      const moveHandler = (moveEvent) => { update(moveEvent); };
+      const endHandler = () => {
+        s.classList.remove('sliding');
+        window.removeEventListener('mousemove', moveHandler);
+        window.removeEventListener('mouseup', endHandler);
+        window.removeEventListener('touchmove', moveHandler);
+        window.removeEventListener('touchend', endHandler);
+      };
+      window.addEventListener('mousemove', moveHandler);
+      window.addEventListener('mouseup', endHandler);
+      window.addEventListener('touchmove', moveHandler, { passive: false });
+      window.addEventListener('touchend', endHandler);
+    };
+
+    s.addEventListener('mousedown', start);
+    s.addEventListener('touchstart', (e) => { e.preventDefault(); start(e); }, { passive: false });
+
+    btnBefore.addEventListener('click', () => setPos(100));
+    btnAfter.addEventListener('click', () => setPos(0));
+
+    setPos(50);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', doInjection);
+  } else {
+    doInjection();
+  }
 })();
 </script>
+
 <script>
-// Automatyczna podmiana danych Shopify na nowe
-window.ShopifyBuyData = {
-domain: 'haxif6-uz.myshopify.com',
-token: 'a1248dd39ee4f72637d6023e518fdde1',
-productId: '15897628770636'
-};
-var originalBuildClient = null;
-var checkShopify = setInterval(function() {
-if (window.ShopifyBuy && window.ShopifyBuy.buildClient) {
-originalBuildClient = window.ShopifyBuy.buildClient;
-window.ShopifyBuy.buildClient = function(config) {
-config.domain = window.ShopifyBuyData.domain;
-config.storefrontAccessToken = window.ShopifyBuyData.token;
-return originalBuildClient.apply(this, arguments);
-};
-clearInterval(checkShopify);
-}
-}, 50);
+  // Automatyczna podmiana danych Shopify na nowe
+  window.ShopifyBuyData = {
+    domain: 'haxif6-uz.myshopify.com',
+    token: 'a1248dd39ee4f72637d6023e518fdde1',
+    productId: '15897628770636'
+  };
+  var originalBuildClient = null;
+  var checkShopify = setInterval(function() {
+    if (window.ShopifyBuy && window.ShopifyBuy.buildClient) {
+      originalBuildClient = window.ShopifyBuy.buildClient;
+      window.ShopifyBuy.buildClient = function(config) {
+        config.domain = window.ShopifyBuyData.domain;
+        config.storefrontAccessToken = window.ShopifyBuyData.token;
+        return originalBuildClient.apply(this, arguments);
+      };
+      clearInterval(checkShopify);
+    }
+  }, 50);
 </script>
+
+<!-- ============ REGULAMINY PRAWNE (INJECTED) ============ -->
 <script>
-// --- WSTRZYKNIĘCIE STOPKI PRAWNEJ (regulamin / polityka prywatności) ---
 (function() {
-const legalFooterHTML = `
-<footer id="injected-legal-footer">
-<div class="legal-footer-links-injected">
-<a href="/regulamin.html">Regulamin sklepu</a>
-<a href="/polityka-prywatnosci.html">Polityka prywatności</a>
-<a href="/regulamin.html#§6-prawo-odstąpienia-od-umowy">Zwroty i odstąpienie od umowy</a>
-</div>
-<div class="legal-footer-copy-injected">&copy; ${new Date().getFullYear()} MogSteppery. Wszelkie prawa zastrzeżone.</div>
-</footer>
-`;
-function injectLegalFooter() {
-if (document.getElementById('injected-legal-footer')) return;
-const existingFooter = document.querySelector('footer');
-const root = document.getElementById('root');
-if (existingFooter) {
-existingFooter.insertAdjacentHTML('beforeend', legalFooterHTML);
-} else if (root && root.children.length > 0) {
-root.insertAdjacentHTML('beforeend', legalFooterHTML);
-} else {
-return false;
-}
-return true;
-}
-const interval = setInterval(() => {
-if (injectLegalFooter()) clearInterval(interval);
-}, 500);
-setTimeout(() => clearInterval(interval), 8000);
+  const SELLER = {
+    name: "MogSteppery",
+    email: "kontakt@mogsteppery.com",
+    address: "al. Wilanowska 364B"
+  };
+
+  const footerHTML = `
+  <footer id="injected-legal-footer">
+    <div class="legal-footer-inner-injected">
+      <div class="legal-footer-brand-injected">Mog<span>Steppery</span></div>
+      <div class="legal-footer-tagline-injected">Wkładki podwyższające premium</div>
+      <div class="legal-footer-links-injected">
+        <button class="legal-link-btn-injected" data-doc="regulamin">Regulamin sklepu</button>
+        <button class="legal-link-btn-injected" data-doc="prywatnosc">Polityka prywatności</button>
+        <button class="legal-link-btn-injected" data-doc="cookies">Polityka cookies</button>
+        <button class="legal-link-btn-injected" data-doc="zwroty">Zwroty i reklamacje</button>
+        <button class="legal-link-btn-injected" data-doc="dane">Dane sprzedawcy</button>
+      </div>
+      <div class="legal-footer-bottom-injected">
+        &copy; ${new Date().getFullYear()} ${SELLER.name}. Wszelkie prawa zastrzeżone.
+      </div>
+    </div>
+  </footer>
+
+  <div id="injected-legal-overlay">
+    <div class="legal-modal-injected">
+      <button class="legal-modal-close-injected" id="injected-legal-close">✕</button>
+      <div id="injected-legal-content"></div>
+    </div>
+  </div>
+  `;
+
+  const DOCS = {
+    regulamin: {
+      title: "Regulamin sklepu internetowego",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>§1 Postanowienia ogólne</h3>
+        <p>Sklep internetowy działający pod adresem mogsteppery.com prowadzony jest przez <strong>${SELLER.name}</strong>. Niniejszy regulamin określa zasady korzystania ze sklepu, składania zamówień, zawierania umów sprzedaży na odległość, płatności, dostawy, odstąpienia od umowy oraz reklamacji.</p>
+        <h3>§2 Definicje</h3>
+        <ul>
+          <li><strong>Sprzedawca</strong> — ${SELLER.name}, adres do korespondencji: ${SELLER.address}, e-mail: <a href="mailto:${SELLER.email}">${SELLER.email}</a>.</li>
+          <li><strong>Klient/Konsument</strong> — osoba fizyczna dokonująca zakupu niezwiązanego bezpośrednio z jej działalnością gospodarczą lub zawodową.</li>
+          <li><strong>Sklep</strong> — serwis internetowy dostępny pod adresem mogsteppery.com.</li>
+          <li><strong>Towar</strong> — produkty oferowane w Sklepie (wkładki podwyższające i akcesoria).</li>
+        </ul>
+        <h3>§3 Składanie i realizacja zamówień</h3>
+        <p>Zamówienia składane są za pośrednictwem formularza zakupowego w Sklepie. Po złożeniu zamówienia Klient otrzymuje potwierdzenie na podany adres e-mail. Umowa sprzedaży zostaje zawarta z chwilą potwierdzenia przyjęcia zamówienia przez Sprzedawcę.</p>
+        <h3>§4 Ceny i płatności</h3>
+        <p>Wszystkie ceny w Sklepie podawane są w złotych polskich (PLN) i są cenami brutto. Płatność realizowana jest za pośrednictwem dostępnych w Sklepie operatorów płatności online.</p>
+        <h3>§5 Dostawa</h3>
+        <p>Zamówienia realizowane są na terenie Polski (oraz krajów wskazanych w Sklepie) za pośrednictwem wybranego przewoźnika. Czas realizacji i koszt dostawy wskazywane są przy składaniu zamówienia.</p>
+        <h3>§6 Prawo odstąpienia od umowy</h3>
+        <p>Zgodnie z ustawą z dnia 30 maja 2014 r. o prawach konsumenta, Konsument ma prawo odstąpić od umowy zawartej na odległość w terminie <strong>14 dni</strong> od dnia otrzymania towaru, bez podawania przyczyny i bez ponoszenia kosztów, z wyjątkiem bezpośrednich kosztów zwrotu towaru.</p>
+        <p>Aby skorzystać z prawa odstąpienia, należy poinformować Sprzedawcę o swojej decyzji w drodze jednoznacznego oświadczenia (np. e-mail na adres <a href="mailto:${SELLER.email}">${SELLER.email}</a>) przed upływem terminu 14 dni. Towar należy odesłać niezwłocznie, nie później niż w ciągu 14 dni od złożenia oświadczenia o odstąpieniu. Zwrot płatności następuje niezwłocznie, nie później niż w ciągu 14 dni od otrzymania oświadczenia, tym samym sposobem płatności, jakiego użył Konsument, chyba że wyraźnie zgodził się na inny sposób.</p>
+        <h3>§7 Reklamacje (rękojmia)</h3>
+        <p>Sprzedawca odpowiada wobec Konsumenta za zgodność towaru z umową na zasadach określonych w ustawie o prawach konsumenta. Reklamacje można zgłaszać na adres e-mail <a href="mailto:${SELLER.email}">${SELLER.email}</a>, opisując wadę oraz oczekiwany sposób rozpatrzenia reklamacji. Sprzedawca ustosunkuje się do reklamacji w terminie 14 dni.</p>
+        <h3>§8 Dane osobowe</h3>
+        <p>Zasady przetwarzania danych osobowych opisane są w Polityce prywatności dostępnej w stopce Sklepu.</p>
+        <h3>§9 Postanowienia końcowe</h3>
+        <p>W sprawach nieuregulowanych niniejszym regulaminem zastosowanie mają przepisy prawa polskiego, w tym Kodeksu cywilnego oraz ustawy o prawach konsumenta. Spory rozstrzygane są przez sąd właściwy zgodnie z przepisami ogólnymi. Konsument może również skorzystać z pozasądowych sposobów rozpatrywania reklamacji, m.in. platformy ODR: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
+      `
+    },
+    prywatnosc: {
+      title: "Polityka prywatności",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>1. Administrator danych</h3>
+        <p>Administratorem danych osobowych jest <strong>${SELLER.name}</strong>, adres: ${SELLER.address}, e-mail: <a href="mailto:${SELLER.email}">${SELLER.email}</a>.</p>
+        <h3>2. Zakres i cel przetwarzania danych</h3>
+        <ul>
+          <li>Realizacja zamówień i umów sprzedaży (imię, nazwisko, adres, e-mail, telefon) — podstawa: art. 6 ust. 1 lit. b RODO.</li>
+          <li>Obsługa reklamacji i zwrotów — podstawa: art. 6 ust. 1 lit. c i f RODO.</li>
+          <li>Marketing własnych produktów (za zgodą) — podstawa: art. 6 ust. 1 lit. a RODO.</li>
+          <li>Analiza ruchu na stronie i statystyki (pliki cookies) — podstawa: art. 6 ust. 1 lit. f RODO.</li>
+        </ul>
+        <h3>3. Odbiorcy danych</h3>
+        <p>Dane mogą być przekazywane podmiotom wspierającym realizację zamówień: operatorom płatności, firmom kurierskim/pocztowym oraz dostawcom usług hostingowych i IT, wyłącznie w zakresie niezbędnym do wykonania usługi.</p>
+        <h3>4. Okres przechowywania danych</h3>
+        <p>Dane przechowywane są przez okres niezbędny do realizacji celu przetwarzania, a następnie przez okres wymagany przepisami prawa (np. podatkowego, rachunkowego) lub do czasu wycofania zgody.</p>
+        <h3>5. Prawa użytkownika</h3>
+        <p>Każdej osobie przysługuje prawo dostępu do swoich danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia danych, wniesienia sprzeciwu oraz wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych. W celu realizacji praw prosimy o kontakt: <a href="mailto:${SELLER.email}">${SELLER.email}</a>.</p>
+        <h3>6. Pliki cookies</h3>
+        <p>Szczegóły dotyczące plików cookies opisane są w Polityce cookies dostępnej w stopce Sklepu.</p>
+        <h3>7. Bezpieczeństwo danych</h3>
+        <p>Administrator stosuje odpowiednie środki techniczne i organizacyjne zapewniające ochronę przetwarzanych danych osobowych, w tym przed nieuprawnionym dostępem.</p>
+      `
+    },
+    cookies: {
+      title: "Polityka cookies",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>1. Czym są pliki cookies</h3>
+        <p>Pliki cookies to niewielkie pliki tekstowe zapisywane na urządzeniu użytkownika, umożliwiające prawidłowe działanie Sklepu oraz analizę ruchu na stronie.</p>
+        <h3>2. Rodzaje wykorzystywanych cookies</h3>
+        <ul>
+          <li><strong>Niezbędne</strong> — wymagane do prawidłowego działania Sklepu (np. koszyk, proces zamówienia).</li>
+          <li><strong>Analityczne/statystyczne</strong> — pozwalają analizować sposób korzystania ze strony w celu jej ulepszania.</li>
+          <li><strong>Marketingowe</strong> — wykorzystywane do wyświetlania treści dopasowanych do zainteresowań użytkownika, wyłącznie za zgodą.</li>
+        </ul>
+        <h3>3. Zarządzanie plikami cookies</h3>
+        <p>Użytkownik może w każdej chwili zmienić ustawienia dotyczące plików cookies w swojej przeglądarce internetowej, w tym zablokować lub usunąć zapisane pliki. Ograniczenie stosowania plików cookies może wpłynąć na niektóre funkcjonalności Sklepu.</p>
+        <h3>4. Podmioty trzecie</h3>
+        <p>Sklep może korzystać z narzędzi podmiotów trzecich (np. analityka, płatności, obsługa sprzedaży), które mogą stosować własne pliki cookies zgodnie ze swoimi politykami prywatności.</p>
+      `
+    },
+    zwroty: {
+      title: "Zwroty i reklamacje",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>Zwrot towaru (odstąpienie od umowy)</h3>
+        <p>Masz <strong>14 dni</strong> od otrzymania przesyłki na odstąpienie od umowy bez podawania przyczyny. Wystarczy wysłać oświadczenie o odstąpieniu na adres <a href="mailto:${SELLER.email}">${SELLER.email}</a>, a następnie odesłać towar w stanie niezmienionym w ciągu kolejnych 14 dni. Koszt odesłania towaru pokrywa Klient. Pieniądze zwracamy tym samym kanałem płatności w ciągu 14 dni od otrzymania oświadczenia.</p>
+        <h3>Wzór formularza odstąpienia od umowy</h3>
+        <p style="border:1px dashed #333; border-radius:12px; padding:14px; background:#141414;">
+          Ja, niżej podpisany/a, niniejszym informuję o moim odstąpieniu od umowy sprzedaży następującego towaru: [nazwa towaru]<br/>
+          Data zawarcia umowy/odbioru towaru: [data]<br/>
+          Imię i nazwisko Klienta: [imię i nazwisko]<br/>
+          Adres Klienta: [adres]<br/>
+          Numer zamówienia: [numer]<br/>
+          Podpis (tylko jeśli formularz przesyłany jest w wersji papierowej): [podpis]<br/>
+          Data: [data]
+        </p>
+        <h3>Reklamacje</h3>
+        <p>Jeśli otrzymany towar jest wadliwy lub niezgodny z opisem, napisz do nas na <a href="mailto:${SELLER.email}">${SELLER.email}</a>, opisując problem i załączając zdjęcia (jeśli to możliwe). Reklamację rozpatrujemy w ciągu 14 dni od jej otrzymania.</p>
+      `
+    },
+    dane: {
+      title: "Dane sprzedawcy",
+      html: `
+        <h3>${SELLER.name}</h3>
+        <p><strong>Adres:</strong> ${SELLER.address}</p>
+        <p><strong>E-mail:</strong> <a href="mailto:${SELLER.email}">${SELLER.email}</a></p>
+        <p style="color:#777; font-size:12px; margin-top:16px;">Pełne dane rejestrowe firmy (NIP, REGON) udostępniane są na życzenie na wskazany powyżej adres e-mail.</p>
+      `
+    }
+  };
+
+  function openDoc(key) {
+    const doc = DOCS[key];
+    if (!doc) return;
+    const content = document.getElementById('injected-legal-content');
+    content.innerHTML = `<h2>${doc.title}</h2>${doc.html}`;
+    document.getElementById('injected-legal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDoc() {
+    document.getElementById('injected-legal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function inject() {
+    if (document.getElementById('injected-legal-footer')) return;
+    document.body.insertAdjacentHTML('beforeend', footerHTML);
+
+    document.querySelectorAll('.legal-link-btn-injected').forEach(btn => {
+      btn.addEventListener('click', () => openDoc(btn.getAttribute('data-doc')));
+    });
+    document.getElementById('injected-legal-close').addEventListener('click', closeDoc);
+    document.getElementById('injected-legal-overlay').addEventListener('click', (e) => {
+      if (e.target.id === 'injected-legal-overlay') closeDoc();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDoc();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inject);
+  } else {
+    inject();
+  }
+  // dodatkowe zabezpieczenie na wypadek, gdyby #root renderował się z opóźnieniem
+  window.addEventListener('load', inject);
 })();
 </script>
+
 </body>
 </html>
