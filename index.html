@@ -1,512 +1,403 @@
 <!doctype html>
 <html lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>MogSteppery — Wkładki Podwyższające Premium</title>
-    <meta name="description" content="Regulowane wkładki podwyższające 3-7 cm. Air Cushion, zero otarć, 100% dyskrecja. Zamów teraz za 59 zł." />
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<title>MogSteppery — Wkładki Podwyższające Premium</title>
+<meta name="description" content="Regulowane wkładki podwyższające 3-7 cm. Air Cushion, zero otarć, 100% dyskrecja. Zamów teraz za 59 zł." />
+<!-- Open Graph -->
+<meta property="og:title" content="MogSteppery — Wkładki Podwyższające Premium" />
+<meta property="og:description" content="Regulowane wkładki podwyższające 3-7 cm. Air Cushion, zero otarć, 100% dyskrecja. Zamów teraz za 59 zł." />
+<meta property="og:image" content="https://www.mogsteppery.com/ogimage (1).png" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="MogSteppery — Wkładki Podwyższające Premium" />
+<meta name="twitter:description" content="Regulowane wkładki podwyższające 3-7 cm. Air Cushion, zero otarć, 100% dyskrecja. Zamów teraz za 59 zł." />
+<meta name="twitter:image" content="https://www.mogsteppery.com/ogimage (1).png" />
+<!-- Favicon -->
+<link rel="icon" type="image/webp" href="/favicon.webp" />
+<link rel="shortcut icon" type="image/webp" href="/favicon.webp" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<script type="module" crossorigin src="/assets/index-BW_yiXVd.js"></script>
+<link rel="stylesheet" crossorigin href="/assets/index-FXu0dG9b.css">
+<link rel="icon" type="image/webp" href="favicon.webp">
+<link rel="apple-touch-icon" href="favicon.webp">
+<style>
+:root {
+--slider-pos: 50%;
+--primary-yellow: #FFC107;
+--dark-bg: #0a0a0a;
+--text-light: #ffffff;
+--text-gray: #999999;
+--border-color: #1a1a1a;
+}
+#injected-slider-section {
+width: 100%;
+background-color: var(--dark-bg);
+padding: 60px 20px;
+font-family: 'Space Grotesk', sans-serif;
+border-top: 1px solid var(--border-color);
+border-bottom: 1px solid var(--border-color);
+display: block !important;
+visibility: visible !important;
+opacity: 1 !important;
+}
+.transformation-container-injected {
+max-width: 500px;
+margin: 0 auto;
+text-align: center;
+}
+.transformation-title-injected {
+color: var(--text-light);
+font-size: clamp(22px, 5vw, 30px);
+font-weight: 700;
+margin-bottom: 8px;
+letter-spacing: -0.5px;
+}
+.transformation-subtitle-injected {
+color: var(--text-gray);
+font-size: 15px;
+margin-bottom: 20px;
+}
+.slider-buttons-injected {
+display: flex;
+justify-content: center;
+gap: 10px;
+margin-bottom: 25px;
+}
+.btn-injected {
+padding: 12px 20px;
+border-radius: 12px;
+border: 1px solid var(--border-color);
+background: #111;
+color: var(--text-light);
+font-family: 'Space Grotesk', sans-serif;
+font-weight: 600;
+font-size: 14px;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+.btn-injected:hover {
+border-color: var(--primary-yellow);
+background: #1a1a1a;
+}
+.btn-injected.active {
+background: var(--primary-yellow);
+color: #000;
+border-color: var(--primary-yellow);
+}
+.instruction-text-injected {
+color: var(--primary-yellow);
+font-size: 13px;
+font-weight: 600;
+margin-bottom: 25px;
+text-transform: uppercase;
+letter-spacing: 1px;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+}
+.instruction-text-injected svg {
+animation: slideLeft 1.5s infinite;
+}
+@keyframes slideLeft {
+0%, 100% { transform: translateX(0); }
+50% { transform: translateX(-5px); }
+}
+/* GŁÓWNY KONTENER SUWAKA */
+.comparison-slider-injected {
+position: relative;
+width: 100%;
+aspect-ratio: 412 / 1024;
+overflow: hidden;
+border-radius: 24px;
+box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
+cursor: ew-resize;
+user-select: none;
+border: 1px solid var(--border-color);
+background: #111;
+touch-action: none;
+}
+.comparison-slider-injected .image-injected {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+}
+.before-image-injected {
+z-index: 2;
+clip-path: inset(0 calc(100% - var(--slider-pos)) 0 0);
+}
+.after-image-injected {
+z-index: 1;
+}
+.slider-divider-injected {
+position: absolute;
+top: 0;
+bottom: 0;
+left: var(--slider-pos);
+width: 4px;
+background-color: var(--primary-yellow);
+z-index: 3;
+transform: translateX(-50%);
+box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+}
+.slider-handle-injected {
+position: absolute;
+top: 50%;
+left: var(--slider-pos);
+transform: translate(-50%, -50%);
+width: 52px;
+height: 52px;
+background-color: var(--primary-yellow);
+border-radius: 50%;
+z-index: 4;
+display: flex;
+align-items: center;
+justify-content: center;
+box-shadow: 0 0 30px rgba(255, 193, 7, 0.7);
+pointer-events: none;
+}
+.slider-handle-injected::before, .slider-handle-injected::after {
+content: '';
+width: 0; height: 0;
+border-top: 7px solid transparent;
+border-bottom: 7px solid transparent;
+}
+.slider-handle-injected::before { border-right: 10px solid #000; margin-right: 4px; }
+.slider-handle-injected::after { border-left: 10px solid #000; margin-left: 4px; }
+.label-injected {
+position: absolute;
+bottom: 30px;
+padding: 10px 18px;
+background: rgba(0, 0, 0, 0.8);
+color: var(--text-light);
+font-weight: 700;
+border-radius: 12px;
+font-size: 12px;
+z-index: 5;
+backdrop-filter: blur(12px);
+border: 1px solid rgba(255,255,255,0.1);
+text-transform: uppercase;
+pointer-events: none;
+}
+.label-before-injected { left: 20px; opacity: 0.9; }
+.label-after-injected { right: 20px; opacity: 0.9; }
+.label-highlight-injected { color: var(--primary-yellow); }
+.comparison-slider-injected:not(.sliding) .before-image-injected,
+.comparison-slider-injected:not(.sliding) .slider-divider-injected,
+.comparison-slider-injected:not(.sliding) .slider-handle-injected {
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="MogSteppery — Wkładki Podwyższające Premium" />
-    <meta property="og:description" content="Regulowane wkładki podwyższające 3-7 cm. Air Cushion, zero otarć, 100% dyskrecja. Zamów teraz za 59 zł." />
-    <meta property="og:image" content="https://www.mogsteppery.com/ogimage (1).png" />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="MogSteppery — Wkładki Podwyższające Premium" />
-    <meta name="twitter:description" content="Regulowane wkładki podwyższające 3-7 cm. Air Cushion, zero otarć, 100% dyskrecja. Zamów teraz za 59 zł." />
-    <meta name="twitter:image" content="https://www.mogsteppery.com/ogimage (1).png" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/webp" href="/favicon.webp" />
-    <link rel="shortcut icon" type="image/webp" href="/favicon.webp" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-
-    <script type="module" crossorigin src="/assets/index-BW_yiXVd.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-FXu0dG9b.css">
-    <link rel="icon" type="image/webp" href="favicon.webp">
-    <link rel="apple-touch-icon" href="favicon.webp">
-
-    <style>
-    :root {
-        --slider-pos: 50%; 
-        --primary-yellow: #FFC107;
-        --dark-bg: #0a0a0a;
-        --text-light: #ffffff;
-        --text-gray: #999999;
-        --border-color: #1a1a1a;
-    }
-    #injected-slider-section {
-        width: 100%;
-        background-color: var(--dark-bg);
-        padding: 60px 20px;
-        font-family: 'Space Grotesk', sans-serif;
-        border-top: 1px solid var(--border-color);
-        border-bottom: 1px solid var(--border-color);
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-    .transformation-container-injected {
-        max-width: 500px;
-        margin: 0 auto;
-        text-align: center;
-    }
-    .transformation-title-injected {
-        color: var(--text-light);
-        font-size: clamp(22px, 5vw, 30px);
-        font-weight: 700;
-        margin-bottom: 8px;
-        letter-spacing: -0.5px;
-    }
-    .transformation-subtitle-injected {
-        color: var(--text-gray);
-        font-size: 15px;
-        margin-bottom: 20px;
-    }
-    
-    .slider-buttons-injected {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-bottom: 25px;
-    }
-    .btn-injected {
-        padding: 12px 20px;
-        border-radius: 12px;
-        border: 1px solid var(--border-color);
-        background: #111;
-        color: var(--text-light);
-        font-family: 'Space Grotesk', sans-serif;
-        font-weight: 600;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    .btn-injected:hover {
-        border-color: var(--primary-yellow);
-        background: #1a1a1a;
-    }
-    .btn-injected.active {
-        background: var(--primary-yellow);
-        color: #000;
-        border-color: var(--primary-yellow);
-    }
-
-    .instruction-text-injected {
-        color: var(--primary-yellow);
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 25px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    .instruction-text-injected svg {
-        animation: slideLeft 1.5s infinite;
-    }
-    @keyframes slideLeft {
-        0%, 100% { transform: translateX(0); }
-        50% { transform: translateX(-5px); }
-    }
-
-    /* GŁÓWNY KONTENER SUWAKA */
-    .comparison-slider-injected {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 412 / 1024; /* Zachowujemy proporcje pionowe */
-        overflow: hidden;
-        border-radius: 24px;
-        box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
-        cursor: ew-resize;
-        user-select: none;
-        border: 1px solid var(--border-color);
-        background: #111;
-        touch-action: none;
-    }
-
-    .comparison-slider-injected .image-injected {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-
-    /* ZDJĘCIE PRZED (NA WIERZCHU) */
-    .before-image-injected {
-        z-index: 2;
-        /* Używamy clip-path dla idealnego odsłaniania bez przesuwania tła */
-        clip-path: inset(0 calc(100% - var(--slider-pos)) 0 0);
-    }
-
-    /* ZDJĘCIE PO (W TLE) */
-    .after-image-injected {
-        z-index: 1;
-    }
-
-    /* PASEK ROZDZIELAJĄCY */
-    .slider-divider-injected {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: var(--slider-pos);
-        width: 4px;
-        background-color: var(--primary-yellow);
-        z-index: 3;
-        transform: translateX(-50%);
-        box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
-    }
-
-    /* UCHWYT SUWAKA */
-    .slider-handle-injected {
-        position: absolute;
-        top: 50%;
-        left: var(--slider-pos);
-        transform: translate(-50%, -50%);
-        width: 52px;
-        height: 52px;
-        background-color: var(--primary-yellow);
-        border-radius: 50%;
-        z-index: 4;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 30px rgba(255, 193, 7, 0.7);
-        pointer-events: none;
-    }
-
-    .slider-handle-injected::before, .slider-handle-injected::after {
-        content: '';
-        width: 0; height: 0;
-        border-top: 7px solid transparent;
-        border-bottom: 7px solid transparent;
-    }
-    .slider-handle-injected::before { border-right: 10px solid #000; margin-right: 4px; }
-    .slider-handle-injected::after { border-left: 10px solid #000; margin-left: 4px; }
-
-    /* ETYKIETY */
-    .label-injected {
-        position: absolute;
-        bottom: 30px;
-        padding: 10px 18px;
-        background: rgba(0, 0, 0, 0.8);
-        color: var(--text-light);
-        font-weight: 700;
-        border-radius: 12px;
-        font-size: 12px;
-        z-index: 5;
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255,255,255,0.1);
-        text-transform: uppercase;
-        pointer-events: none;
-    }
-    .label-before-injected { left: 20px; opacity: 0.9; }
-    .label-after-injected { right: 20px; opacity: 0.9; }
-    .label-highlight-injected { color: var(--primary-yellow); }
-
-    /* Animacja płynnego przejścia przy klikaniu przycisków */
-    .comparison-slider-injected:not(.sliding) .before-image-injected,
-    .comparison-slider-injected:not(.sliding) .slider-divider-injected,
-    .comparison-slider-injected:not(.sliding) .slider-handle-injected {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
-
-    <script>
-      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-    </script>
-    <script defer src="/_vercel/insights/script.js"></script>
-
-    <script>
-        (function() {
-            // SPRAWDŹ CZY TE NAZWY SĄ POPRAWNE NA TWOIM SERWERZE
-            const img_przed = "przed7cm.png";
-            const img_po = "po7cm.png";
-
-            const sliderHTML = `
-                <section class="transformation-section-injected" id="injected-slider-section">
-                    <div class="transformation-container-injected">
-                        <h2 class="transformation-title-injected">Zobacz różnicę na demo</h2>
-                        <p class="transformation-subtitle-injected">Porównanie sylwetki bez wkładek i z MogSteppery</p>
-                        
-                        <div class="slider-buttons-injected">
-                            <button class="btn-injected" id="btn-before">Bez wkładek</button>
-                            <button class="btn-injected" id="btn-after">Po +7 cm</button>
-                        </div>
-
-                        <div class="instruction-text-injected">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                            Przesuń suwak, aby porównać
-                        </div>
-                        
-                        <div class="comparison-slider-injected" id="slider-root-injected">
-                            <!-- Zdjęcie PO (Tło) -->
-                            <div class="image-injected after-image-injected" style="background-image: url('${img_po}')"></div>
-                            
-                            <!-- Zdjęcie PRZED (Odsłaniane) -->
-                            <div class="image-injected before-image-injected" style="background-image: url('${img_przed}')"></div>
-                            
-                            <!-- Elementy suwaka -->
-                            <div class="slider-divider-injected"></div>
-                            <div class="slider-handle-injected"></div>
-                            
-                            <!-- Etykiety -->
-                            <div class="label-injected label-before-injected">Bez wkładek</div>
-                            <div class="label-injected label-after-injected">Po <span class="label-highlight-injected">+7CM</span></div>
-                        </div>
-                    </div>
-                </section>
-            `;
-
-            function doInjection() {
-                const checkAndInject = () => {
-                    if (document.getElementById('injected-slider-section')) return;
-                    
-                    const allElements = Array.from(document.querySelectorAll('section, div'));
-                    let target = null;
-
-                    for (let el of allElements) {
-                        if (el.textContent.includes('KORZYŚCI') || el.textContent.includes('Przemyślane od początku')) {
-                            target = el.closest('section') || el.parentElement;
-                            break;
-                        }
-                    }
-
-                    if (!target) {
-                        const sections = document.querySelectorAll('section');
-                        if (sections.length > 0) {
-                            target = sections[Math.floor(sections.length / 2)];
-                        }
-                    }
-
-                    if (target) {
-                        target.insertAdjacentHTML('afterend', sliderHTML);
-                        setupSlider();
-                    }
-                };
-
-                const interval = setInterval(checkAndInject, 500);
-                setTimeout(() => clearInterval(interval), 5000);
-            }
-
-            function setupSlider() {
-                const s = document.getElementById('slider-root-injected');
-                const btnBefore = document.getElementById('btn-before');
-                const btnAfter = document.getElementById('btn-after');
-                if (!s) return;
-
-                const setPos = (p) => {
-                    s.style.setProperty('--slider-pos', p + '%');
-                    
-                    // Aktywacja przycisków
-                    if (p >= 90) {
-                        btnBefore.classList.add('active');
-                        btnAfter.classList.remove('active');
-                    } else if (p <= 10) {
-                        btnAfter.classList.add('active');
-                        btnBefore.classList.remove('active');
-                    } else {
-                        btnBefore.classList.remove('active');
-                        btnAfter.classList.remove('active');
-                    }
-                };
-
-                const update = (e) => {
-                    const r = s.getBoundingClientRect();
-                    const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
-                    let p = ((clientX - r.left) / r.width) * 100;
-                    p = Math.max(0, Math.min(p, 100));
-                    setPos(p);
-                };
-
-                const start = (e) => { 
-                    s.classList.add('sliding');
-                    update(e); 
-                    
-                    const moveHandler = (moveEvent) => {
-                        update(moveEvent);
-                    };
-                    
-                    const endHandler = () => {
-                        s.classList.remove('sliding');
-                        window.removeEventListener('mousemove', moveHandler);
-                        window.removeEventListener('mouseup', endHandler);
-                        window.removeEventListener('touchmove', moveHandler);
-                        window.removeEventListener('touchend', endHandler);
-                    };
-
-                    window.addEventListener('mousemove', moveHandler);
-                    window.addEventListener('mouseup', endHandler);
-                    window.addEventListener('touchmove', moveHandler, { passive: false });
-                    window.addEventListener('touchend', endHandler);
-                };
-
-                s.addEventListener('mousedown', start);
-                s.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    start(e);
-                }, { passive: false });
-
-                btnBefore.addEventListener('click', () => setPos(100));
-                btnAfter.addEventListener('click', () => setPos(0));
-
-                // Inicjalizacja środka
-                setPos(50);
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', doInjection);
-            } else {
-                doInjection();
-            }
-        })();
-    </script>
-  <!-- WKLEJ TO tuż przed </body> w index.html -->
-<!-- Możesz usunąć stary fragment z "window.ShopifyBuyData" / "originalBuildClient" - jest już zbędny -->
-
+/* --- STOPKA PRAWNA (regulamin/RODO) --- */
+#injected-legal-footer {
+width: 100%;
+background-color: var(--dark-bg);
+border-top: 1px solid var(--border-color);
+padding: 30px 20px 40px;
+font-family: 'Inter', sans-serif;
+text-align: center;
+}
+.legal-footer-links-injected {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+gap: 8px 22px;
+margin-bottom: 12px;
+}
+.legal-footer-links-injected a {
+color: var(--text-gray);
+text-decoration: none;
+font-size: 13px;
+transition: color 0.2s ease;
+}
+.legal-footer-links-injected a:hover {
+color: var(--primary-yellow);
+}
+.legal-footer-copy-injected {
+color: #555555;
+font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
 <script>
-(function () {
-  var SHOPIFY_DOMAIN = 'haxif6-uz.myshopify.com';
-  var SHOPIFY_TOKEN = 'a1248dd39ee4f72637d6023e518fdde1';
-  var PRODUCT_ID = '15897628770636';
-  var NEW_COMPONENT_ID = 'product-component-new-2026';
-
-  // 1) Ukryj KAŻDY inny, "stary" komponent Buy Button, który wyrenderuje aplikacja React
-  function hideOldComponents() {
-    document.querySelectorAll('[id^="product-component-"]').forEach(function (el) {
-      if (el.id !== NEW_COMPONENT_ID) {
-        el.style.setProperty('display', 'none', 'important');
-      }
-    });
-  }
-  new MutationObserver(hideOldComponents).observe(document.body, { childList: true, subtree: true });
-  hideOldComponents();
-
-  // 2) Stwórz kontener na NOWY Buy Button
-  //    Domyślnie wstawiam go na końcu <body> - jeśli chcesz go w konkretnym miejscu
-  //    (np. zaraz po sekcji z opisem produktu), daj mi znać, a dopasuję selektor.
-  var container = document.createElement('div');
-  container.id = NEW_COMPONENT_ID;
-  document.body.appendChild(container);
-
-  // 3) Załaduj SDK Shopify i zainicjuj NOWY Buy Button z Twoją konfiguracją
-  var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
-
-  function ShopifyBuyInit() {
-    var client = ShopifyBuy.buildClient({
-      domain: SHOPIFY_DOMAIN,
-      storefrontAccessToken: SHOPIFY_TOKEN,
-    });
-    ShopifyBuy.UI.onReady(client).then(function (ui) {
-      ui.createComponent('product', {
-        id: PRODUCT_ID,
-        node: document.getElementById(NEW_COMPONENT_ID),
-        moneyFormat: '%7B%7Bamount_with_comma_separator%7D%7D%20z%C5%82',
-        options: {
-          product: {
-            styles: {
-              product: {
-                '@media (min-width: 601px)': {
-                  'max-width': 'calc(25% - 20px)',
-                  'margin-left': '20px',
-                  'margin-bottom': '50px'
-                }
-              },
-              button: {
-                ':hover': { 'background-color': '#e69300' },
-                'background-color': '#ffa300',
-                ':focus': { 'background-color': '#e69300' }
-              }
-            },
-            text: { button: 'Zamów teraz' }
-          },
-          productSet: {
-            styles: {
-              products: {
-                '@media (min-width: 601px)': { 'margin-left': '-20px' }
-              }
-            }
-          },
-          modalProduct: {
-            contents: {
-              img: false,
-              imgWithCarousel: true,
-              button: false,
-              buttonWithQuantity: true
-            },
-            styles: {
-              product: {
-                '@media (min-width: 601px)': {
-                  'max-width': '100%',
-                  'margin-left': '0px',
-                  'margin-bottom': '0px'
-                }
-              },
-              button: {
-                ':hover': { 'background-color': '#e69300' },
-                'background-color': '#ffa300',
-                ':focus': { 'background-color': '#e69300' }
-              }
-            },
-            text: { button: 'Add to cart' }
-          },
-          option: {},
-          cart: {
-            styles: {
-              button: {
-                ':hover': { 'background-color': '#e69300' },
-                'background-color': '#ffa300',
-                ':focus': { 'background-color': '#e69300' }
-              }
-            },
-            text: { total: 'Subtotal', button: 'Checkout' }
-          },
-          toggle: {
-            styles: {
-              toggle: {
-                'background-color': '#ffa300',
-                ':hover': { 'background-color': '#e69300' },
-                ':focus': { 'background-color': '#e69300' }
-              }
-            }
-          }
-        }
-      });
-    });
-  }
-
-  if (window.ShopifyBuy) {
-    if (window.ShopifyBuy.UI) {
-      ShopifyBuyInit();
-    } else {
-      loadScript();
-    }
-  } else {
-    loadScript();
-  }
-
-  function loadScript() {
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = scriptURL;
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
-    script.onload = ShopifyBuyInit;
-  }
+window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script>
+(function() {
+// SPRAWDŹ CZY TE NAZWY SĄ POPRAWNE NA TWOIM SERWERZE
+const img_przed = "przed7cm.png";
+const img_po = "po7cm.png";
+const sliderHTML = `
+<section class="transformation-section-injected" id="injected-slider-section">
+<div class="transformation-container-injected">
+<h2 class="transformation-title-injected">Zobacz różnicę na demo</h2>
+<p class="transformation-subtitle-injected">Porównanie sylwetki bez wkładek i z MogSteppery</p>
+<div class="slider-buttons-injected">
+<button class="btn-injected" id="btn-before">Bez wkładek</button>
+<button class="btn-injected" id="btn-after">Po +7 cm</button>
+</div>
+<div class="instruction-text-injected">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+Przesuń suwak, aby porównać
+</div>
+<div class="comparison-slider-injected" id="slider-root-injected">
+<div class="image-injected after-image-injected" style="background-image: url('${img_po}')"></div>
+<div class="image-injected before-image-injected" style="background-image: url('${img_przed}')"></div>
+<div class="slider-divider-injected"></div>
+<div class="slider-handle-injected"></div>
+<div class="label-injected label-before-injected">Bez wkładek</div>
+<div class="label-injected label-after-injected">Po <span class="label-highlight-injected">+7CM</span></div>
+</div>
+</div>
+</section>
+`;
+function doInjection() {
+const checkAndInject = () => {
+if (document.getElementById('injected-slider-section')) return;
+const allElements = Array.from(document.querySelectorAll('section, div'));
+let target = null;
+for (let el of allElements) {
+if (el.textContent.includes('KORZYŚCI') || el.textContent.includes('Przemyślane od początku')) {
+target = el.closest('section') || el.parentElement;
+break;
+}
+}
+if (!target) {
+const sections = document.querySelectorAll('section');
+if (sections.length > 0) {
+target = sections[Math.floor(sections.length / 2)];
+}
+}
+if (target) {
+target.insertAdjacentHTML('afterend', sliderHTML);
+setupSlider();
+}
+};
+const interval = setInterval(checkAndInject, 500);
+setTimeout(() => clearInterval(interval), 5000);
+}
+function setupSlider() {
+const s = document.getElementById('slider-root-injected');
+const btnBefore = document.getElementById('btn-before');
+const btnAfter = document.getElementById('btn-after');
+if (!s) return;
+const setPos = (p) => {
+s.style.setProperty('--slider-pos', p + '%');
+if (p >= 90) {
+btnBefore.classList.add('active');
+btnAfter.classList.remove('active');
+} else if (p <= 10) {
+btnAfter.classList.add('active');
+btnBefore.classList.remove('active');
+} else {
+btnBefore.classList.remove('active');
+btnAfter.classList.remove('active');
+}
+};
+const update = (e) => {
+const r = s.getBoundingClientRect();
+const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
+let p = ((clientX - r.left) / r.width) * 100;
+p = Math.max(0, Math.min(p, 100));
+setPos(p);
+};
+const start = (e) => {
+s.classList.add('sliding');
+update(e);
+const moveHandler = (moveEvent) => {
+update(moveEvent);
+};
+const endHandler = () => {
+s.classList.remove('sliding');
+window.removeEventListener('mousemove', moveHandler);
+window.removeEventListener('mouseup', endHandler);
+window.removeEventListener('touchmove', moveHandler);
+window.removeEventListener('touchend', endHandler);
+};
+window.addEventListener('mousemove', moveHandler);
+window.addEventListener('mouseup', endHandler);
+window.addEventListener('touchmove', moveHandler, { passive: false });
+window.addEventListener('touchend', endHandler);
+};
+s.addEventListener('mousedown', start);
+s.addEventListener('touchstart', (e) => {
+e.preventDefault();
+start(e);
+}, { passive: false });
+btnBefore.addEventListener('click', () => setPos(100));
+btnAfter.addEventListener('click', () => setPos(0));
+setPos(50);
+}
+if (document.readyState === 'loading') {
+document.addEventListener('DOMContentLoaded', doInjection);
+} else {
+doInjection();
+}
 })();
 </script>
-
-
-  </body>
+<script>
+// Automatyczna podmiana danych Shopify na nowe
+window.ShopifyBuyData = {
+domain: 'haxif6-uz.myshopify.com',
+token: 'a1248dd39ee4f72637d6023e518fdde1',
+productId: '15897628770636'
+};
+var originalBuildClient = null;
+var checkShopify = setInterval(function() {
+if (window.ShopifyBuy && window.ShopifyBuy.buildClient) {
+originalBuildClient = window.ShopifyBuy.buildClient;
+window.ShopifyBuy.buildClient = function(config) {
+config.domain = window.ShopifyBuyData.domain;
+config.storefrontAccessToken = window.ShopifyBuyData.token;
+return originalBuildClient.apply(this, arguments);
+};
+clearInterval(checkShopify);
+}
+}, 50);
+</script>
+<script>
+// --- WSTRZYKNIĘCIE STOPKI PRAWNEJ (regulamin / polityka prywatności) ---
+(function() {
+const legalFooterHTML = `
+<footer id="injected-legal-footer">
+<div class="legal-footer-links-injected">
+<a href="/regulamin.html">Regulamin sklepu</a>
+<a href="/polityka-prywatnosci.html">Polityka prywatności</a>
+<a href="/regulamin.html#§6-prawo-odstąpienia-od-umowy">Zwroty i odstąpienie od umowy</a>
+</div>
+<div class="legal-footer-copy-injected">&copy; ${new Date().getFullYear()} MogSteppery. Wszelkie prawa zastrzeżone.</div>
+</footer>
+`;
+function injectLegalFooter() {
+if (document.getElementById('injected-legal-footer')) return;
+const existingFooter = document.querySelector('footer');
+const root = document.getElementById('root');
+if (existingFooter) {
+existingFooter.insertAdjacentHTML('beforeend', legalFooterHTML);
+} else if (root && root.children.length > 0) {
+root.insertAdjacentHTML('beforeend', legalFooterHTML);
+} else {
+return false;
+}
+return true;
+}
+const interval = setInterval(() => {
+if (injectLegalFooter()) clearInterval(interval);
+}, 500);
+setTimeout(() => clearInterval(interval), 8000);
+})();
+</script>
+</body>
 </html>
