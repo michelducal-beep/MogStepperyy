@@ -499,13 +499,24 @@ html, body {
     });
   }
 
-  // React może renderować/re-renderować w dowolnym momencie, więc zamiast
-  // ubijać pętlę po kilku sekundach, obserwujemy DOM stale (tani koszt dla
-  // strony produktowej) i za każdym razem, gdy coś się zmienia, sprawdzamy
-  // ponownie nagłówek/CTA.
-  overrideHeroTexts();
-  const heroObserver = new MutationObserver(() => overrideHeroTexts());
-  heroObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+  // UWAGA: nagłówek h1 może mieć w środku animację wejścia (np. animowane
+  // litery/fade-in renderowane przez React jako zagnieżdżone elementy).
+  // `h1.textContent = ...` KASUJE całą tę strukturę. Dlatego NIE nadpisujemy
+  // bez końca (to niszczyło animację przy każdym re-renderze) - czekamy aż
+  // h1 się pojawi, nadpisujemy, i dajemy tylko krótki bufor na ewentualny
+  // późny re-render Reacta, po czym przestajemy w ogóle dotykać h1.
+  (async function applyHeroOverrideOnce() {
+    const h1 = await window.__mogWaitFor(() => document.querySelector('h1'), 20000);
+    if (!h1) return;
+    overrideHeroTexts();
+    // Krótki bufor (3x co 700ms) na wypadek, gdyby React jeszcze raz
+    // nadpisał nagłówek tuż po hydratacji - potem już nie ruszamy h1,
+    // żeby nie kasować jego animacji wejścia.
+    for (let i = 0; i < 3; i++) {
+      await new Promise((r) => setTimeout(r, 700));
+      overrideHeroTexts();
+    }
+  })();
 
 
   /* ---------------- TRUST BADGES + OFERTA POD CTA ---------------- */
@@ -991,6 +1002,24 @@ html, body {
     document.addEventListener('DOMContentLoaded', inject);
   }
   window.addEventListener('load', inject);
+
+  // Dane sprzedawcy + pasek prawny mają być ZAWSZE na samym dole strony,
+  // nawet jeśli inne wstrzykiwane sekcje (tabela, opinie itp.) doklejają
+  // się później i normalnie "spychałyby" je w górę kolejności.
+  function pinFooterToBottom() {
+    const seller = document.getElementById('injected-seller-trust');
+    const bar = document.getElementById('injected-legal-bar');
+    if (!seller && !bar) return;
+    const last = document.body.lastElementChild;
+    if (bar && last !== bar) {
+      if (seller) document.body.appendChild(seller);
+      document.body.appendChild(bar);
+    } else if (!bar && seller && last !== seller) {
+      document.body.appendChild(seller);
+    }
+  }
+  const footerPinObserver = new MutationObserver(() => pinFooterToBottom());
+  footerPinObserver.observe(document.body, { childList: true });
 })();
 </script>
 
