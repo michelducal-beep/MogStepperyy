@@ -50,6 +50,20 @@ header a:not(:first-child) {
   margin-left: 8px;
 }
 
+/* ---- Wyśrodkowanie linków "Produkt / Opinie / FAQ" w pasku nawigacji ---- */
+header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+header nav,
+.nav-links {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 #injected-slider-section {
   width: 100%;
   background-color: var(--dark-bg);
@@ -1027,48 +1041,6 @@ header .bestseller-badge,
   setTimeout(() => clearInterval(heroInterval), 6000);
 
 
-  /* ---------------- 2. TRUST BADGES + OFERTA POD CTA ---------------- */
-  const ctaBoostHTML = `
-  <div id="cro-cta-boost-injected">
-    <div class="cro-offer-box-injected">
-      <div>
-        <span class="cro-offer-title-injected">2 pary za 99 zł</span>
-      </div>
-      <span class="cro-offer-save-injected">Oszczędzasz 19 zł</span>
-    </div>
-    <div class="cro-trust-row-injected">
-      <span class="cro-trust-pill-injected">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
-        14 dni na zwrot
-      </span>
-      <span class="cro-trust-pill-injected">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Bezpieczne płatności SSL
-      </span>
-      <span class="cro-trust-pill-injected">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
-        Gwarancja Satysfakcji
-      </span>
-    </div>
-    <div class="cro-delivery-note-injected">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-      Dostawa InPost: 1-2 dni robocze
-    </div>
-  </div>
-  `;
-
-  function insertCtaBoost() {
-    if (document.getElementById('cro-cta-boost-injected')) return;
-    if (!ctaAnchorEl) return;
-    const panel = document.getElementById('cro-cta-panel-injected');
-    const anchorRef = panel || ctaAnchorEl;
-    const container = anchorRef.closest('div') || anchorRef.parentElement;
-    container.insertAdjacentHTML('afterend', ctaBoostHTML);
-  }
-  const ctaBoostInterval = setInterval(insertCtaBoost, 500);
-  setTimeout(() => clearInterval(ctaBoostInterval), 7000);
-
-
   /* ---------------- 2b. PANEL WOKÓŁ PRZYCISKU CTA (klikalny "kafelek") ----------------
      Owijamy oryginalny przycisk CTA w wizualny panel (obramowanie, hover/active),
      żeby wyraźnie było widać, że to jest klikalny element z przyciskiem w środku,
@@ -1801,9 +1773,6 @@ header .bestseller-badge,
   });
 })();
 </script>
-
-</body>
-</html>
 
 </body>
 </html>
