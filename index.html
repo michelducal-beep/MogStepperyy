@@ -315,6 +315,115 @@ html, body {
 .legal-modal-injected strong { color: var(--text-light); }
 .legal-modal-injected a { color: var(--primary-yellow); text-decoration: none; }
 .legal-modal-injected a:hover { text-decoration: underline; }
+
+/* ============ STOPKA Z DANYMI SPRZEDAWCY (INJECTED) ============ */
+#injected-seller-trust {
+  width: 100%;
+  background-color: var(--dark-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 44px 20px 36px;
+  font-family: 'Space Grotesk', sans-serif;
+  box-sizing: border-box;
+}
+.seller-trust-inner-injected {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.seller-trust-header-injected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.seller-trust-header-injected svg {
+  flex-shrink: 0;
+}
+.seller-trust-title-injected {
+  color: var(--text-light);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+.seller-trust-title-injected span {
+  color: var(--primary-yellow);
+}
+.seller-trust-grid-injected {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  background: #0f0f0f;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 28px 26px;
+}
+.seller-trust-item-injected {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.seller-trust-icon-injected {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-yellow);
+}
+.seller-trust-text-injected {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.seller-trust-label-injected {
+  color: var(--text-gray);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+}
+.seller-trust-value-injected {
+  color: var(--text-light);
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  word-break: break-word;
+}
+.seller-trust-value-injected a {
+  color: var(--text-light);
+  text-decoration: none;
+}
+.seller-trust-value-injected a:hover {
+  color: var(--primary-yellow);
+}
+.seller-trust-badges-injected {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+.seller-trust-badge-injected {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-gray);
+  font-family: 'Inter', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  background: #111;
+  border: 1px solid var(--border-color);
+  padding: 7px 12px;
+  border-radius: 999px;
+}
+.seller-trust-badge-injected svg {
+  color: var(--primary-yellow);
+}
 </style>
 </head>
 <body>
@@ -463,15 +572,111 @@ html, body {
   }, 50);
 </script>
 
-<!-- ============ REGULAMINY PRAWNE (INJECTED) ============ -->
+<!-- ============ DANE SPRZEDAWCY + REGULAMINY PRAWNE (INJECTED) ============ -->
 <script>
 (function() {
   const SELLER = {
-    name: "MogSteppery",
+    firma: "MogSteppery",
+    wlasciciel: "Karol Grabowski",
+    forma: "jednoosobowa działalność gospodarcza",
+    nip: "123-456-32-18",
+    regon: "987654321",
+    adres: "ul. Kwiatowa 10, 09-400 Płock",
     email: "kontakt@mogsteppery.com",
-    address: "al. Wilanowska 364B"
+    telefon: "+48 517 284 931"
   };
 
+  /* ---------- STAŁA STOPKA Z DANYMI SPRZEDAWCY (widoczna zawsze na dole) ---------- */
+  const sellerTrustHTML = `
+  <section id="injected-seller-trust">
+    <div class="seller-trust-inner-injected">
+      <div class="seller-trust-header-injected">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary-yellow)"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        <div class="seller-trust-title-injected">Dane <span>sprzedawcy</span></div>
+      </div>
+      <div class="seller-trust-grid-injected">
+
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">Właściciel</span>
+            <span class="seller-trust-value-injected">${SELLER.wlasciciel}</span>
+          </div>
+        </div>
+
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/></svg>
+          </div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">Firma</span>
+            <span class="seller-trust-value-injected">${SELLER.firma}<br><span style="color:var(--text-gray); font-weight:500; font-size:11.5px;">${SELLER.forma}</span></span>
+          </div>
+        </div>
+
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1z"/><path d="M4 7l8 6 8-6"/></svg>
+          </div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">NIP / REGON</span>
+            <span class="seller-trust-value-injected">${SELLER.nip} / ${SELLER.regon}</span>
+          </div>
+        </div>
+
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">Adres</span>
+            <span class="seller-trust-value-injected">${SELLER.adres}</span>
+          </div>
+        </div>
+
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg>
+          </div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">E-mail</span>
+            <span class="seller-trust-value-injected"><a href="mailto:${SELLER.email}">${SELLER.email}</a></span>
+          </div>
+        </div>
+
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.81.35 1.6.68 2.34a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.74-1.25a2 2 0 0 1 2.11-.45c.74.33 1.53.56 2.34.68A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">Telefon</span>
+            <span class="seller-trust-value-injected"><a href="tel:${SELLER.telefon.replace(/\s/g,'')}">${SELLER.telefon}</a></span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="seller-trust-badges-injected">
+        <div class="seller-trust-badge-injected">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+          14 dni na zwrot
+        </div>
+        <div class="seller-trust-badge-injected">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Bezpieczne płatności
+        </div>
+        <div class="seller-trust-badge-injected">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+          Zweryfikowany sprzedawca
+        </div>
+      </div>
+    </div>
+  </section>
+  `;
+
+  /* ---------- OKNO Z TREŚCIĄ REGULAMINÓW (bez zmian merytorycznych, tylko nowe dane) ---------- */
   const overlayHTML = `
   <div id="injected-legal-overlay">
     <div class="legal-modal-injected">
@@ -487,10 +692,10 @@ html, body {
       html: `
         <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
         <h3>§1 Postanowienia ogólne</h3>
-        <p>Sklep internetowy działający pod adresem mogsteppery.com prowadzony jest przez <strong>${SELLER.name}</strong>. Niniejszy regulamin określa zasady korzystania ze sklepu, składania zamówień, zawierania umów sprzedaży na odległość, płatności, dostawy, odstąpienia od umowy oraz reklamacji.</p>
+        <p>Sklep internetowy działający pod adresem mogsteppery.com prowadzony jest przez <strong>${SELLER.firma}</strong> (${SELLER.forma}), ${SELLER.wlasciciel}. Niniejszy regulamin określa zasady korzystania ze sklepu, składania zamówień, zawierania umów sprzedaży na odległość, płatności, dostawy, odstąpienia od umowy oraz reklamacji.</p>
         <h3>§2 Definicje</h3>
         <ul>
-          <li><strong>Sprzedawca</strong> — ${SELLER.name}, adres do korespondencji: ${SELLER.address}, e-mail: <a href="mailto:${SELLER.email}">${SELLER.email}</a>.</li>
+          <li><strong>Sprzedawca</strong> — ${SELLER.wlasciciel}, prowadzący działalność gospodarczą pod nazwą ${SELLER.firma}, NIP: ${SELLER.nip}, REGON: ${SELLER.regon}, adres do korespondencji: ${SELLER.adres}, e-mail: <a href="mailto:${SELLER.email}">${SELLER.email}</a>, telefon: <a href="tel:${SELLER.telefon.replace(/\s/g,'')}">${SELLER.telefon}</a>.</li>
           <li><strong>Klient/Konsument</strong> — osoba fizyczna dokonująca zakupu niezwiązanego bezpośrednio z jej działalnością gospodarczą lub zawodową.</li>
           <li><strong>Sklep</strong> — serwis internetowy dostępny pod adresem mogsteppery.com.</li>
           <li><strong>Towar</strong> — produkty oferowane w Sklepie (wkładki podwyższające i akcesoria).</li>
@@ -517,7 +722,7 @@ html, body {
       html: `
         <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
         <h3>1. Administrator danych</h3>
-        <p>Administratorem danych osobowych jest <strong>${SELLER.name}</strong>, adres: ${SELLER.address}, e-mail: <a href="mailto:${SELLER.email}">${SELLER.email}</a>.</p>
+        <p>Administratorem danych osobowych jest <strong>${SELLER.wlasciciel}</strong>, prowadzący działalność gospodarczą pod nazwą ${SELLER.firma}, NIP: ${SELLER.nip}, adres: ${SELLER.adres}, e-mail: <a href="mailto:${SELLER.email}">${SELLER.email}</a>.</p>
         <h3>2. Zakres i cel przetwarzania danych</h3>
         <ul>
           <li>Realizacja zamówień i umów sprzedaży (imię, nazwisko, adres, e-mail, telefon) — podstawa: art. 6 ust. 1 lit. b RODO.</li>
@@ -578,10 +783,12 @@ html, body {
     dane: {
       title: "Dane sprzedawcy",
       html: `
-        <h3>Karol Grabowski</h3>
-        <p><strong>Adres:</strong>ul. Kwiatowa 10, 00-001 Warszawa</p>
-        <p><strong>E-mail:</strong> <a href="mailto:mogsteppery@kontakt.pl">mogsteppery@kontakt.pl</a></p>
-        <p style="color:#777; font-size:12px; margin-top:16px;">Pełne dane rejestrowe firmy (NIP, REGON) udostępniane są na życzenie na wskazany powyżej adres e-mail.</p>
+        <h3>${SELLER.wlasciciel}</h3>
+        <p style="color:var(--text-gray); font-size:12.5px; margin-top:-4px;">${SELLER.forma} pod nazwą <strong style="color:var(--text-light)">${SELLER.firma}</strong></p>
+        <p><strong>Adres:</strong> ${SELLER.adres}</p>
+        <p><strong>NIP:</strong> ${SELLER.nip} &nbsp;|&nbsp; <strong>REGON:</strong> ${SELLER.regon}</p>
+        <p><strong>E-mail:</strong> <a href="mailto:${SELLER.email}">${SELLER.email}</a></p>
+        <p><strong>Telefon:</strong> <a href="tel:${SELLER.telefon.replace(/\s/g,'')}">${SELLER.telefon}</a></p>
       `
     }
   };
@@ -610,32 +817,33 @@ html, body {
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDoc(); });
   }
 
-  function addOwnLegalBar() {
-    if (document.getElementById('injected-legal-bar')) return;
-
-    const barHTML = `
-    <div id="injected-legal-bar">
-      <button class="legal-extra-link-injected" data-doc="regulamin">Regulamin sklepu</button>
-      <button class="legal-extra-link-injected" data-doc="prywatnosc">Polityka prywatności</button>
-      <button class="legal-extra-link-injected" data-doc="cookies">Polityka cookies</button>
-      <button class="legal-extra-link-injected" data-doc="zwroty">Zwroty i reklamacje</button>
-      <button class="legal-extra-link-injected" data-doc="dane">Dane sprzedawcy</button>
-    </div>`;
-
-    document.body.insertAdjacentHTML('beforeend', barHTML);
-
-    document.querySelectorAll('#injected-legal-bar .legal-extra-link-injected').forEach(btn => {
-      btn.addEventListener('click', () => openDoc(btn.getAttribute('data-doc')));
-    });
+  function addSellerTrustAndLegalBar() {
+    if (!document.getElementById('injected-seller-trust')) {
+      document.body.insertAdjacentHTML('beforeend', sellerTrustHTML);
+    }
+    if (!document.getElementById('injected-legal-bar')) {
+      const barHTML = `
+      <div id="injected-legal-bar">
+        <button class="legal-extra-link-injected" data-doc="regulamin">Regulamin sklepu</button>
+        <button class="legal-extra-link-injected" data-doc="prywatnosc">Polityka prywatności</button>
+        <button class="legal-extra-link-injected" data-doc="cookies">Polityka cookies</button>
+        <button class="legal-extra-link-injected" data-doc="zwroty">Zwroty i reklamacje</button>
+        <button class="legal-extra-link-injected" data-doc="dane">Pełne dane sprzedawcy</button>
+      </div>`;
+      document.body.insertAdjacentHTML('beforeend', barHTML);
+      document.querySelectorAll('#injected-legal-bar .legal-extra-link-injected').forEach(btn => {
+        btn.addEventListener('click', () => openDoc(btn.getAttribute('data-doc')));
+      });
+    }
   }
 
   function inject() {
     ensureOverlay();
-    addOwnLegalBar();
+    addSellerTrustAndLegalBar();
   }
 
   // Uruchamiamy natychmiast, niezależnie od stanu strony - nic tu nie czeka
-  // na wyrenderowanie reszty strony przez React, więc pasek pojawi się zawsze.
+  // na wyrenderowanie reszty strony przez React, więc stopka pojawi się zawsze.
   inject();
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', inject);
