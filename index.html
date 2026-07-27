@@ -1484,5 +1484,88 @@ html, body {
 })();
 </script>
 
+<!-- ============ CZYSZCZENIE STARYCH SEKCJI + POPRAWKI HERO (INJECTED v2) ============ -->
+<style>
+/* Kompaktowy, responsywny nagłówek hero - zapobiega zbyt dużemu/łamiącemu się tekstowi */
+.hero-headline-fixed-injected {
+  font-size: clamp(24px, 4.2vw, 52px) !important;
+  line-height: 1.18 !important;
+  max-width: 920px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+</style>
+<script>
+(function() {
+
+  /* ---- 1. Zmniejszenie i wyśrodkowanie nagłówka hero ---- */
+  function fixHeroHeadline() {
+    const h1 = document.querySelector('h1');
+    if (h1 && !h1.classList.contains('hero-headline-fixed-injected')) {
+      h1.classList.add('hero-headline-fixed-injected');
+    }
+  }
+
+  /* ---- 2. Ukrywanie starych, zmodernizowanych sekcji ---- */
+  /* 01 Technologia ("Warstwy, które zmieniają grę"), 02 Korzyści ("Przemyślane od początku"),
+     04 Opinie stare, bez zdjęć ("Klienci mówią") - świadomie NIE dotykamy 03 Produkt (cena/zakup) */
+  const OLD_SECTION_MARKERS = [
+    'Warstwy, które',
+    'Przemyślane od początku',
+    'Klienci mówią'
+  ];
+
+  function removeOldSections() {
+    const candidates = Array.from(document.querySelectorAll('section, div'));
+    OLD_SECTION_MARKERS.forEach((marker) => {
+      for (let el of candidates) {
+        if (el.id && el.id.includes('injected')) continue;
+        if (el.closest && el.closest('[id*="injected"]')) continue;
+        if (el.textContent.includes(marker)) {
+          const section = el.closest('section') || el;
+          if (section && section.dataset.removedInjected !== '1') {
+            section.dataset.removedInjected = '1';
+            section.style.display = 'none';
+          }
+          break;
+        }
+      }
+    });
+  }
+
+  /* ---- 3. Przeniesienie boxa z ofertą pod sekcję z ceną (zamiast na górę strony) ---- */
+  function relocateCtaBoost() {
+    const boost = document.getElementById('cro-cta-boost-injected');
+    if (!boost || boost.dataset.relocated === '1') return;
+
+    const all = Array.from(document.querySelectorAll('section, div, p, span'));
+    let priceAnchor = null;
+    for (let el of all) {
+      if (el.closest && el.closest('[id*="injected"]')) continue;
+      if (/Wysyłka InPost/i.test(el.textContent) && el.textContent.length < 60) {
+        priceAnchor = el;
+        break;
+      }
+    }
+    if (priceAnchor) {
+      const container = priceAnchor.closest('div') || priceAnchor.parentElement;
+      container.insertAdjacentElement('afterend', boost);
+      boost.dataset.relocated = '1';
+      boost.style.marginTop = '28px';
+    }
+  }
+
+  function runAll() {
+    fixHeroHeadline();
+    removeOldSections();
+    relocateCtaBoost();
+  }
+
+  const cleanupInterval = setInterval(runAll, 500);
+  setTimeout(() => clearInterval(cleanupInterval), 9000);
+
+})();
+</script>
+
 </body>
 </html>
