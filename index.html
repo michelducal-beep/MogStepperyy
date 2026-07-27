@@ -532,19 +532,6 @@ html, body {
   gap: 12px;
   flex-wrap: wrap;
 }
-.cro-offer-badge-injected {
-  background: var(--primary-yellow);
-  color: #000;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 10.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 3px 9px;
-  border-radius: 999px;
-  display: inline-block;
-  margin-bottom: 4px;
-}
 .cro-offer-title-injected {
   color: var(--text-light);
   font-family: 'Space Grotesk', sans-serif;
@@ -753,6 +740,61 @@ h1 {
 .seller-trust-badges-injected { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }
 .seller-trust-badge-injected { display: flex; align-items: center; gap: 6px; color: var(--text-gray); font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 500; background: #111; border: 1px solid var(--border-color); padding: 7px 12px; border-radius: 999px; }
 .seller-trust-badge-injected svg { color: var(--primary-yellow); }
+
+/* ============ CTA PANEL (przycisk hero jako "klikalny panel") ============ */
+#cro-cta-panel-injected {
+  max-width: 480px;
+  margin: 22px auto 0;
+  background: linear-gradient(145deg, rgba(255,193,7,0.10), rgba(255,193,7,0.02));
+  border: 1px solid rgba(255,193,7,0.35);
+  border-radius: 20px;
+  padding: 14px;
+  box-shadow: 0 10px 40px -10px rgba(255,193,7,0.25);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+#cro-cta-panel-injected:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,193,7,0.6);
+  box-shadow: 0 14px 46px -8px rgba(255,193,7,0.35);
+}
+#cro-cta-panel-injected:active { transform: translateY(0px) scale(0.99); }
+.cro-cta-panel-tag-injected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--primary-yellow);
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.cro-cta-panel-tag-injected svg { animation: pulseTag 1.6s infinite; }
+@keyframes pulseTag { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* ---- Badge "Bestseller" przeniesiony nad tabelę porównawczą ---- */
+.cro-bestseller-pill-injected {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary-yellow);
+  color: #000;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin: 0 auto 14px;
+}
+.cro-bestseller-wrap-injected { text-align: center; }
+
+/* ---- Klikalne linki nav (Opinie / Produkt) podpięte do sekcji ---- */
+.mog-nav-bound-injected { cursor: pointer !important; }
 </style>
 </head>
 <body>
@@ -952,7 +994,6 @@ h1 {
   <div id="cro-cta-boost-injected">
     <div class="cro-offer-box-injected">
       <div>
-        <span class="cro-offer-badge-injected">Bestseller</span><br/>
         <span class="cro-offer-title-injected">2 pary za 99 zł</span>
       </div>
       <span class="cro-offer-save-injected">Oszczędzasz 19 zł</span>
@@ -981,18 +1022,63 @@ h1 {
   function insertCtaBoost() {
     if (document.getElementById('cro-cta-boost-injected')) return;
     if (!ctaAnchorEl) return;
-    // wstawiamy zaraz po kontenerze przycisku CTA
-    const container = ctaAnchorEl.closest('div') || ctaAnchorEl.parentElement;
+    const panel = document.getElementById('cro-cta-panel-injected');
+    const anchorRef = panel || ctaAnchorEl;
+    const container = anchorRef.closest('div') || anchorRef.parentElement;
     container.insertAdjacentHTML('afterend', ctaBoostHTML);
   }
   const ctaBoostInterval = setInterval(insertCtaBoost, 500);
   setTimeout(() => clearInterval(ctaBoostInterval), 7000);
 
 
-  /* ---------------- 3. SEKCJA: TABELA PORÓWNAWCZA ---------------- */
+  /* ---------------- 2b. PANEL WOKÓŁ PRZYCISKU CTA (klikalny "kafelek") ----------------
+     Owijamy oryginalny przycisk CTA w wizualny panel (obramowanie, gradient,
+     hover/active), żeby wyraźnie było widać, że to jest klikalny element z
+     przyciskiem w środku, a nie zwykły tekst. Cały panel reaguje na klik.
+  ---------------------------------------------------------------------------- */
+  function wrapCtaAsPanel() {
+    if (!ctaAnchorEl) return;
+    if (document.getElementById('cro-cta-panel-injected')) return;
+    if (ctaAnchorEl.closest('#cro-cta-panel-injected')) return;
+
+    const panel = document.createElement('div');
+    panel.id = 'cro-cta-panel-injected';
+    panel.setAttribute('role', 'button');
+    panel.setAttribute('tabindex', '0');
+
+    const tag = document.createElement('div');
+    tag.className = 'cro-cta-panel-tag-injected';
+    tag.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 5V3M12 21v-2M5 12H3M21 12h-2M6.3 6.3L4.9 4.9M19.1 19.1l-1.4-1.4M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></svg> Kliknij, aby zacząć`;
+
+    const parent = ctaAnchorEl.parentElement;
+    parent.insertBefore(panel, ctaAnchorEl);
+    panel.appendChild(tag);
+    panel.appendChild(ctaAnchorEl);
+
+    // Cały panel jest klikalny, nie tylko sam przycisk w środku
+    const activate = () => ctaAnchorEl.click();
+    panel.addEventListener('click', (e) => {
+      if (e.target === ctaAnchorEl || ctaAnchorEl.contains(e.target)) return; // przycisk sam obsłuży swój klik
+      activate();
+    });
+    panel.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+    });
+  }
+  const ctaPanelInterval = setInterval(wrapCtaAsPanel, 500);
+  setTimeout(() => clearInterval(ctaPanelInterval), 7500);
+
+
+  /* ---------------- 3. SEKCJA: TABELA PORÓWNAWCZA (z odznaką "Bestseller" nad tytułem) ---------------- */
   const compareHTML = `
   <section class="cro-section-injected" id="cro-comparison-section-injected">
     <div class="cro-inner-injected">
+      <div class="cro-bestseller-wrap-injected">
+        <span class="cro-bestseller-pill-injected">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2l2.9 6.3 6.9.9-5 4.8 1.3 6.8-6.1-3.4-6.1 3.4 1.3-6.8-5-4.8 6.9-.9z"/></svg>
+          Bestseller
+        </span>
+      </div>
       <div class="cro-eyebrow-injected">Porównanie</div>
       <h2 class="cro-title-injected">Dlaczego MogSteppery?</h2>
       <p class="cro-subtitle-injected">Nie wszystkie wkładki są takie same. Zobacz różnicę, zanim zdecydujesz się na tanią imitację.</p>
@@ -1176,7 +1262,6 @@ h1 {
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
               <span>Zdjęcie klienta</span>
             </div>
-            <!-- Aby dodać zdjęcie, zamień powyższy placeholder na: <img src="SCIEZKA_DO_ZDJECIA.jpg" alt="Zdjęcie od @matek97" /> -->
           </div>
         </div>
         <div class="cro-testimonial-card-injected">
@@ -1265,29 +1350,32 @@ h1 {
   `;
 
 
-  /* ---------------- WSTAWIANIE SEKCJI W ODPOWIEDNIEJ KOLEJNOŚCI ---------------- */
+  /* ---------------- WSTAWIANIE SEKCJI W ODPOWIEDNIEJ KOLEJNOŚCI ----------------
+     Nowa kolejność: najpierw informacje o produkcie (porównanie, korzyści,
+     zastosowanie, rozmiary), a DOPIERO POTEM transformacja (slider przed/po),
+     a na końcu opinie klientów.
+  ---------------------------------------------------------------------------- */
   function insertChain() {
     const slider = document.getElementById('injected-slider-section');
     if (!slider) return; // czekamy aż slider się pojawi - to nasz pewny punkt zaczepienia
 
+    // Sekcje produktowe wstawiamy PRZED sliderem (beforebegin), w kolejności:
+    // porównanie -> korzyści -> zastosowanie -> rozmiary -> [SLIDER] -> opinie
     if (!document.getElementById('cro-comparison-section-injected')) {
-      slider.insertAdjacentHTML('afterend', compareHTML);
+      slider.insertAdjacentHTML('beforebegin', compareHTML);
     }
-    const compareSection = document.getElementById('cro-comparison-section-injected');
-    if (compareSection && !document.getElementById('cro-benefits-detail-injected')) {
-      compareSection.insertAdjacentHTML('afterend', benefitsDetailHTML);
+    if (!document.getElementById('cro-benefits-detail-injected')) {
+      slider.insertAdjacentHTML('beforebegin', benefitsDetailHTML);
     }
-    const benefitsSection = document.getElementById('cro-benefits-detail-injected');
-    if (benefitsSection && !document.getElementById('cro-lifestyle-injected')) {
-      benefitsSection.insertAdjacentHTML('afterend', lifestyleHTML);
+    if (!document.getElementById('cro-lifestyle-injected')) {
+      slider.insertAdjacentHTML('beforebegin', lifestyleHTML);
     }
-    const lifestyleSection = document.getElementById('cro-lifestyle-injected');
-    if (lifestyleSection && !document.getElementById('cro-size-info-injected')) {
-      lifestyleSection.insertAdjacentHTML('afterend', sizeInfoHTML);
+    if (!document.getElementById('cro-size-info-injected')) {
+      slider.insertAdjacentHTML('beforebegin', sizeInfoHTML);
     }
-    const sizeSection = document.getElementById('cro-size-info-injected');
-    if (sizeSection && !document.getElementById('cro-testimonials-injected')) {
-      sizeSection.insertAdjacentHTML('afterend', testimonialsHTML);
+    // Opinie zostają na końcu, zaraz PO transformacji
+    if (!document.getElementById('cro-testimonials-injected')) {
+      slider.insertAdjacentHTML('afterend', testimonialsHTML);
     }
   }
 
@@ -1296,10 +1384,6 @@ h1 {
 
 
   /* ---------------- 8. UKRYCIE STARYCH PANELI 01/02/03/04 (zmodernizowanych) ---------------- */
-  // Panele natywne "01 TECHNOLOGIA", "02 KORZYŚCI", "03 PRODUKT", "04 OPINIE" dublują
-  // nasze wstrzyknięte sekcje (tabela porównawcza, korzyści, opinie ze zdjęciami).
-  // Zanim je ukryjemy, wyłapujemy zdjęcia z paneli 01 i 03, żeby wykorzystać je
-  // w nowych sekcjach zamiast je tracić.
   const NATIVE_PANEL_LABELS = ['TECHNOLOGIA', 'KORZYŚCI', 'PRODUKT', 'OPINIE'];
   window.__mogNativeImages = window.__mogNativeImages || {};
 
@@ -1335,8 +1419,8 @@ h1 {
   function hideNativeDuplicateSections() {
     const candidates = document.querySelectorAll('span, div, p, h1, h2, h3, h4, h5');
     candidates.forEach((el) => {
-      if (el.children.length !== 0) return; // interesują nas tylko "liście" tekstowe (etykiety)
-      if (el.closest('[id*="injected"]') || el.closest('[class*="injected"]')) return; // nie ruszamy własnych sekcji
+      if (el.children.length !== 0) return;
+      if (el.closest('[id*="injected"]') || el.closest('[class*="injected"]')) return;
       const txt = el.textContent.trim().toUpperCase();
       if (!NATIVE_PANEL_LABELS.includes(txt)) return;
       const block = getBlockAncestor(el);
@@ -1372,6 +1456,43 @@ h1 {
 
   const fillVisualsInterval = setInterval(fillCapturedVisuals, 500);
   setTimeout(() => clearInterval(fillVisualsInterval), 10000);
+
+
+  /* ---------------- 10. PODPIĘCIE LINKÓW NAV "OPINIE" / "PRODUKT" DO SEKCJI ----------------
+     W górnym panelu znajdują się natywne etykiety "Opinie" i "Produkt". Wyszukujemy je
+     heurystycznie (krótki, samodzielny tekst w klikalnym elemencie) i podpinamy płynne
+     przewijanie do odpowiednich wstrzykniętych sekcji.
+  ---------------------------------------------------------------------------- */
+  const NAV_TARGETS = [
+    { match: /^opinie$/i, targetId: 'cro-testimonials-injected' },
+    { match: /^produkt$/i, targetId: 'cro-size-info-injected' },
+  ];
+
+  function bindNavLinks() {
+    const candidates = document.querySelectorAll('a, button, span, div, li');
+    candidates.forEach((el) => {
+      if (el.children.length !== 0) return;
+      if (el.closest('[id*="injected"]') || el.closest('[class*="injected"]')) return;
+      if (el.dataset.mogNavBound) return;
+      const txt = el.textContent.trim();
+      const rule = NAV_TARGETS.find(r => r.match.test(txt));
+      if (!rule) return;
+
+      const clickableEl = el.closest('a, button') || el;
+      clickableEl.classList.add('mog-nav-bound-injected');
+      el.dataset.mogNavBound = 'true';
+      clickableEl.addEventListener('click', (e) => {
+        const target = document.getElementById(rule.targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  }
+
+  const navBindInterval = setInterval(bindNavLinks, 500);
+  setTimeout(() => clearInterval(navBindInterval), 9000);
 
 })();
 </script>
