@@ -8,22 +8,32 @@
 <!-- Open Graph -->
 <meta property="og:title" content="MogSteppery — Wkładki Podwyższające Premium" />
 <meta property="og:description" content="Zyskaj do 7 cm wzrostu w 10 sekund. Air Cushion, zero otarć, 100% dyskrecja. Zacznij swoją metamorfozę już teraz." />
-<meta property="og:image" content="https://www.mogsteppery.com/ogimage (1).png" />
+<!-- UWAGA: nazwa pliku ze spacją naprawiona (%20), żeby og:image na pewno się ładował -->
+<meta property="og:image" content="https://www.mogsteppery.com/ogimage%20(1).png" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="MogSteppery — Wkładki Podwyższające Premium" />
 <meta name="twitter:description" content="Zyskaj do 7 cm wzrostu w 10 sekund. Air Cushion, zero otarć, 100% dyskrecja. Zacznij swoją metamorfozę już teraz." />
-<meta name="twitter:image" content="https://www.mogsteppery.com/ogimage (1).png" />
+<meta name="twitter:image" content="https://www.mogsteppery.com/ogimage%20(1).png" />
 <!-- Favicon -->
 <link rel="icon" type="image/webp" href="/favicon.webp" />
 <link rel="shortcut icon" type="image/webp" href="/favicon.webp" />
+<link rel="apple-touch-icon" href="/favicon.webp" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<!--
+  WAŻNE: poniższe dwie ścieżki (JS i CSS aplikacji React) MUSZĄ dokładnie
+  odpowiadać plikom faktycznie obecnym w folderze /assets na serwerze.
+  Jeśli kiedykolwiek robisz nowy build, hash w nazwie pliku się zmienia
+  (np. index-BW_yiXVd.js -> index-XXXXXXXX.js) i te ścieżki trzeba
+  zaktualizować, inaczej strona zostaje pusta (tylko elementy wstrzykiwane
+  bezwarunkowo, jak stopka, będą widoczne).
+-->
 <script type="module" crossorigin src="/assets/index-BW_yiXVd.js"></script>
 <link rel="stylesheet" crossorigin href="/assets/index-FXu0dG9b.css">
-<link rel="icon" type="image/webp" href="favicon.webp">
-<link rel="apple-touch-icon" href="favicon.webp">
+
 <style>
 :root {
   --slider-pos: 50%;
@@ -33,6 +43,10 @@
   --text-gray: #999999;
   --border-color: #1a1a1a;
 }
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
 #injected-slider-section {
   width: 100%;
   background-color: var(--dark-bg);
@@ -40,9 +54,6 @@
   font-family: 'Space Grotesk', sans-serif;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
 }
 .transformation-container-injected {
   max-width: 500px;
@@ -100,13 +111,8 @@
   justify-content: center;
   gap: 8px;
 }
-.instruction-text-injected svg {
-  animation: slideLeft 1.5s infinite;
-}
-@keyframes slideLeft {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-5px); }
-}
+.instruction-text-injected svg { animation: slideLeft 1.5s infinite; }
+@keyframes slideLeft { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-5px); } }
 .comparison-slider-injected {
   position: relative;
   width: 100%;
@@ -121,569 +127,120 @@
   touch-action: none;
 }
 .comparison-slider-injected .image-injected {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background-size: cover; background-position: center; background-repeat: no-repeat;
 }
-.before-image-injected {
-  z-index: 2;
-  clip-path: inset(0 calc(100% - var(--slider-pos)) 0 0);
-}
-.after-image-injected {
-  z-index: 1;
-}
+.before-image-injected { z-index: 2; clip-path: inset(0 calc(100% - var(--slider-pos)) 0 0); }
+.after-image-injected { z-index: 1; }
 .slider-divider-injected {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: var(--slider-pos);
-  width: 4px;
-  background-color: var(--primary-yellow);
-  z-index: 3;
-  transform: translateX(-50%);
+  position: absolute; top: 0; bottom: 0; left: var(--slider-pos); width: 4px;
+  background-color: var(--primary-yellow); z-index: 3; transform: translateX(-50%);
   box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
 }
 .slider-handle-injected {
-  position: absolute;
-  top: 50%;
-  left: var(--slider-pos);
-  transform: translate(-50%, -50%);
-  width: 52px;
-  height: 52px;
-  background-color: var(--primary-yellow);
-  border-radius: 50%;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 30px rgba(255, 193, 7, 0.7);
-  pointer-events: none;
+  position: absolute; top: 50%; left: var(--slider-pos); transform: translate(-50%, -50%);
+  width: 52px; height: 52px; background-color: var(--primary-yellow); border-radius: 50%;
+  z-index: 4; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 30px rgba(255, 193, 7, 0.7); pointer-events: none;
 }
 .slider-handle-injected::before, .slider-handle-injected::after {
-  content: '';
-  width: 0; height: 0;
-  border-top: 7px solid transparent;
-  border-bottom: 7px solid transparent;
+  content: ''; width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent;
 }
 .slider-handle-injected::before { border-right: 10px solid #000; margin-right: 4px; }
 .slider-handle-injected::after { border-left: 10px solid #000; margin-left: 4px; }
 .label-injected {
-  position: absolute;
-  bottom: 30px;
-  padding: 10px 18px;
-  background: rgba(0, 0, 0, 0.8);
-  color: var(--text-light);
-  font-weight: 700;
-  border-radius: 12px;
-  font-size: 12px;
-  z-index: 5;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.1);
-  text-transform: uppercase;
-  pointer-events: none;
+  position: absolute; bottom: 30px; padding: 10px 18px; background: rgba(0, 0, 0, 0.8);
+  color: var(--text-light); font-weight: 700; border-radius: 12px; font-size: 12px; z-index: 5;
+  backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; pointer-events: none;
 }
 .label-before-injected { left: 20px; opacity: 0.9; }
 .label-after-injected { right: 20px; opacity: 0.9; }
 .label-highlight-injected { color: var(--primary-yellow); }
 .comparison-slider-injected:not(.sliding) .before-image-injected,
 .comparison-slider-injected:not(.sliding) .slider-divider-injected,
-.comparison-slider-injected:not(.sliding) .slider-handle-injected {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
+.comparison-slider-injected:not(.sliding) .slider-handle-injected { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
-/* ============ NAPRAWA POZIOMEGO SCROLLA ============ */
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* ============ WSPÓLNE STYLE DLA SEKCJI CRO (INJECTED) ============ */
 .cro-section-injected {
-  width: 100%;
-  background-color: var(--dark-bg);
-  padding: 56px 20px;
-  font-family: 'Space Grotesk', sans-serif;
-  border-top: 1px solid var(--border-color);
-  box-sizing: border-box;
+  width: 100%; background-color: var(--dark-bg); padding: 56px 20px;
+  font-family: 'Space Grotesk', sans-serif; border-top: 1px solid var(--border-color); box-sizing: border-box;
 }
-.cro-inner-injected {
-  max-width: 900px;
-  margin: 0 auto;
-}
-.cro-eyebrow-injected {
-  color: var(--primary-yellow);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.4px;
-  text-align: center;
-  margin-bottom: 10px;
-}
-.cro-title-injected {
-  color: var(--text-light);
-  font-size: clamp(22px, 5vw, 30px);
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 10px;
-  letter-spacing: -0.5px;
-}
-.cro-subtitle-injected {
-  color: var(--text-gray);
-  font-size: 15px;
-  text-align: center;
-  max-width: 560px;
-  margin: 0 auto 34px;
-  line-height: 1.6;
-}
+.cro-inner-injected { max-width: 900px; margin: 0 auto; }
+.cro-eyebrow-injected { color: var(--primary-yellow); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.4px; text-align: center; margin-bottom: 10px; }
+.cro-title-injected { color: var(--text-light); font-size: clamp(22px, 5vw, 30px); font-weight: 700; text-align: center; margin-bottom: 10px; letter-spacing: -0.5px; }
+.cro-subtitle-injected { color: var(--text-gray); font-size: 15px; text-align: center; max-width: 560px; margin: 0 auto 34px; line-height: 1.6; }
 
-/* ---- Tabela porównawcza ---- */
-.cro-compare-wrap-injected {
-  max-width: 620px;
-  margin: 0 auto;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid var(--border-color);
-  background: #0f0f0f;
-}
-.cro-compare-table-injected {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: 'Inter', sans-serif;
-}
-.cro-compare-table-injected th {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  padding: 16px 12px;
-  text-align: center;
-  border-bottom: 1px solid var(--border-color);
-}
-.cro-compare-table-injected th.cro-col-us-injected {
-  background: rgba(255, 193, 7, 0.08);
-  color: var(--primary-yellow);
-}
-.cro-compare-table-injected th.cro-col-them-injected {
-  color: var(--text-gray);
-}
-.cro-compare-table-injected td {
-  padding: 14px 12px;
-  text-align: center;
-  font-size: 13px;
-  border-bottom: 1px solid var(--border-color);
-  vertical-align: middle;
-}
+.cro-compare-wrap-injected { max-width: 620px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 1px solid var(--border-color); background: #0f0f0f; }
+.cro-compare-table-injected { width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; }
+.cro-compare-table-injected th { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; padding: 16px 12px; text-align: center; border-bottom: 1px solid var(--border-color); }
+.cro-compare-table-injected th.cro-col-us-injected { background: rgba(255, 193, 7, 0.08); color: var(--primary-yellow); }
+.cro-compare-table-injected th.cro-col-them-injected { color: var(--text-gray); }
+.cro-compare-table-injected td { padding: 14px 12px; text-align: center; font-size: 13px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
 .cro-compare-table-injected tr:last-child td { border-bottom: none; }
-.cro-compare-table-injected td.cro-col-us-injected {
-  background: rgba(255, 193, 7, 0.04);
-  color: var(--text-light);
-  font-weight: 600;
-}
-.cro-compare-table-injected td.cro-col-them-injected {
-  color: var(--text-gray);
-}
-.cro-compare-table-injected td.cro-feature-label-injected {
-  text-align: left;
-  color: var(--text-light);
-  font-weight: 600;
-  font-size: 12.5px;
-}
-.cro-icon-inline-injected {
-  display: inline-flex;
-  vertical-align: middle;
-  margin-right: 4px;
-}
+.cro-compare-table-injected td.cro-col-us-injected { background: rgba(255, 193, 7, 0.04); color: var(--text-light); font-weight: 600; }
+.cro-compare-table-injected td.cro-col-them-injected { color: var(--text-gray); }
+.cro-compare-table-injected td.cro-feature-label-injected { text-align: left; color: var(--text-light); font-weight: 600; font-size: 12.5px; }
+.cro-icon-inline-injected { display: inline-flex; vertical-align: middle; margin-right: 4px; }
 
-/* ---- Karty (benefity / lifestyle) ---- */
-.cro-card-grid-injected {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 18px;
-}
-.cro-card-injected {
-  background: #0f0f0f;
-  border: 1px solid var(--border-color);
-  border-radius: 18px;
-  padding: 26px 22px;
-  transition: border-color 0.25s ease;
-}
+.cro-card-grid-injected { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+.cro-card-injected { background: #0f0f0f; border: 1px solid var(--border-color); border-radius: 18px; padding: 26px 22px; transition: border-color 0.25s ease; }
 .cro-card-injected:hover { border-color: rgba(255,193,7,0.4); }
-.cro-card-icon-injected {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: rgba(255, 193, 7, 0.1);
-  border: 1px solid rgba(255, 193, 7, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--primary-yellow);
-  margin-bottom: 16px;
-}
-.cro-card-title-injected {
-  color: var(--text-light);
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.cro-card-text-injected {
-  color: var(--text-gray);
-  font-size: 13.5px;
-  line-height: 1.65;
-  font-family: 'Inter', sans-serif;
-}
+.cro-card-icon-injected { width: 44px; height: 44px; border-radius: 12px; background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.25); display: flex; align-items: center; justify-content: center; color: var(--primary-yellow); margin-bottom: 16px; }
+.cro-card-title-injected { color: var(--text-light); font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.cro-card-text-injected { color: var(--text-gray); font-size: 13.5px; line-height: 1.65; font-family: 'Inter', sans-serif; }
 
-/* ---- Info techniczne / rozmiary ---- */
-.cro-info-box-injected {
-  max-width: 620px;
-  margin: 0 auto;
-  background: #0f0f0f;
-  border: 1px solid var(--border-color);
-  border-radius: 18px;
-  padding: 24px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.cro-info-row-injected {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-}
-.cro-info-row-injected + .cro-info-row-injected {
-  padding-top: 16px;
-  border-top: 1px solid var(--border-color);
-}
-.cro-info-icon-injected {
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: rgba(255, 193, 7, 0.1);
-  border: 1px solid rgba(255, 193, 7, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--primary-yellow);
-}
-.cro-info-label-injected {
-  color: var(--text-gray);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  font-weight: 600;
-  display: block;
-  margin-bottom: 3px;
-}
-.cro-info-value-injected {
-  color: var(--text-light);
-  font-size: 14px;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
-}
+.cro-info-box-injected { max-width: 620px; margin: 0 auto; background: #0f0f0f; border: 1px solid var(--border-color); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.cro-info-row-injected { display: flex; align-items: flex-start; gap: 14px; }
+.cro-info-row-injected + .cro-info-row-injected { padding-top: 16px; border-top: 1px solid var(--border-color); }
+.cro-info-icon-injected { flex-shrink: 0; width: 36px; height: 36px; border-radius: 10px; background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.25); display: flex; align-items: center; justify-content: center; color: var(--primary-yellow); }
+.cro-info-label-injected { color: var(--text-gray); font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600; display: block; margin-bottom: 3px; }
+.cro-info-value-injected { color: var(--text-light); font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif; }
 
-/* ---- Opinie / dowód społeczny ---- */
-.cro-social-proof-banner-injected {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  max-width: 620px;
-  margin: 0 auto 30px;
-  background: rgba(255, 193, 7, 0.07);
-  border: 1px solid rgba(255, 193, 7, 0.25);
-  border-radius: 999px;
-  padding: 10px 20px;
-  color: var(--text-light);
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  text-align: center;
-}
+.cro-social-proof-banner-injected { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: 620px; margin: 0 auto 30px; background: rgba(255, 193, 7, 0.07); border: 1px solid rgba(255, 193, 7, 0.25); border-radius: 999px; padding: 10px 20px; color: var(--text-light); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; text-align: center; }
 .cro-social-proof-banner-injected svg { color: var(--primary-yellow); flex-shrink:0; }
-.cro-testimonial-card-injected {
-  background: #0f0f0f;
-  border: 1px solid var(--border-color);
-  border-radius: 18px;
-  padding: 22px;
-}
-.cro-testimonial-head-injected {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.cro-avatar-injected {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #1a1a1a;
-  border: 1px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--primary-yellow);
-  font-weight: 700;
-  font-size: 14px;
-  font-family: 'Space Grotesk', sans-serif;
-  flex-shrink: 0;
-}
-.cro-testimonial-name-injected {
-  color: var(--text-light);
-  font-size: 13.5px;
-  font-weight: 700;
-}
-.cro-testimonial-stars-injected {
-  color: var(--primary-yellow);
-  font-size: 11px;
-  letter-spacing: 1px;
-}
-.cro-testimonial-text-injected {
-  color: var(--text-gray);
-  font-size: 13px;
-  line-height: 1.6;
-  font-family: 'Inter', sans-serif;
-}
-.cro-testimonial-photo-injected {
-  margin-top: 14px;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 12px;
-  border: 1.5px dashed var(--border-color);
-  background: #141414;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-}
-.cro-testimonial-photo-injected img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.cro-testimonial-photo-placeholder-injected {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  color: var(--text-gray);
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  text-align: center;
-  padding: 10px;
-}
+.cro-testimonial-card-injected { background: #0f0f0f; border: 1px solid var(--border-color); border-radius: 18px; padding: 22px; }
+.cro-testimonial-head-injected { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.cro-avatar-injected { width: 42px; height: 42px; border-radius: 50%; background: #1a1a1a; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; color: var(--primary-yellow); font-weight: 700; font-size: 14px; font-family: 'Space Grotesk', sans-serif; flex-shrink: 0; }
+.cro-testimonial-name-injected { color: var(--text-light); font-size: 13.5px; font-weight: 700; }
+.cro-testimonial-stars-injected { color: var(--primary-yellow); font-size: 11px; letter-spacing: 1px; }
+.cro-testimonial-text-injected { color: var(--text-gray); font-size: 13px; line-height: 1.6; font-family: 'Inter', sans-serif; }
+.cro-testimonial-photo-injected { margin-top: 14px; width: 100%; aspect-ratio: 4 / 3; border-radius: 12px; border: 1.5px dashed var(--border-color); background: #141414; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+.cro-testimonial-photo-injected img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cro-testimonial-photo-placeholder-injected { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--text-gray); font-family: 'Inter', sans-serif; font-size: 11px; text-align: center; padding: 10px; }
 .cro-testimonial-photo-placeholder-injected svg { color: var(--primary-yellow); }
 
-/* ---- Trust badges + oferta pod CTA ---- */
-#cro-cta-boost-injected {
-  max-width: 480px;
-  margin: 18px auto 0;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.cro-trust-row-injected {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-}
-.cro-trust-pill-injected {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-gray);
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  background: #111;
-  border: 1px solid var(--border-color);
-  padding: 6px 11px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
+#cro-cta-boost-injected { max-width: 480px; margin: 18px auto 0; display: flex; flex-direction: column; gap: 14px; }
+.cro-trust-row-injected { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.cro-trust-pill-injected { display: flex; align-items: center; gap: 6px; color: var(--text-gray); font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; background: #111; border: 1px solid var(--border-color); padding: 6px 11px; border-radius: 999px; white-space: nowrap; }
 .cro-trust-pill-injected svg { color: var(--primary-yellow); flex-shrink: 0; }
-.cro-delivery-note-injected {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  color: var(--text-gray);
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-}
+.cro-delivery-note-injected { display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--text-gray); font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; }
 .cro-delivery-note-injected svg { color: var(--primary-yellow); }
-.cro-offer-box-injected {
-  border: 1px solid rgba(255,193,7,0.4);
-  background: rgba(255, 193, 7, 0.06);
-  border-radius: 16px;
-  padding: 14px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.cro-offer-badge-injected {
-  background: var(--primary-yellow);
-  color: #000;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 10.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 3px 9px;
-  border-radius: 999px;
-  display: inline-block;
-  margin-bottom: 4px;
-}
-.cro-offer-title-injected {
-  color: var(--text-light);
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 14.5px;
-}
-.cro-offer-save-injected {
-  color: var(--primary-yellow);
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-}
+.cro-offer-box-injected { border: 1px solid rgba(255,193,7,0.4); background: rgba(255, 193, 7, 0.06); border-radius: 16px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.cro-offer-badge-injected { background: var(--primary-yellow); color: #000; font-family: 'Space Grotesk', sans-serif; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 9px; border-radius: 999px; display: inline-block; margin-bottom: 4px; }
+.cro-offer-title-injected { color: var(--text-light); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14.5px; }
+.cro-offer-save-injected { color: var(--primary-yellow); font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; }
+@media (max-width: 480px) { .cro-offer-box-injected { justify-content: center; text-align: center; } }
 
-@media (max-width: 480px) {
-  .cro-offer-box-injected { justify-content: center; text-align: center; }
-}
-
-/* ============ REGULAMINY — pasek linków ============ */
-.legal-native-link-injected {
-  cursor: pointer !important;
-  text-decoration: none;
-}
-.legal-native-link-injected:hover {
-  color: var(--primary-yellow) !important;
-}
-#injected-legal-bar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 8px 18px;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 22px 16px;
-  background-color: var(--dark-bg);
-  border-top: 1px solid var(--border-color);
-  font-family: 'Space Grotesk', sans-serif;
-}
-.legal-extra-link-injected {
-  display: inline-block;
-  background: transparent;
-  border: none;
-  color: var(--text-gray);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12.5px;
-  font-weight: 600;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  white-space: nowrap;
-}
+.legal-native-link-injected { cursor: pointer !important; text-decoration: none; }
+.legal-native-link-injected:hover { color: var(--primary-yellow) !important; }
+#injected-legal-bar { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 18px; width: 100%; box-sizing: border-box; padding: 22px 16px; background-color: var(--dark-bg); border-top: 1px solid var(--border-color); font-family: 'Space Grotesk', sans-serif; }
+.legal-extra-link-injected { display: inline-block; background: transparent; border: none; color: var(--text-gray); font-family: 'Space Grotesk', sans-serif; font-size: 12.5px; font-weight: 600; padding: 0; margin: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
 .legal-extra-link-injected:hover { color: var(--primary-yellow); }
 
-/* Overlay z treścią regulaminów */
-#injected-legal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.88);
-  backdrop-filter: blur(6px);
-  z-index: 9999;
-  display: none;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 40px 16px;
-  overflow-y: auto;
-  font-family: 'Inter', sans-serif;
-}
+#injected-legal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(6px); z-index: 9999; display: none; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; font-family: 'Inter', sans-serif; }
 #injected-legal-overlay.open { display: flex; }
-.legal-modal-injected {
-  background: #0f0f0f;
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  max-width: 720px;
-  width: 100%;
-  padding: 32px 28px 36px;
-  color: var(--text-light);
-  position: relative;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-}
-.legal-modal-close-injected {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  background: #1a1a1a;
-  border: 1px solid var(--border-color);
-  color: var(--text-light);
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.legal-modal-injected { background: #0f0f0f; border: 1px solid var(--border-color); border-radius: 20px; max-width: 720px; width: 100%; padding: 32px 28px 36px; color: var(--text-light); position: relative; box-shadow: 0 30px 80px rgba(0,0,0,0.7); }
+.legal-modal-close-injected { position: absolute; top: 18px; right: 18px; background: #1a1a1a; border: 1px solid var(--border-color); color: var(--text-light); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center; }
 .legal-modal-close-injected:hover { border-color: var(--primary-yellow); color: var(--primary-yellow); }
-.legal-modal-injected h2 {
-  font-family: 'Space Grotesk', sans-serif;
-  color: var(--primary-yellow);
-  font-size: 22px;
-  margin: 0 0 4px;
-  padding-right: 30px;
-}
-.legal-modal-injected .legal-updated-injected {
-  color: var(--text-gray);
-  font-size: 12px;
-  margin-bottom: 20px;
-}
-.legal-modal-injected h3 {
-  font-family: 'Space Grotesk', sans-serif;
-  color: var(--text-light);
-  font-size: 15px;
-  margin: 22px 0 8px;
-}
-.legal-modal-injected p, .legal-modal-injected li {
-  color: #cfcfcf;
-  font-size: 13.5px;
-  line-height: 1.7;
-}
-.legal-modal-injected ul, .legal-modal-injected ol {
-  margin: 6px 0 6px 18px;
-  padding: 0;
-}
+.legal-modal-injected h2 { font-family: 'Space Grotesk', sans-serif; color: var(--primary-yellow); font-size: 22px; margin: 0 0 4px; padding-right: 30px; }
+.legal-modal-injected .legal-updated-injected { color: var(--text-gray); font-size: 12px; margin-bottom: 20px; }
+.legal-modal-injected h3 { font-family: 'Space Grotesk', sans-serif; color: var(--text-light); font-size: 15px; margin: 22px 0 8px; }
+.legal-modal-injected p, .legal-modal-injected li { color: #cfcfcf; font-size: 13.5px; line-height: 1.7; }
+.legal-modal-injected ul, .legal-modal-injected ol { margin: 6px 0 6px 18px; padding: 0; }
 .legal-modal-injected strong { color: var(--text-light); }
 .legal-modal-injected a { color: var(--primary-yellow); text-decoration: none; }
 .legal-modal-injected a:hover { text-decoration: underline; }
 
-/* ============ STOPKA Z DANYMI SPRZEDAWCY (INJECTED) ============ */
-#injected-seller-trust {
-  width: 100%;
-  background-color: var(--dark-bg);
-  border-top: 1px solid var(--border-color);
-  padding: 44px 20px 36px;
-  font-family: 'Space Grotesk', sans-serif;
-  box-sizing: border-box;
-}
+#injected-seller-trust { width: 100%; background-color: var(--dark-bg); border-top: 1px solid var(--border-color); padding: 44px 20px 36px; font-family: 'Space Grotesk', sans-serif; box-sizing: border-box; }
 .seller-trust-inner-injected { max-width: 900px; margin: 0 auto; }
 .seller-trust-header-injected { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 28px; }
 .seller-trust-title-injected { color: var(--text-light); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; }
@@ -699,6 +256,14 @@ html, body {
 .seller-trust-badges-injected { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }
 .seller-trust-badge-injected { display: flex; align-items: center; gap: 6px; color: var(--text-gray); font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 500; background: #111; border: 1px solid var(--border-color); padding: 7px 12px; border-radius: 999px; }
 .seller-trust-badge-injected svg { color: var(--primary-yellow); }
+
+.hero-headline-fixed-injected {
+  font-size: clamp(24px, 4.2vw, 52px) !important;
+  line-height: 1.18 !important;
+  max-width: 920px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
 </style>
 </head>
 <body>
@@ -707,6 +272,77 @@ html, body {
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+
+<!-- ============================================================
+     RDZEŃ: odporny mechanizm wstrzykiwania (zastępuje wszystkie
+     poprzednie setInterval + setTimeout(clearInterval, Xms)).
+
+     Dlaczego to było zepsute: każda sekcja czekała max. 5-9s na
+     wyrenderowanie się elementu Reacta, a potem interval był
+     ubijany NA ZAWSZE. Jeśli React (duże pliki wideo, wolniejsze
+     łącze) renderował się dłużej niż ten limit - sekcja znikała
+     bezpowrotnie. Stąd widoczna była tylko stopka/legal-bar, bo
+     te dwie rzeczy jako jedyne wstawiają się bezwarunkowo.
+
+     Nowe podejście:
+     1) MutationObserver realnie czeka, aż element się pojawi
+        (żadnego sztywnego "poddaję się po 5s").
+     2) Twardy limit czasu jest znacznie dłuższy (20s) TYLKO jako
+        zabezpieczenie przed nieskończonym czekaniem.
+     3) Jeśli mimo wszystko po 20s nic nie znaleziono - sekcja i
+        tak wstawia się w bezpiecznym, gwarantowanym miejscu
+        (koniec <body>), zamiast znikać na zawsze.
+============================================================ -->
+<script>
+(function () {
+
+  // Czeka aż finder() zwróci coś "prawdziwego", albo do upływu timeout.
+  // Zwraca Promise<element|null>.
+  function waitFor(finder, timeout) {
+    timeout = timeout || 20000;
+    return new Promise(function (resolve) {
+      var found = finder();
+      if (found) { resolve(found); return; }
+
+      var settled = false;
+      var obs = new MutationObserver(function () {
+        if (settled) return;
+        var f = finder();
+        if (f) {
+          settled = true;
+          obs.disconnect();
+          clearTimeout(timer);
+          resolve(f);
+        }
+      });
+      obs.observe(document.body, { childList: true, subtree: true, characterData: true });
+
+      var timer = setTimeout(function () {
+        if (settled) return;
+        settled = true;
+        obs.disconnect();
+        resolve(null); // brak wyniku - kod wywołujący MUSI mieć fallback
+      }, timeout);
+    });
+  }
+
+  window.__mogFindAnchor = function () {
+    var allElements = Array.prototype.slice.call(document.querySelectorAll('section, div'));
+    for (var i = 0; i < allElements.length; i++) {
+      var el = allElements[i];
+      var txt = el.textContent || '';
+      if (txt.indexOf('KORZYŚCI') !== -1 || txt.indexOf('Przemyślane od początku') !== -1) {
+        return el.closest('section') || el.parentElement;
+      }
+    }
+    var sections = document.querySelectorAll('section');
+    if (sections.length > 0) return sections[Math.floor(sections.length / 2)];
+    return null;
+  };
+
+  window.__mogWaitFor = waitFor;
+})();
+</script>
 
 <!-- ============ SLIDER PRZED/PO ============ -->
 <script>
@@ -739,30 +375,17 @@ html, body {
   </section>
   `;
 
-  function doInjection() {
-    const checkAndInject = () => {
-      if (document.getElementById('injected-slider-section')) return;
-      const allElements = Array.from(document.querySelectorAll('section, div'));
-      let target = null;
-      for (let el of allElements) {
-        if (el.textContent.includes('KORZYŚCI') || el.textContent.includes('Przemyślane od początku')) {
-          target = el.closest('section') || el.parentElement;
-          break;
-        }
-      }
-      if (!target) {
-        const sections = document.querySelectorAll('section');
-        if (sections.length > 0) {
-          target = sections[Math.floor(sections.length / 2)];
-        }
-      }
-      if (target) {
-        target.insertAdjacentHTML('afterend', sliderHTML);
-        setupSlider();
-      }
-    };
-    const interval = setInterval(checkAndInject, 500);
-    setTimeout(() => clearInterval(interval), 5000);
+  async function doInjection() {
+    if (document.getElementById('injected-slider-section')) return;
+    const target = await window.__mogWaitFor(window.__mogFindAnchor, 20000);
+    if (target) {
+      target.insertAdjacentHTML('afterend', sliderHTML);
+    } else {
+      // Fallback: nie znaleziono zaczepienia w Reactcie - wstaw i tak,
+      // zamiast tracić całą sekcję bezpowrotnie.
+      document.body.insertAdjacentHTML('beforeend', sliderHTML);
+    }
+    setupSlider();
   }
 
   function setupSlider() {
@@ -840,31 +463,23 @@ html, body {
 </script>
 
 <!-- ============================================================
-     CRO / COPYWRITING OPTIMIZATIONS (INJECTED)
-     Uwaga: Hero/CTA to tekst generowany przez React (bundle .js),
-     więc podmieniamy go przez wyszukanie w DOM (heuristyka).
-     Jeśli po wdrożeniu któryś tekst się nie podmieni, prześlij
-     realny HTML wyrenderowanej strony - dam wtedy dokładny selektor.
+     CRO / COPYWRITING OPTIMIZATIONS (zmodernizowane)
 ============================================================ -->
 <script>
 (function() {
 
-  /* ---------------- 1. PODMIANA TEKSTÓW HERO + CTA ---------------- */
   const HERO_HEADLINE = "MogSteppery: Odkryj Siebie na Nowo. Wyższy Wzrost, Niezachwiana Pewność Siebie.";
   const HERO_SUBTITLE = "Zyskaj do 7 cm wzrostu w 10 sekund. Niewidoczne dla innych, przełomowe dla Ciebie.";
   const CTA_LABEL = "Zacznij Swoją Metamorfozę";
   const OLD_CTA_PATTERN = /zam[oó]w\s*teraz/i;
 
-  let ctaAnchorEl = null; // zapamiętujemy pierwszy znaleziony CTA, żeby pod nim wstawić trust-badge/ofertę
+  let ctaAnchorEl = null;
 
   function overrideHeroTexts() {
-    // Nagłówek H1
     const h1 = document.querySelector('h1');
     if (h1 && h1.textContent.trim() !== HERO_HEADLINE) {
       h1.textContent = HERO_HEADLINE;
     }
-
-    // Podtytuł - pierwszy p/h2 zaraz po h1
     if (h1) {
       let sib = h1.nextElementSibling;
       if (sib && (sib.tagName === 'P' || sib.tagName === 'H2')) {
@@ -873,11 +488,8 @@ html, body {
         }
       }
     }
-
-    // CTA - wszystkie przyciski/linki zawierające "Zamów teraz"
     const clickable = document.querySelectorAll('button, a');
     clickable.forEach((el) => {
-      // pomijamy nasze własne wstrzyknięte elementy
       if (el.closest('#injected-legal-bar') || el.closest('#injected-seller-trust')) return;
       const txt = el.textContent.trim();
       if (OLD_CTA_PATTERN.test(txt) && txt.length < 40) {
@@ -887,13 +499,16 @@ html, body {
     });
   }
 
-  // React może renderować z opóźnieniem / re-renderować i nadpisywać nasze zmiany,
-  // więc próbujemy przez kilka sekund w pętli (tak samo jak przy sliderze).
-  const heroInterval = setInterval(overrideHeroTexts, 400);
-  setTimeout(() => clearInterval(heroInterval), 6000);
+  // React może renderować/re-renderować w dowolnym momencie, więc zamiast
+  // ubijać pętlę po kilku sekundach, obserwujemy DOM stale (tani koszt dla
+  // strony produktowej) i za każdym razem, gdy coś się zmienia, sprawdzamy
+  // ponownie nagłówek/CTA.
+  overrideHeroTexts();
+  const heroObserver = new MutationObserver(() => overrideHeroTexts());
+  heroObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
 
 
-  /* ---------------- 2. TRUST BADGES + OFERTA POD CTA ---------------- */
+  /* ---------------- TRUST BADGES + OFERTA POD CTA ---------------- */
   const ctaBoostHTML = `
   <div id="cro-cta-boost-injected">
     <div class="cro-offer-box-injected">
@@ -924,18 +539,22 @@ html, body {
   </div>
   `;
 
-  function insertCtaBoost() {
+  async function insertCtaBoost() {
     if (document.getElementById('cro-cta-boost-injected')) return;
-    if (!ctaAnchorEl) return;
-    // wstawiamy zaraz po kontenerze przycisku CTA
-    const container = ctaAnchorEl.closest('div') || ctaAnchorEl.parentElement;
-    container.insertAdjacentHTML('afterend', ctaBoostHTML);
+    // Czekamy na CTA (znajduje się przez overrideHeroTexts, więc czekamy aż się pojawi)
+    const anchor = await window.__mogWaitFor(() => ctaAnchorEl, 20000);
+    const container = (anchor && (anchor.closest('div') || anchor.parentElement)) || null;
+    if (container) {
+      container.insertAdjacentHTML('afterend', ctaBoostHTML);
+    } else {
+      // Fallback: wstaw przed stopką/legal-bar, żeby nadal było widoczne
+      document.body.insertAdjacentHTML('beforeend', ctaBoostHTML);
+    }
   }
-  const ctaBoostInterval = setInterval(insertCtaBoost, 500);
-  setTimeout(() => clearInterval(ctaBoostInterval), 7000);
+  insertCtaBoost();
 
 
-  /* ---------------- 3. SEKCJA: TABELA PORÓWNAWCZA ---------------- */
+  /* ---------------- SEKCJE CRO (tabela / benefity / lifestyle / rozmiary / opinie) ---------------- */
   const compareHTML = `
   <section class="cro-section-injected" id="cro-comparison-section-injected">
     <div class="cro-inner-injected">
@@ -979,8 +598,6 @@ html, body {
   </section>
   `;
 
-
-  /* ---------------- 4. SEKCJA: ROZBUDOWANE KORZYŚCI ---------------- */
   const benefitsDetailHTML = `
   <section class="cro-section-injected" id="cro-benefits-detail-injected">
     <div class="cro-inner-injected">
@@ -989,23 +606,17 @@ html, body {
       <p class="cro-subtitle-injected">Każdy detal MogSteppery został zaprojektowany, byś czuł się pewniej — od rana do wieczora.</p>
       <div class="cro-card-grid-injected">
         <div class="cro-card-injected">
-          <div class="cro-card-icon-injected">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>
-          </div>
+          <div class="cro-card-icon-injected"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg></div>
           <div class="cro-card-title-injected">Do +7 cm wzrostu</div>
           <div class="cro-card-text-injected">Poczuj się wyżej i bardziej dominująco. Niewidoczny wzrost, który zmienia to, jak widzi Cię świat.</div>
         </div>
         <div class="cro-card-injected">
-          <div class="cro-card-icon-injected">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-          </div>
+          <div class="cro-card-icon-injected"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></div>
           <div class="cro-card-title-injected">Regulacja 3–7 cm</div>
           <div class="cro-card-text-injected">Dopasuj wysokość do butów w 10 sekund. Od subtelnego boostu na co dzień po pełną moc na specjalne okazje.</div>
         </div>
         <div class="cro-card-injected">
-          <div class="cro-card-icon-injected">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
+          <div class="cro-card-icon-injected"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
           <div class="cro-card-title-injected">Koniec z obcieraniem</div>
           <div class="cro-card-text-injected">Stopa siedzi wyżej, co eliminuje tarcie pięty o but. Komfort, którego nie oferują zwykłe wkładki.</div>
         </div>
@@ -1014,8 +625,6 @@ html, body {
   </section>
   `;
 
-
-  /* ---------------- 5. SEKCJA: DLA KOGO SĄ MOGSTEPPERY ---------------- */
   const lifestyleHTML = `
   <section class="cro-section-injected" id="cro-lifestyle-injected">
     <div class="cro-inner-injected">
@@ -1024,23 +633,17 @@ html, body {
       <p class="cro-subtitle-injected">Niezależnie od okazji — dodatkowa pewność siebie zawsze się przydaje.</p>
       <div class="cro-card-grid-injected">
         <div class="cro-card-injected">
-          <div class="cro-card-icon-injected">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-          </div>
+          <div class="cro-card-icon-injected"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></div>
           <div class="cro-card-title-injected">Randki i spotkania</div>
           <div class="cro-card-text-injected">Zrób piorunujące pierwsze wrażenie od pierwszej sekundy.</div>
         </div>
         <div class="cro-card-injected">
-          <div class="cro-card-icon-injected">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-          </div>
+          <div class="cro-card-icon-injected"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
           <div class="cro-card-title-injected">Praca i biznes</div>
           <div class="cro-card-text-injected">Buduj autorytet i pewność siebie w zespole oraz na spotkaniach biznesowych.</div>
         </div>
         <div class="cro-card-injected">
-          <div class="cro-card-icon-injected">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5.8 11.3L2 22l10.7-3.79"/><path d="M4 3h.01M22 8h.01M15 2h.01M22 20h.01M22 2l-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="M22 13.05C22 13.05 21 14 20 14c-1 0-1-1-2-1s-1 1-2 1-1-1-2-1-1 1-2 1-1-1-2-1-1.4.5-2.4 1.5"/></svg>
-          </div>
+          <div class="cro-card-icon-injected"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5.8 11.3L2 22l10.7-3.79"/><path d="M4 3h.01M22 8h.01M15 2h.01M22 20h.01M22 2l-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="M22 13.05C22 13.05 21 14 20 14c-1 0-1-1-2-1s-1 1-2 1-1-1-2-1-1 1-2 1-1-1-2-1-1.4.5-2.4 1.5"/></svg></div>
           <div class="cro-card-title-injected">Wydarzenia</div>
           <div class="cro-card-text-injected">Śluby, imprezy, gale — bądź najwyższą wersją siebie w każdej sytuacji.</div>
         </div>
@@ -1049,8 +652,6 @@ html, body {
   </section>
   `;
 
-
-  /* ---------------- 6. SEKCJA: INFO TECHNICZNE / ROZMIARY ---------------- */
   const sizeInfoHTML = `
   <section class="cro-section-injected" id="cro-size-info-injected">
     <div class="cro-inner-injected">
@@ -1059,27 +660,21 @@ html, body {
       <p class="cro-subtitle-injected">Jeden rozmiar, który pasuje niemal do każdego buta.</p>
       <div class="cro-info-box-injected">
         <div class="cro-info-row-injected">
-          <div class="cro-info-icon-injected">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0z"/><path d="M14 6l2 2M10 10l2 2M6 14l2 2"/></svg>
-          </div>
+          <div class="cro-info-icon-injected"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0z"/><path d="M14 6l2 2M10 10l2 2M6 14l2 2"/></svg></div>
           <div>
             <span class="cro-info-label-injected">Kompatybilność</span>
             <span class="cro-info-value-injected">Rozmiary 36–45 (możliwość przycięcia)</span>
           </div>
         </div>
         <div class="cro-info-row-injected">
-          <div class="cro-info-icon-injected">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/><path d="M4 16h16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2z"/></svg>
-          </div>
+          <div class="cro-info-icon-injected"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/><path d="M4 16h16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2z"/></svg></div>
           <div>
             <span class="cro-info-label-injected">Typ obuwia</span>
             <span class="cro-info-value-injected">Sneakersy, buty eleganckie, botki, buty sportowe</span>
           </div>
         </div>
         <div class="cro-info-row-injected">
-          <div class="cro-info-icon-injected">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-          </div>
+          <div class="cro-info-icon-injected"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
           <div>
             <span class="cro-info-label-injected">Materiał</span>
             <span class="cro-info-value-injected">Premium EVA + system Air Cushion</span>
@@ -1090,8 +685,6 @@ html, body {
   </section>
   `;
 
-
-  /* ---------------- 7. SEKCJA: OPINIE / DOWÓD SPOŁECZNY ---------------- */
   const testimonialsHTML = `
   <section class="cro-section-injected" id="cro-testimonials-injected">
     <div class="cro-inner-injected">
@@ -1103,115 +696,51 @@ html, body {
       </div>
       <div class="cro-card-grid-injected">
         <div class="cro-testimonial-card-injected">
-          <div class="cro-testimonial-head-injected">
-            <div class="cro-avatar-injected">M</div>
-            <div>
-              <div class="cro-testimonial-name-injected">@matek97</div>
-              <div class="cro-testimonial-stars-injected">★★★★★</div>
-            </div>
-          </div>
+          <div class="cro-testimonial-head-injected"><div class="cro-avatar-injected">M</div><div><div class="cro-testimonial-name-injected">@matek97</div><div class="cro-testimonial-stars-injected">★★★★★</div></div></div>
           <div class="cro-testimonial-text-injected">„Mam wersję 5 cm i są ideolo. Niższe noszę codziennie, polecam."</div>
-          <div class="cro-testimonial-photo-injected" data-review-photo-slot="matek97">
-            <div class="cro-testimonial-photo-placeholder-injected">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <span>Zdjęcie klienta</span>
-            </div>
-            <!-- Aby dodać zdjęcie, zamień powyższy placeholder na: <img src="SCIEZKA_DO_ZDJECIA.jpg" alt="Zdjęcie od @matek97" /> -->
-          </div>
+          <div class="cro-testimonial-photo-injected"><div class="cro-testimonial-photo-placeholder-injected"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Zdjęcie klienta</span></div></div>
         </div>
         <div class="cro-testimonial-card-injected">
-          <div class="cro-testimonial-head-injected">
-            <div class="cro-avatar-injected">K</div>
-            <div>
-              <div class="cro-testimonial-name-injected">@kacpeer_</div>
-              <div class="cro-testimonial-stars-injected">★★★★★</div>
-            </div>
-          </div>
+          <div class="cro-testimonial-head-injected"><div class="cro-avatar-injected">K</div><div><div class="cro-testimonial-name-injected">@kacpeer_</div><div class="cro-testimonial-stars-injected">★★★★★</div></div></div>
           <div class="cro-testimonial-text-injected">„Niby kilka cm, a serio robi robotę jak się stoi obok innych."</div>
-          <div class="cro-testimonial-photo-injected" data-review-photo-slot="kacpeer_">
-            <div class="cro-testimonial-photo-placeholder-injected">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <span>Zdjęcie klienta</span>
-            </div>
-          </div>
+          <div class="cro-testimonial-photo-injected"><div class="cro-testimonial-photo-placeholder-injected"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Zdjęcie klienta</span></div></div>
         </div>
         <div class="cro-testimonial-card-injected">
-          <div class="cro-testimonial-head-injected">
-            <div class="cro-avatar-injected">B</div>
-            <div>
-              <div class="cro-testimonial-name-injected">@bartek.fit</div>
-              <div class="cro-testimonial-stars-injected">★★★★★</div>
-            </div>
-          </div>
+          <div class="cro-testimonial-head-injected"><div class="cro-avatar-injected">B</div><div><div class="cro-testimonial-name-injected">@bartek.fit</div><div class="cro-testimonial-stars-injected">★★★★★</div></div></div>
           <div class="cro-testimonial-text-injected">„Najlepszy zakup, nikt nie zauważył, a 2 osoby zapytały czy urosłem XD"</div>
-          <div class="cro-testimonial-photo-injected" data-review-photo-slot="bartek.fit">
-            <div class="cro-testimonial-photo-placeholder-injected">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <span>Zdjęcie klienta</span>
-            </div>
-          </div>
+          <div class="cro-testimonial-photo-injected"><div class="cro-testimonial-photo-placeholder-injected"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Zdjęcie klienta</span></div></div>
         </div>
         <div class="cro-testimonial-card-injected">
-          <div class="cro-testimonial-head-injected">
-            <div class="cro-avatar-injected">Z</div>
-            <div>
-              <div class="cro-testimonial-name-injected">@zuzia.w</div>
-              <div class="cro-testimonial-stars-injected">★★★★★</div>
-            </div>
-          </div>
+          <div class="cro-testimonial-head-injected"><div class="cro-avatar-injected">Z</div><div><div class="cro-testimonial-name-injected">@zuzia.w</div><div class="cro-testimonial-stars-injected">★★★★★</div></div></div>
           <div class="cro-testimonial-text-injected">„Mega wygodne jak na coś takiego, kupujcie! Myślałam że będzie gorzej."</div>
-          <div class="cro-testimonial-photo-injected" data-review-photo-slot="zuzia.w">
-            <div class="cro-testimonial-photo-placeholder-injected">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <span>Zdjęcie klienta</span>
-            </div>
-          </div>
+          <div class="cro-testimonial-photo-injected"><div class="cro-testimonial-photo-placeholder-injected"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Zdjęcie klienta</span></div></div>
         </div>
         <div class="cro-testimonial-card-injected">
-          <div class="cro-testimonial-head-injected">
-            <div class="cro-avatar-injected">D</div>
-            <div>
-              <div class="cro-testimonial-name-injected">@dawid_k</div>
-              <div class="cro-testimonial-stars-injected">★★★★★</div>
-            </div>
-          </div>
+          <div class="cro-testimonial-head-injected"><div class="cro-avatar-injected">D</div><div><div class="cro-testimonial-name-injected">@dawid_k</div><div class="cro-testimonial-stars-injected">★★★★★</div></div></div>
           <div class="cro-testimonial-text-injected">„Noszę codziennie do pracy. Nikt nie wie, a ja czuję się pewniej."</div>
-          <div class="cro-testimonial-photo-injected" data-review-photo-slot="dawid_k">
-            <div class="cro-testimonial-photo-placeholder-injected">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <span>Zdjęcie klienta</span>
-            </div>
-          </div>
+          <div class="cro-testimonial-photo-injected"><div class="cro-testimonial-photo-placeholder-injected"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Zdjęcie klienta</span></div></div>
         </div>
         <div class="cro-testimonial-card-injected">
-          <div class="cro-testimonial-head-injected">
-            <div class="cro-avatar-injected">M</div>
-            <div>
-              <div class="cro-testimonial-name-injected">@mateusz.r</div>
-              <div class="cro-testimonial-stars-injected">★★★★★</div>
-            </div>
-          </div>
+          <div class="cro-testimonial-head-injected"><div class="cro-avatar-injected">M</div><div><div class="cro-testimonial-name-injected">@mateusz.r</div><div class="cro-testimonial-stars-injected">★★★★★</div></div></div>
           <div class="cro-testimonial-text-injected">„Zamówiłem drugą parę do drugich butów. Warto."</div>
-          <div class="cro-testimonial-photo-injected" data-review-photo-slot="mateusz.r">
-            <div class="cro-testimonial-photo-placeholder-injected">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <span>Zdjęcie klienta</span>
-            </div>
-          </div>
+          <div class="cro-testimonial-photo-injected"><div class="cro-testimonial-photo-placeholder-injected"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Zdjęcie klienta</span></div></div>
         </div>
       </div>
     </div>
   </section>
   `;
 
-
-  /* ---------------- WSTAWIANIE SEKCJI W ODPOWIEDNIEJ KOLEJNOŚCI ---------------- */
-  function insertChain() {
-    const slider = document.getElementById('injected-slider-section');
-    if (!slider) return; // czekamy aż slider się pojawi - to nasz pewny punkt zaczepienia
+  // Wstawianie w łańcuchu, ale KAŻDE ogniwo ma własny, niezależny fallback,
+  // więc jedna nieznaleziona kotwica nie blokuje już reszty sekcji na zawsze.
+  async function insertChain() {
+    const slider = await window.__mogWaitFor(
+      () => document.getElementById('injected-slider-section'),
+      20000
+    );
+    const afterSlider = slider || document.body.lastElementChild;
 
     if (!document.getElementById('cro-comparison-section-injected')) {
-      slider.insertAdjacentHTML('afterend', compareHTML);
+      (slider || document.body).insertAdjacentHTML(slider ? 'afterend' : 'beforeend', compareHTML);
     }
     const compareSection = document.getElementById('cro-comparison-section-injected');
     if (compareSection && !document.getElementById('cro-benefits-detail-injected')) {
@@ -1231,13 +760,12 @@ html, body {
     }
   }
 
-  const chainInterval = setInterval(insertChain, 500);
-  setTimeout(() => clearInterval(chainInterval), 8000);
+  insertChain();
 
 })();
 </script>
 
-<!-- ============ DANE SPRZEDAWCY + REGULAMINY PRAWNE (INJECTED) ============ -->
+<!-- ============ DANE SPRZEDAWCY + REGULAMINY PRAWNE ============ -->
 <script>
 (function() {
   const SELLER = {
@@ -1261,45 +789,27 @@ html, body {
       <div class="seller-trust-grid-injected">
         <div class="seller-trust-item-injected">
           <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <div class="seller-trust-text-injected">
-            <span class="seller-trust-label-injected">Właściciel</span>
-            <span class="seller-trust-value-injected">${SELLER.wlasciciel}</span>
-          </div>
+          <div class="seller-trust-text-injected"><span class="seller-trust-label-injected">Właściciel</span><span class="seller-trust-value-injected">${SELLER.wlasciciel}</span></div>
         </div>
         <div class="seller-trust-item-injected">
           <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/></svg></div>
-          <div class="seller-trust-text-injected">
-            <span class="seller-trust-label-injected">Firma</span>
-            <span class="seller-trust-value-injected">${SELLER.firma}<br><span style="color:var(--text-gray); font-weight:500; font-size:11.5px;">${SELLER.forma}</span></span>
-          </div>
+          <div class="seller-trust-text-injected"><span class="seller-trust-label-injected">Firma</span><span class="seller-trust-value-injected">${SELLER.firma}<br><span style="color:var(--text-gray); font-weight:500; font-size:11.5px;">${SELLER.forma}</span></span></div>
         </div>
         <div class="seller-trust-item-injected">
           <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1z"/><path d="M4 7l8 6 8-6"/></svg></div>
-          <div class="seller-trust-text-injected">
-            <span class="seller-trust-label-injected">NIP / REGON</span>
-            <span class="seller-trust-value-injected">${SELLER.nip} / ${SELLER.regon}</span>
-          </div>
+          <div class="seller-trust-text-injected"><span class="seller-trust-label-injected">NIP / REGON</span><span class="seller-trust-value-injected">${SELLER.nip} / ${SELLER.regon}</span></div>
         </div>
         <div class="seller-trust-item-injected">
           <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-          <div class="seller-trust-text-injected">
-            <span class="seller-trust-label-injected">Adres</span>
-            <span class="seller-trust-value-injected">${SELLER.adres}</span>
-          </div>
+          <div class="seller-trust-text-injected"><span class="seller-trust-label-injected">Adres</span><span class="seller-trust-value-injected">${SELLER.adres}</span></div>
         </div>
         <div class="seller-trust-item-injected">
           <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg></div>
-          <div class="seller-trust-text-injected">
-            <span class="seller-trust-label-injected">E-mail</span>
-            <span class="seller-trust-value-injected"><a href="mailto:${SELLER.email}">${SELLER.email}</a></span>
-          </div>
+          <div class="seller-trust-text-injected"><span class="seller-trust-label-injected">E-mail</span><span class="seller-trust-value-injected"><a href="mailto:${SELLER.email}">${SELLER.email}</a></span></div>
         </div>
         <div class="seller-trust-item-injected">
           <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.81.35 1.6.68 2.34a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.74-1.25a2 2 0 0 1 2.11-.45c.74.33 1.53.56 2.34.68A2 2 0 0 1 22 16.92z"/></svg></div>
-          <div class="seller-trust-text-injected">
-            <span class="seller-trust-label-injected">Telefon</span>
-            <span class="seller-trust-value-injected"><a href="tel:${SELLER.telefon.replace(/\s/g,'')}">${SELLER.telefon}</a></span>
-          </div>
+          <div class="seller-trust-text-injected"><span class="seller-trust-label-injected">Telefon</span><span class="seller-trust-value-injected"><a href="tel:${SELLER.telefon.replace(/\s/g,'')}">${SELLER.telefon}</a></span></div>
         </div>
       </div>
       <div class="seller-trust-badges-injected">
@@ -1484,21 +994,10 @@ html, body {
 })();
 </script>
 
-<!-- ============ CZYSZCZENIE STARYCH SEKCJI + POPRAWKI HERO (INJECTED v2) ============ -->
-<style>
-/* Kompaktowy, responsywny nagłówek hero - zapobiega zbyt dużemu/łamiącemu się tekstowi */
-.hero-headline-fixed-injected {
-  font-size: clamp(24px, 4.2vw, 52px) !important;
-  line-height: 1.18 !important;
-  max-width: 920px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-</style>
+<!-- ============ CZYSZCZENIE STARYCH SEKCJI + POPRAWKI HERO ============ -->
 <script>
 (function() {
 
-  /* ---- 1. Zmniejszenie i wyśrodkowanie nagłówka hero ---- */
   function fixHeroHeadline() {
     const h1 = document.querySelector('h1');
     if (h1 && !h1.classList.contains('hero-headline-fixed-injected')) {
@@ -1506,9 +1005,6 @@ html, body {
     }
   }
 
-  /* ---- 2. Ukrywanie starych, zmodernizowanych sekcji ---- */
-  /* 01 Technologia ("Warstwy, które zmieniają grę"), 02 Korzyści ("Przemyślane od początku"),
-     04 Opinie stare, bez zdjęć ("Klienci mówią") - świadomie NIE dotykamy 03 Produkt (cena/zakup) */
   const OLD_SECTION_MARKERS = [
     'Warstwy, które',
     'Przemyślane od początku',
@@ -1533,7 +1029,6 @@ html, body {
     });
   }
 
-  /* ---- 3. Przeniesienie boxa z ofertą pod sekcję z ceną (zamiast na górę strony) ---- */
   function relocateCtaBoost() {
     const boost = document.getElementById('cro-cta-boost-injected');
     if (!boost || boost.dataset.relocated === '1') return;
@@ -1561,8 +1056,11 @@ html, body {
     relocateCtaBoost();
   }
 
-  const cleanupInterval = setInterval(runAll, 500);
-  setTimeout(() => clearInterval(cleanupInterval), 9000);
+  runAll();
+  // Zamiast ubijać po 9s, obserwujemy stale - koszt znikomy, a strona
+  // zawsze pozostaje spójna, niezależnie od tego jak długo ładuje się React.
+  const cleanupObserver = new MutationObserver(() => runAll());
+  cleanupObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
 
 })();
 </script>
