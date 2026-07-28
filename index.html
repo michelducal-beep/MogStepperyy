@@ -946,51 +946,43 @@ header .bestseller-badge,
     const btnAfter = document.getElementById('btn-after');
     if (!s) return;
 
-    let isSliding = false;
-    const updateSlider = (x) => {
-      const rect = s.getBoundingClientRect();
-      let pos = ((x - rect.left) / rect.width) * 100;
-      pos = Math.max(0, Math.min(100, pos));
-      s.style.setProperty('--slider-pos', `${pos}%`);
-      
-      if (pos < 45) {
-        btnBefore.classList.add('active');
-        btnAfter.classList.remove('active');
-      } else if (pos > 55) {
-        btnAfter.classList.add('active');
-        btnBefore.classList.remove('active');
-      } else {
-        btnBefore.classList.remove('active');
-        btnAfter.classList.remove('active');
-      }
+    const setPos = (p) => {
+      s.style.setProperty('--slider-pos', p + '%');
+      if (p >= 90) { btnBefore.classList.add('active'); btnAfter.classList.remove('active'); }
+      else if (p <= 10) { btnAfter.classList.add('active'); btnBefore.classList.remove('active'); }
+      else { btnBefore.classList.remove('active'); btnAfter.classList.remove('active'); }
     };
 
-    const onMove = (e) => {
-      if (!isSliding) return;
-      const x = e.touches ? e.touches[0].clientX : e.clientX;
-      updateSlider(x);
+    const update = (e) => {
+      const r = s.getBoundingClientRect();
+      const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
+      let p = ((clientX - r.left) / r.width) * 100;
+      p = Math.max(0, Math.min(p, 100));
+      setPos(p);
     };
 
-    s.addEventListener('mousedown', () => { isSliding = true; s.classList.add('sliding'); });
-    s.addEventListener('touchstart', () => { isSliding = true; s.classList.add('sliding'); }, {passive: true});
-    window.addEventListener('mouseup', () => { isSliding = false; s.classList.remove('sliding'); });
-    window.addEventListener('touchend', () => { isSliding = false; s.classList.remove('sliding'); });
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('touchmove', onMove, {passive: false});
+    const start = (e) => {
+      s.classList.add('sliding');
+      update(e);
+      const moveHandler = (moveEvent) => { update(moveEvent); };
+      const endHandler = () => {
+        s.classList.remove('sliding');
+        window.removeEventListener('mousemove', moveHandler);
+        window.removeEventListener('mouseup', endHandler);
+        window.removeEventListener('touchmove', moveHandler);
+        window.removeEventListener('touchend', endHandler);
+      };
+      window.addEventListener('mousemove', moveHandler);
+      window.addEventListener('mouseup', endHandler);
+      window.addEventListener('touchmove', moveHandler, { passive: false });
+      window.addEventListener('touchend', endHandler);
+    };
 
-    btnBefore.addEventListener('click', () => {
-      s.style.setProperty('--slider-pos', '85%');
-      btnBefore.classList.add('active');
-      btnAfter.classList.remove('active');
-    });
-    btnAfter.addEventListener('click', () => {
-      s.style.setProperty('--slider-pos', '15%');
-      btnAfter.classList.add('active');
-      btnBefore.classList.remove('active');
-    });
-
-    // Początkowy stan
-    s.style.setProperty('--slider-pos', '50%');
+    s.addEventListener('mousedown', start);
+    s.addEventListener('touchstart', (e) => { e.preventDefault(); start(e); }, { passive: false });
+    btnBefore.addEventListener('click', () => setPos(100));
+    btnAfter.addEventListener('click', () => setPos(0));
+    setPos(50);
   }
 
   if (document.readyState === 'loading') {
@@ -1002,19 +994,52 @@ header .bestseller-badge,
 </script>
 
 <script>
+  // Automatyczna podmiana danych Shopify na nowe
+  window.ShopifyBuyData = {
+    domain: 'haxif6-uz.myshopify.com',
+    token: 'a1248dd39ee4f72637d6023e518fdde1',
+    productId: '15897628770636'
+  };
+  var originalBuildClient = null;
+  var checkShopify = setInterval(function() {
+    if (window.ShopifyBuy && window.ShopifyBuy.buildClient) {
+      originalBuildClient = window.ShopifyBuy.buildClient;
+      window.ShopifyBuy.buildClient = function(config) {
+        config.domain = window.ShopifyBuyData.domain;
+        config.storefrontAccessToken = window.ShopifyBuyData.token;
+        return originalBuildClient.apply(this, arguments);
+      };
+      clearInterval(checkShopify);
+    }
+  }, 50);
+</script>
+
+<!-- ============================================================
+     CRO / COPYWRITING OPTIMIZATIONS (INJECTED)
+     Uwaga: Hero/CTA to tekst generowany przez React (bundle .js),
+     więc podmieniamy go przez wyszukanie w DOM (heuristyka).
+     Jeśli po wdrożeniu któryś tekst się nie podmieni, prześlij
+     realny HTML wyrenderowanej strony - dam wtedy dokładny selektor.
+============================================================ -->
+<script>
 (function() {
+
+  /* ---------------- 1. PODMIANA TEKSTÓW HERO + CTA ---------------- */
   const HERO_HEADLINE = "Wyższy Wzrost. Większa Pewność Siebie.";
   const HERO_SUBTITLE = "Do +7 cm w 10 sekund. Niewidoczne dla innych.";
   const CTA_LABEL = "Zacznij Swoją Metamorfozę";
   const OLD_CTA_PATTERN = /zam[oó]w\s*teraz/i;
 
-  let ctaAnchorEl = null;
+  let ctaAnchorEl = null; // zapamiętujemy pierwszy znaleziony CTA, żeby pod nim wstawić trust-badge/ofertę
 
   function overrideHeroTexts() {
+    // Nagłówek H1
     const h1 = document.querySelector('h1');
     if (h1 && h1.textContent.trim() !== HERO_HEADLINE) {
       h1.textContent = HERO_HEADLINE;
     }
+
+    // Podtytuł - pierwszy p/h2 zaraz po h1
     if (h1) {
       let sib = h1.nextElementSibling;
       if (sib && (sib.tagName === 'P' || sib.tagName === 'H2')) {
@@ -1023,8 +1048,11 @@ header .bestseller-badge,
         }
       }
     }
+
+    // CTA - wszystkie przyciski/linki zawierające "Zamów teraz"
     const clickable = document.querySelectorAll('button, a');
     clickable.forEach((el) => {
+      // pomijamy nasze własne wstrzyknięte elementy
       if (el.closest('#injected-legal-bar') || el.closest('#injected-seller-trust')) return;
       const txt = el.textContent.trim();
       if (OLD_CTA_PATTERN.test(txt) && txt.length < 40) {
@@ -1034,9 +1062,17 @@ header .bestseller-badge,
     });
   }
 
+  // React może renderować z opóźnieniem / re-renderować i nadpisywać nasze zmiany,
+  // więc próbujemy przez kilka sekund w pętli (tak samo jak przy sliderze).
   const heroInterval = setInterval(overrideHeroTexts, 400);
   setTimeout(() => clearInterval(heroInterval), 6000);
 
+
+  /* ---------------- 2b. PANEL WOKÓŁ PRZYCISKU CTA (klikalny "kafelek") ----------------
+     Owijamy oryginalny przycisk CTA w wizualny panel (obramowanie, hover/active),
+     żeby wyraźnie było widać, że to jest klikalny element z przyciskiem w środku,
+     a nie zwykły tekst. Cały panel reaguje na klik.
+  ---------------------------------------------------------------------------- */
   function wrapCtaAsPanel() {
     if (!ctaAnchorEl) return;
     if (document.getElementById('cro-cta-panel-injected')) return;
@@ -1056,9 +1092,10 @@ header .bestseller-badge,
     panel.appendChild(tag);
     panel.appendChild(ctaAnchorEl);
 
+    // Cały panel jest klikalny, nie tylko sam przycisk w środku
     const activate = () => ctaAnchorEl.click();
     panel.addEventListener('click', (e) => {
-      if (e.target === ctaAnchorEl || ctaAnchorEl.contains(e.target)) return;
+      if (e.target === ctaAnchorEl || ctaAnchorEl.contains(e.target)) return; // przycisk sam obsłuży swój klik
       activate();
     });
     panel.addEventListener('keydown', (e) => {
@@ -1068,6 +1105,8 @@ header .bestseller-badge,
   const ctaPanelInterval = setInterval(wrapCtaAsPanel, 500);
   setTimeout(() => clearInterval(ctaPanelInterval), 7500);
 
+
+  /* ---------------- 3. SEKCJA: TABELA PORÓWNAWCZA (z odznaką "Bestseller" nad tytułem) ---------------- */
   const compareHTML = `
   <section class="cro-section-injected" id="cro-comparison-section-injected">
     <div class="cro-inner-injected">
@@ -1117,6 +1156,8 @@ header .bestseller-badge,
   </section>
   `;
 
+
+  /* ---------------- 4. SEKCJA: ROZBUDOWANE KORZYŚCI ---------------- */
   const benefitsDetailHTML = `
   <section class="cro-section-injected" id="cro-benefits-detail-injected">
     <div class="cro-inner-injected">
@@ -1151,6 +1192,8 @@ header .bestseller-badge,
   </section>
   `;
 
+
+  /* ---------------- 5. SEKCJA: DLA KOGO SĄ MOGSTEPPERY ---------------- */
   const lifestyleHTML = `
   <section class="cro-section-injected" id="cro-lifestyle-injected">
     <div class="cro-inner-injected">
@@ -1184,6 +1227,8 @@ header .bestseller-badge,
   </section>
   `;
 
+
+  /* ---------------- 6. SEKCJA: INFO TECHNICZNE / ROZMIARY ---------------- */
   const sizeInfoHTML = `
   <section class="cro-section-injected" id="cro-size-info-injected">
     <div class="cro-inner-injected">
@@ -1205,11 +1250,20 @@ header .bestseller-badge,
             </div>
             <div class="cro-info-row-injected">
               <div class="cro-info-icon-injected">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/><path d="M4 16h16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2z"/></svg>
+              </div>
+              <div>
+                <span class="cro-info-label-injected">Typ obuwia</span>
+                <span class="cro-info-value-injected">Sneakersy, buty eleganckie, botki, buty sportowe</span>
+              </div>
+            </div>
+            <div class="cro-info-row-injected">
+              <div class="cro-info-icon-injected">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
               </div>
               <div>
                 <span class="cro-info-label-injected">Materiał</span>
-                <span class="cro-info-value-injected">Wytrzymały PU + Amortyzacja Air Cushion</span>
+                <span class="cro-info-value-injected">Premium EVA + system Air Cushion</span>
               </div>
             </div>
           </div>
@@ -1219,18 +1273,35 @@ header .bestseller-badge,
   </section>
   `;
 
+
+  /* ---------------- 7. SEKCJA: OPINIE / DOWÓD SPOŁECZNY ---------------- */
   const testimonialsHTML = `
   <section class="cro-section-injected" id="cro-testimonials-injected">
     <div class="cro-inner-injected">
+      <div class="cro-eyebrow-injected">Opinie klientów</div>
+      <h2 class="cro-title-injected">Zaufali nam</h2>
       <div class="cro-social-proof-banner-injected">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        Ponad 10 000 zadowolonych klientów
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Dołącz do 1485+ pewnych siebie mężczyzn
       </div>
-      <div class="cro-eyebrow-injected">Opinie</div>
-      <h2 class="cro-title-injected">Nie wierz nam na słowo</h2>
-      <p class="cro-subtitle-injected">Zobacz, co mówią faceci, którzy już zmienili swoje życie z MogSteppery.</p>
-      <div class="cro-card-grid-injected" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-        
+      <div class="cro-card-grid-injected">
+        <div class="cro-testimonial-card-injected">
+          <div class="cro-testimonial-head-injected">
+            <div class="cro-avatar-injected">M</div>
+            <div>
+              <div class="cro-testimonial-name-injected">@matek97</div>
+              <div class="cro-testimonial-stars-injected">★★★★★</div>
+            </div>
+          </div>
+          <div class="cro-testimonial-text-injected">„Mam wersję 5 cm i są ideolo. Niższe noszę codziennie, polecam."</div>
+          <div class="cro-testimonial-photo-injected" data-review-photo-slot="matek97">
+            <img src="opinia-matek97.png" alt="Zdjęcie klienta @matek97" loading="lazy" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+            <div class="cro-testimonial-photo-placeholder-injected">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span>Zdjęcie klienta</span>
+            </div>
+          </div>
+        </div>
         <div class="cro-testimonial-card-injected">
           <div class="cro-testimonial-head-injected">
             <div class="cro-avatar-injected">K</div>
@@ -1248,7 +1319,6 @@ header .bestseller-badge,
             </div>
           </div>
         </div>
-
         <div class="cro-testimonial-card-injected">
           <div class="cro-testimonial-head-injected">
             <div class="cro-avatar-injected">B</div>
@@ -1266,7 +1336,6 @@ header .bestseller-badge,
             </div>
           </div>
         </div>
-
         <div class="cro-testimonial-card-injected">
           <div class="cro-testimonial-head-injected">
             <div class="cro-avatar-injected">Z</div>
@@ -1284,7 +1353,6 @@ header .bestseller-badge,
             </div>
           </div>
         </div>
-
         <div class="cro-testimonial-card-injected">
           <div class="cro-testimonial-head-injected">
             <div class="cro-avatar-injected">D</div>
@@ -1302,7 +1370,6 @@ header .bestseller-badge,
             </div>
           </div>
         </div>
-
         <div class="cro-testimonial-card-injected">
           <div class="cro-testimonial-head-injected">
             <div class="cro-avatar-injected">M</div>
@@ -1313,25 +1380,7 @@ header .bestseller-badge,
           </div>
           <div class="cro-testimonial-text-injected">„Zamówiłem drugą parę do drugich butów. Warto."</div>
           <div class="cro-testimonial-photo-injected" data-review-photo-slot="mateusz.r">
-            <img src="opinia-mateuszr.png" alt="Zdjęcie klienta @mateusz.r" loading="lazy" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
-            <div class="cro-testimonial-photo-placeholder-injected">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <span>Zdjęcie klienta</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="cro-testimonial-card-injected">
-          <div class="cro-testimonial-head-injected">
-            <div class="cro-avatar-injected">M</div>
-            <div>
-              <div class="cro-testimonial-name-injected">@matek97</div>
-              <div class="cro-testimonial-stars-injected">★★★★★</div>
-            </div>
-          </div>
-          <div class="cro-testimonial-text-injected">„Zdecydowanie polecam, super sprawa."</div>
-          <div class="cro-testimonial-photo-injected" data-review-photo-slot="matek97">
-            <img src="opinia-matek97.png" alt="Zdjęcie klienta @matek97" loading="lazy" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+            <img src="opinia-kacper.png" alt="Zdjęcie klienta @mateusz.r" loading="lazy" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
             <div class="cro-testimonial-photo-placeholder-injected">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
               <span>Zdjęcie klienta</span>
@@ -1343,9 +1392,18 @@ header .bestseller-badge,
   </section>
   `;
 
+
+  /* ---------------- WSTAWIANIE SEKCJI W ODPOWIEDNIEJ KOLEJNOŚCI ----------------
+     Nowa kolejność: najpierw informacje o produkcie (porównanie, korzyści,
+     zastosowanie, rozmiary), a DOPIERO POTEM transformacja (slider przed/po),
+     a na końcu opinie klientów.
+  ---------------------------------------------------------------------------- */
   function insertChain() {
     const slider = document.getElementById('injected-slider-section');
-    if (!slider) return;
+    if (!slider) return; // czekamy aż slider się pojawi - to nasz pewny punkt zaczepienia
+
+    // Sekcje produktowe wstawiamy PRZED sliderem (beforebegin), w kolejności:
+    // porównanie -> korzyści -> zastosowanie -> rozmiary -> [SLIDER] -> opinie
     if (!document.getElementById('cro-comparison-section-injected')) {
       slider.insertAdjacentHTML('beforebegin', compareHTML);
     }
@@ -1358,6 +1416,7 @@ header .bestseller-badge,
     if (!document.getElementById('cro-size-info-injected')) {
       slider.insertAdjacentHTML('beforebegin', sizeInfoHTML);
     }
+    // Opinie zostają na końcu, zaraz PO transformacji
     if (!document.getElementById('cro-testimonials-injected')) {
       slider.insertAdjacentHTML('afterend', testimonialsHTML);
     }
@@ -1366,6 +1425,8 @@ header .bestseller-badge,
   const chainInterval = setInterval(insertChain, 500);
   setTimeout(() => clearInterval(chainInterval), 8000);
 
+
+  /* ---------------- 8. UKRYCIE STARYCH PANELI 01/02/03/04 (zmodernizowanych) ---------------- */
   const NATIVE_PANEL_LABELS = ['TECHNOLOGIA', 'KORZYŚCI', 'PRODUKT', 'OPINIE'];
   window.__mogNativeImages = window.__mogNativeImages || {};
 
@@ -1417,6 +1478,8 @@ header .bestseller-badge,
   const hideNativeInterval = setInterval(hideNativeDuplicateSections, 500);
   setTimeout(() => clearInterval(hideNativeInterval), 9000);
 
+
+  /* ---------------- 9. WSTAWIENIE PRZECHWYCONYCH ZDJĘĆ W NOWE MIEJSCA ---------------- */
   function fillCapturedVisuals() {
     const techUrl = window.__mogNativeImages['TECHNOLOGIA'];
     const techSlot = document.getElementById('cro-tech-visual-slot-injected');
@@ -1437,6 +1500,12 @@ header .bestseller-badge,
   const fillVisualsInterval = setInterval(fillCapturedVisuals, 500);
   setTimeout(() => clearInterval(fillVisualsInterval), 10000);
 
+
+  /* ---------------- 10. PODPIĘCIE LINKÓW NAV "OPINIE" / "PRODUKT" DO SEKCJI ----------------
+     W górnym panelu znajdują się natywne etykiety "Opinie" i "Produkt". Wyszukujemy je
+     heurystycznie (krótki, samodzielny tekst w klikalnym elemencie) i podpinamy płynne
+     przewijanie do odpowiednich wstrzykniętych sekcji.
+  ---------------------------------------------------------------------------- */
   const NAV_TARGETS = [
     { match: /^opinie$/i, targetId: 'cro-testimonials-injected' },
     { match: /^produkt$/i, targetId: 'cro-size-info-injected' },
@@ -1471,6 +1540,7 @@ header .bestseller-badge,
 })();
 </script>
 
+<!-- ============ DANE SPRZEDAWCY + REGULAMINY PRAWNE (INJECTED) ============ -->
 <script>
 (function() {
   const SELLER = {
@@ -1507,66 +1577,234 @@ header .bestseller-badge,
           </div>
         </div>
         <div class="seller-trust-item-injected">
-          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1z"/><path d="M4 7l8 6 8-6"/></svg></div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">NIP / REGON</span>
+            <span class="seller-trust-value-injected">${SELLER.nip} / ${SELLER.regon}</span>
+          </div>
+        </div>
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
           <div class="seller-trust-text-injected">
             <span class="seller-trust-label-injected">Adres</span>
             <span class="seller-trust-value-injected">${SELLER.adres}</span>
           </div>
         </div>
         <div class="seller-trust-item-injected">
-          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg></div>
           <div class="seller-trust-text-injected">
-            <span class="seller-trust-label-injected">Email</span>
+            <span class="seller-trust-label-injected">E-mail</span>
             <span class="seller-trust-value-injected"><a href="mailto:${SELLER.email}">${SELLER.email}</a></span>
+          </div>
+        </div>
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.81.35 1.6.68 2.34a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.74-1.25a2 2 0 0 1 2.11-.45c.74.33 1.53.56 2.34.68A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">Telefon</span>
+            <span class="seller-trust-value-injected"><a href="tel:${SELLER.telefon.replace(/\s/g,'')}">${SELLER.telefon}</a></span>
           </div>
         </div>
       </div>
       <div class="seller-trust-badges-injected">
-        <div class="seller-trust-badge-injected"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Bezpieczne płatności</div>
-        <div class="seller-trust-badge-injected"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M16 8l-4 4-4-4"/></svg>Gwarancja zwrotu</div>
+        <div class="seller-trust-badge-injected"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>14 dni na zwrot</div>
+        <div class="seller-trust-badge-injected"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Bezpieczne płatności</div>
+        <div class="seller-trust-badge-injected"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>Zweryfikowany sprzedawca</div>
       </div>
     </div>
   </section>
   `;
 
-  const legalBarHTML = `
-  <div id="injected-legal-bar">
-    <button class="legal-extra-link-injected" data-legal="regulamin">Regulamin</button>
-    <button class="legal-extra-link-injected" data-legal="prywatnosc">Polityka prywatności</button>
-    <button class="legal-extra-link-injected" data-legal="zwroty">Zwroty i reklamacje</button>
+  const overlayHTML = `
+  <div id="injected-legal-overlay">
+    <div class="legal-modal-injected">
+      <button class="legal-modal-close-injected" id="injected-legal-close">✕</button>
+      <div id="injected-legal-content"></div>
+    </div>
   </div>
   `;
 
-  function insertFooter() {
-    if (document.getElementById('injected-seller-trust')) return;
-    const footer = document.querySelector('footer');
-    if (footer) {
-      footer.insertAdjacentHTML('beforebegin', sellerTrustHTML);
-      footer.insertAdjacentHTML('afterend', legalBarHTML);
+  const DOCS = {
+    regulamin: {
+      title: "Regulamin sklepu internetowego",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>§1 Postanowienia ogólne</h3>
+        <p>Sklep internetowy działający pod adresem mogsteppery.com prowadzony jest przez <strong>${SELLER.firma}</strong> (${SELLER.forma}), ${SELLER.wlasciciel}. Niniejszy regulamin określa zasady korzystania ze sklepu, składania zamówień, zawierania umów sprzedaży na odległość, płatności, dostawy, odstąpienia od umowy oraz reklamacji.</p>
+        <h3>§2 Definicje</h3>
+        <ul>
+          <li><strong>Sprzedawca</strong> — ${SELLER.wlasciciel}, prowadzący działalność gospodarczą pod nazwą ${SELLER.firma}, NIP: ${SELLER.nip}, REGON: ${SELLER.regon}, adres do korespondencji: ${SELLER.adres}, e-mail: <a href="mailto:${SELLER.email}">${SELLER.email}</a>, telefon: <a href="tel:${SELLER.telefon.replace(/\s/g,'')}">${SELLER.telefon}</a>.</li>
+          <li><strong>Klient/Konsument</strong> — osoba fizyczna dokonująca zakupu niezwiązanego bezpośrednio z jej działalnością gospodarczą lub zawodową.</li>
+          <li><strong>Sklep</strong> — serwis internetowy dostępny pod adresem mogsteppery.com.</li>
+          <li><strong>Towar</strong> — produkty oferowane w Sklepie (wkładki podwyższające i akcesoria).</li>
+        </ul>
+        <h3>§3 Składanie i realizacja zamówień</h3>
+        <p>Zamówienia składane są za pośrednictwem formularza zakupowego w Sklepie. Po złożeniu zamówienia Klient otrzymuje potwierdzenie na podany adres e-mail. Umowa sprzedaży zostaje zawarta z chwilą potwierdzenia przyjęcia zamówienia przez Sprzedawcę.</p>
+        <h3>§4 Ceny i płatności</h3>
+        <p>Wszystkie ceny w Sklepie podawane są w złotych polskich (PLN) i są cenami brutto. Płatność realizowana jest za pośrednictwem dostępnych w Sklepie operatorów płatności online.</p>
+        <h3>§5 Dostawa</h3>
+        <p>Zamówienia realizowane są na terenie Polski (oraz krajów wskazanych w Sklepie) za pośrednictwem wybranego przewoźnika. Czas realizacji i koszt dostawy wskazywane są przy składaniu zamówienia.</p>
+        <h3>§6 Prawo odstąpienia od umowy</h3>
+        <p>Zgodnie z ustawą z dnia 30 maja 2014 r. o prawach konsumenta, Konsument ma prawo odstąpić od umowy zawartej na odległość w terminie <strong>14 dni</strong> od dnia otrzymania towaru, bez podawania przyczyny i bez ponoszenia kosztów, z wyjątkiem bezpośrednich kosztów zwrotu towaru.</p>
+        <p>Aby skorzystać z prawa odstąpienia, należy poinformować Sprzedawcę o swojej decyzji w drodze jednoznacznego oświadczenia (np. e-mail na adres <a href="mailto:${SELLER.email}">${SELLER.email}</a>) przed upływem terminu 14 dni. Towar należy odesłać niezwłocznie, nie później niż w ciągu 14 dni od złożenia oświadczenia o odstąpieniu. Zwrot płatności następuje niezwłocznie, nie później niż w ciągu 14 dni od otrzymania oświadczenia, tym samym sposobem płatności, jakiego użył Konsument, chyba że wyraźnie zgodził się na inny sposób.</p>
+        <h3>§7 Reklamacje (rękojmia)</h3>
+        <p>Sprzedawca odpowiada wobec Konsumenta za zgodność towaru z umową na zasadach określonych w ustawie o prawach konsumenta. Reklamacje można zgłaszać na adres e-mail <a href="mailto:${SELLER.email}">${SELLER.email}</a>, opisując wadę oraz oczekiwany sposób rozpatrzenia reklamacji. Sprzedawca ustosunkuje się do reklamacji w terminie 14 dni.</p>
+        <h3>§8 Dane osobowe</h3>
+        <p>Zasady przetwarzania danych osobowych opisane są w Polityce prywatności dostępnej w stopce Sklepu.</p>
+        <h3>§9 Postanowienia końcowe</h3>
+        <p>W sprawach nieuregulowanych niniejszym regulaminem zastosowanie mają przepisy prawa polskiego, w tym Kodeksu cywilnego oraz ustawy o prawach konsumenta. Spory rozstrzygane są przez sąd właściwy zgodnie z przepisami ogólnymi. Konsument może również skorzystać z pozasądowych sposobów rozpatrywania reklamacji, m.in. platformy ODR: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
+      `
+    },
+    prywatnosc: {
+      title: "Polityka prywatności",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>1. Administrator danych</h3>
+        <p>Administratorem danych osobowych jest <strong>${SELLER.wlasciciel}</strong>, prowadzący działalność gospodarczą pod nazwą ${SELLER.firma}, NIP: ${SELLER.nip}, adres: ${SELLER.adres}, e-mail: <a href="mailto:${SELLER.email}">${SELLER.email}</a>.</p>
+        <h3>2. Zakres i cel przetwarzania danych</h3>
+        <ul>
+          <li>Realizacja zamówień i umów sprzedaży (imię, nazwisko, adres, e-mail, telefon) — podstawa: art. 6 ust. 1 lit. b RODO.</li>
+          <li>Obsługa reklamacji i zwrotów — podstawa: art. 6 ust. 1 lit. c i f RODO.</li>
+          <li>Marketing własnych produktów (za zgodą) — podstawa: art. 6 ust. 1 lit. a RODO.</li>
+          <li>Analiza ruchu na stronie i statystyki (pliki cookies) — podstawa: art. 6 ust. 1 lit. f RODO.</li>
+        </ul>
+        <h3>3. Odbiorcy danych</h3>
+        <p>Dane mogą być przekazywane podmiotom wspierającym realizację zamówień: operatorom płatności, firmom kurierskim/pocztowym oraz dostawcom usług hostingowych i IT, wyłącznie w zakresie niezbędnym do wykonania usługi.</p>
+        <h3>4. Okres przechowywania danych</h3>
+        <p>Dane przechowywane są przez okres niezbędny do realizacji celu przetwarzania, a następnie przez okres wymagany przepisami prawa (np. podatkowego, rachunkowego) lub do czasu wycofania zgody.</p>
+        <h3>5. Prawa użytkownika</h3>
+        <p>Każdej osobie przysługuje prawo dostępu do swoich danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia danych, wniesienia sprzeciwu oraz wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych. W celu realizacji praw prosimy o kontakt: <a href="mailto:${SELLER.email}">${SELLER.email}</a>.</p>
+        <h3>6. Pliki cookies</h3>
+        <p>Szczegóły dotyczące plików cookies opisane są w Polityce cookies dostępnej w stopce Sklepu.</p>
+        <h3>7. Bezpieczeństwo danych</h3>
+        <p>Administrator stosuje odpowiednie środki techniczne i organizacyjne zapewniające ochronę przetwarzanych danych osobowych, w tym przed nieuprawnionym dostępem.</p>
+      `
+    },
+    cookies: {
+      title: "Polityka cookies",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>1. Czym są pliki cookies</h3>
+        <p>Pliki cookies to niewielkie pliki tekstowe zapisywane na urządzeniu użytkownika, umożliwiające prawidłowe działanie Sklepu oraz analizę ruchu na stronie.</p>
+        <h3>2. Rodzaje wykorzystywanych cookies</h3>
+        <ul>
+          <li><strong>Niezbędne</strong> — wymagane do prawidłowego działania Sklepu (np. koszyk, proces zamówienia).</li>
+          <li><strong>Analityczne/statystyczne</strong> — pozwalają analizować sposób korzystania ze strony w celu jej ulepszania.</li>
+          <li><strong>Marketingowe</strong> — wykorzystywane do wyświetlania treści dopasowanych do zainteresowań użytkownika, wyłącznie za zgodą.</li>
+        </ul>
+        <h3>3. Zarządzanie plikami cookies</h3>
+        <p>Użytkownik może w każdej chwili zmienić ustawienia dotyczące plików cookies w swojej przeglądarce internetowej, w tym zablokować lub usunąć zapisane pliki. Ograniczenie stosowania plików cookies może wpłynąć na niektóre funkcjonalności Sklepu.</p>
+        <h3>4. Podmioty trzecie</h3>
+        <p>Sklep może korzystać z narzędzi podmiotów trzecich (np. analityka, płatności, obsługa sprzedaży), które mogą stosować własne pliki cookies zgodnie ze swoimi politykami prywatności.</p>
+      `
+    },
+    zwroty: {
+      title: "Zwroty i reklamacje",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>Zwrot towaru (odstąpienie od umowy)</h3>
+        <p>Masz <strong>14 dni</strong> od otrzymania przesyłki na odstąpienie od umowy bez podawania przyczyny. Wystarczy wysłać oświadczenie o odstąpieniu na adres <a href="mailto:${SELLER.email}">${SELLER.email}</a>, a następnie odesłać towar w stanie niezmienionym w ciągu kolejnych 14 dni. Koszt odesłania towaru pokrywa Klient. Pieniądze zwracamy tym samym kanałem płatności w ciągu 14 dni od otrzymania oświadczenia.</p>
+        <h3>Wzór formularza odstąpienia od umowy</h3>
+        <p style="border:1px dashed #333; border-radius:12px; padding:14px; background:#141414;">
+          Ja, niżej podpisany/a, niniejszym informuję o moim odstąpieniu od umowy sprzedaży następującego towaru: [nazwa towaru]<br/>
+          Data zawarcia umowy/odbioru towaru: [data]<br/>
+          Imię i nazwisko Klienta: [imię i nazwisko]<br/>
+          Adres Klienta: [adres]<br/>
+          Numer zamówienia: [numer]<br/>
+          Podpis (tylko jeśli formularz przesyłany jest w wersji papierowej): [podpis]<br/>
+          Data: [data]
+        </p>
+        <h3>Reklamacje</h3>
+        <p>Jeśli otrzymany towar jest wadliwy lub niezgodny z opisem, napisz do nas na <a href="mailto:${SELLER.email}">${SELLER.email}</a>, opisując problem i załączając zdjęcia (jeśli to możliwe). Reklamację rozpatrujemy w ciągu 14 dni od jej otrzymania.</p>
+      `
+    },
+    dane: {
+      title: "Dane sprzedawcy",
+      html: `
+        <h3>${SELLER.wlasciciel}</h3>
+        <p style="color:var(--text-gray); font-size:12.5px; margin-top:-4px;">${SELLER.forma} pod nazwą <strong style="color:var(--text-light)">${SELLER.firma}</strong></p>
+        <p><strong>Adres:</strong> ${SELLER.adres}</p>
+        <p><strong>NIP:</strong> ${SELLER.nip} &nbsp;|&nbsp; <strong>REGON:</strong> ${SELLER.regon}</p>
+        <p><strong>E-mail:</strong> <a href="mailto:${SELLER.email}">${SELLER.email}</a></p>
+        <p><strong>Telefon:</strong> <a href="tel:${SELLER.telefon.replace(/\s/g,'')}">${SELLER.telefon}</a></p>
+      `
+    }
+  };
+
+  function openDoc(key) {
+    const doc = DOCS[key];
+    if (!doc) return;
+    const content = document.getElementById('injected-legal-content');
+    content.innerHTML = `<h2>${doc.title}</h2>${doc.html}`;
+    document.getElementById('injected-legal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDoc() {
+    document.getElementById('injected-legal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function ensureOverlay() {
+    if (document.getElementById('injected-legal-overlay')) return;
+    document.body.insertAdjacentHTML('beforeend', overlayHTML);
+    document.getElementById('injected-legal-close').addEventListener('click', closeDoc);
+    document.getElementById('injected-legal-overlay').addEventListener('click', (e) => {
+      if (e.target.id === 'injected-legal-overlay') closeDoc();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDoc(); });
+  }
+
+  function addSellerTrustAndLegalBar() {
+    if (!document.getElementById('injected-seller-trust')) {
+      document.body.insertAdjacentHTML('beforeend', sellerTrustHTML);
+    }
+    if (!document.getElementById('injected-legal-bar')) {
+      const barHTML = `
+      <div id="injected-legal-bar">
+        <button class="legal-extra-link-injected" data-doc="regulamin">Regulamin sklepu</button>
+        <button class="legal-extra-link-injected" data-doc="prywatnosc">Polityka prywatności</button>
+        <button class="legal-extra-link-injected" data-doc="cookies">Polityka cookies</button>
+        <button class="legal-extra-link-injected" data-doc="zwroty">Zwroty i reklamacje</button>
+        <button class="legal-extra-link-injected" data-doc="dane">Pełne dane sprzedawcy</button>
+      </div>`;
+      document.body.insertAdjacentHTML('beforeend', barHTML);
+      document.querySelectorAll('#injected-legal-bar .legal-extra-link-injected').forEach(btn => {
+        btn.addEventListener('click', () => openDoc(btn.getAttribute('data-doc')));
+      });
     }
   }
-  setInterval(insertFooter, 1000);
+
+  function inject() {
+    ensureOverlay();
+    addSellerTrustAndLegalBar();
+  }
+
+  inject();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inject);
+  }
+  window.addEventListener('load', inject);
 })();
 </script>
 
+<!-- ============================================================
+     POPRAWKA WIZUALNA — finder do lokalizacji natywnej odznaki
+     "Bestseller" (jeśli powyższe selektory CSS jej nie złapały).
+     Ten skrypt WYŁĄCZNIE loguje do konsoli, niczego nie zmienia
+     ani nie ukrywa automatycznie.
+============================================================ -->
 <script>
-window.ShopifyBuyData = {
-  domain: '9c533e-78.myshopify.com',
-  token: '7994967396112f45300626372074366b',
-  productId: '15897628770636'
-};
-var originalBuildClient = null;
-var checkShopify = setInterval(function() {
-  if (window.ShopifyBuy && window.ShopifyBuy.buildClient) {
-    originalBuildClient = window.ShopifyBuy.buildClient;
-    window.ShopifyBuy.buildClient = function(config) {
-      config.domain = window.ShopifyBuyData.domain;
-      config.storefrontAccessToken = window.ShopifyBuyData.token;
-      return originalBuildClient.apply(this, arguments);
-    };
-    clearInterval(checkShopify);
-  }
-}, 50);
+(function () {
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      document.querySelectorAll('*').forEach((el) => {
+        if (el.children.length === 0 && /bestseller/i.test(el.textContent || '')) {
+          console.log('Znaleziono element z tekstem "Bestseller":', el, 'klasa:', el.className, 'id:', el.id);
+        }
+      });
+    }, 1500);
+  });
+})();
 </script>
 
 </body>
