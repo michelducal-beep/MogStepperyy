@@ -166,6 +166,22 @@ h1 { font-size: clamp(26px, 5.5vw, 44px) !important; line-height: 1.2 !important
 .cro-bestseller-wrap-injected { text-align: center; }
 header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(.cro-bestseller-pill-injected) { display: none !important; }
 .mog-nav-bound-injected { cursor: pointer !important; }
+  #cro-cta-small-injected { text-align: center; margin-top: 16px; }
+#cro-cta-small-link-injected {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary-yellow);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 193, 7, 0.4);
+  padding-bottom: 2px;
+  transition: border-color 0.2s ease;
+}
+#cro-cta-small-link-injected:hover { border-color: var(--primary-yellow); }
+#cro-cta-small-link-injected svg { flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -344,35 +360,30 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
   setTimeout(() => clearInterval(heroInterval), 6000);
 
   function wrapCtaAsPanel() {
+   function addSmallCtaLink() {
     if (!ctaAnchorEl) return;
-    if (document.getElementById('cro-cta-panel-injected')) return;
-    if (ctaAnchorEl.closest('#cro-cta-panel-injected')) return;
+    if (document.getElementById('cro-cta-small-injected')) return;
+    if (ctaAnchorEl.closest('#cro-cta-small-injected')) return;
 
-    const panel = document.createElement('div');
-    panel.id = 'cro-cta-panel-injected';
-    panel.setAttribute('role', 'button');
-    panel.setAttribute('tabindex', '0');
+    const wrap = document.createElement('div');
+    wrap.id = 'cro-cta-small-injected';
 
-    const tag = document.createElement('div');
-    tag.className = 'cro-cta-panel-tag-injected';
-    tag.innerHTML = `<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 3.2 1.3 5.3 2.6 6.6 1.3 1.3 3.4 2.1 6.6 2.6-3.2.5-5.3 1.3-6.6 2.6-1.3 1.3-2.1 3.4-2.6 6.6-.5-3.2-1.3-5.3-2.6-6.6C8.1 12.9 6 12.1 2.8 11.7c3.2-.5 5.3-1.3 6.6-2.6 1.3-1.3 2.1-3.4 2.6-6.6z"/></svg> Kliknij, aby zacząć`;
+    const link = document.createElement('a');
+    link.href = '#';
+    link.id = 'cro-cta-small-link-injected';
+    link.innerHTML = `Unieś się <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`;
 
-    const parent = ctaAnchorEl.parentElement;
-    parent.insertBefore(panel, ctaAnchorEl);
-    panel.appendChild(tag);
-    panel.appendChild(ctaAnchorEl);
-
-    const activate = () => ctaAnchorEl.click();
-    panel.addEventListener('click', (e) => {
-      if (e.target === ctaAnchorEl || ctaAnchorEl.contains(e.target)) return;
-      activate();
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      ctaAnchorEl.click();
     });
-    panel.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
-    });
-  }
-  const ctaPanelInterval = setInterval(wrapCtaAsPanel, 500);
-  setTimeout(() => clearInterval(ctaPanelInterval), 7500);
+
+    wrap.appendChild(link);
+    ctaAnchorEl.style.display = 'none';
+    ctaAnchorEl.parentElement.insertBefore(wrap, ctaAnchorEl);
+}
+const ctaSmallInterval = setInterval(addSmallCtaLink, 500);
+setTimeout(() => clearInterval(ctaSmallInterval), 7500);
 
   const compareHTML = `
   <section class="cro-section-injected" id="cro-comparison-section-injected">
