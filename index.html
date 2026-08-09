@@ -1311,10 +1311,56 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
   // Znajduje natywną kartę zakupową (obrazek + nazwa + cena + "Kup teraz"),
   // dokładnie taką jak na zrzucie ekranu nr 3 od klienta.
   function findNativeBuyCard() {
-  const buyButton = document.querySelector('.shopify-buy-button');
+  const shopifyButton = document.querySelector('.shopify-buy-button');
 
-  if (!buyButton) {
-    return null;
+  if (!shopifyButton) return null;
+
+  /*
+   * Shopify Buy Button siedzi wewnątrz karty produktu.
+   * Nie chcemy wychodzić aż do Hero.
+   *
+   * Szukamy najmniejszego kontenera, który:
+   * - zawiera Shopify Buy Button
+   * - jest rzeczywistym blokiem karty
+   * - nie jest całym Hero
+   */
+
+  let node = shopifyButton;
+  let bestCard = shopifyButton;
+
+  for (let i = 0; i < 12; i++) {
+    if (!node.parentElement) break;
+
+    const parent = node.parentElement;
+
+    if (
+      parent.id === 'root' ||
+      parent.tagName === 'BODY' ||
+      parent.tagName === 'MAIN'
+    ) {
+      break;
+    }
+
+    const rect = parent.getBoundingClientRect();
+
+    /*
+     * Pomijamy kontenery obejmujące praktycznie cały ekran.
+     * To właśnie one powodowały wcześniejsze wyskakiwanie
+     * panelu obok całego Hero.
+     */
+    const isWholeHero =
+      rect.width >= window.innerWidth * 0.9 &&
+      rect.height >= window.innerHeight * 0.7;
+
+    if (!isWholeHero) {
+      bestCard = parent;
+    }
+
+    node = parent;
+  }
+
+  return bestCard;
+}
   }
 
   /*
