@@ -1261,17 +1261,17 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     <div class="mog-selector-wrap-injected" id="mog-selector-wrap-injected">
       <div class="mog-selector-label-injected">Wybierz swój pakiet</div>
       <div class="mog-selector-grid-injected">
-        <div class="mog-option-injected" data-option="single">
+        <div class="mog-option-injected" data-option="single" data-price="69.99">
           <div class="mog-option-name-injected">Pojedyncza para</div>
-          <div class="mog-option-price-injected">${fmt(PRICE_SINGLE)}</div>
+          <div class="mog-option-price-injected">69,99 zł</div>
           <div class="mog-option-perks-injected">Darmowa dostawa<br>E-book PDF gratis</div>
         </div>
-        <div class="mog-option-injected mog-active-injected" data-option="double">
+        <div class="mog-option-injected mog-active-injected" data-option="double" data-price="99.99">
           <span class="mog-option-badge-injected">Najczęściej wybierane</span>
           <div class="mog-option-name-injected">Pakiet 2 pary</div>
-          <div class="mog-option-oldprice-injected">${fmt(PRICE_DOUBLE_BASE)}</div>
-          <div class="mog-option-price-injected">${fmt(PRICE_DOUBLE)}</div>
-          <div class="mog-option-save-injected">Oszczędzasz ${fmt(SAVE_DOUBLE)} (${SAVE_DOUBLE_PCT}%)</div>
+          <div class="mog-option-oldprice-injected">139,98 zł</div>
+          <div class="mog-option-price-injected">99,99 zł</div>
+          <div class="mog-option-save-injected">Oszczędzasz 39,99 zł</div>
           <div class="mog-option-perks-injected">Darmowa dostawa<br>E-book PDF gratis</div>
         </div>
       </div>
@@ -1293,11 +1293,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     </div>
 
     <div class="mog-final-box-injected">
-      <div class="mog-final-pricerow-injected">
-        <span class="mog-final-oldprice-injected">${OLD_PRICE_FINAL} zł</span>
-        <span class="mog-final-newprice-injected">${fmt(PRICE_SINGLE)}</span>
-        <span class="mog-final-percent-injected">${FINAL_PCT}%</span>
-      </div>
+      <button class="cta" id="buyBtn" style="display: block; width: 100%; margin-bottom: 15px; background: var(--primary-yellow); color: #000; border: none; font-size: 15px; font-weight: 700; padding: 14px; border-radius: 12px; cursor: pointer; text-align: center; font-family: 'Space Grotesk', sans-serif;">Kup teraz — 99,99 zł</button>
       <div class="mog-final-shipping-injected">Darmowa dostawa</div>
       <ul class="mog-final-bullets-injected">
         <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Wysyłka InPost 24h z Polski</li>
@@ -1513,6 +1509,7 @@ function insertPurchaseBlock() {
 
   function bindSelector() {
     const wrap = document.getElementById('mog-selector-wrap-injected');
+    const buyBtn = document.getElementById('buyBtn');
     if (!wrap || wrap.dataset.bound) return;
     wrap.dataset.bound = 'true';
     const opts = wrap.querySelectorAll('.mog-option-injected');
@@ -1520,8 +1517,17 @@ function insertPurchaseBlock() {
       opt.addEventListener('click', () => {
         opts.forEach((o) => o.classList.remove('mog-active-injected'));
         opt.classList.add('mog-active-injected');
+        const price = opt.getAttribute('data-price');
+        const label = opt.getAttribute('data-option') === 'double' ? '99,99 zł' : '69,99 zł';
+        if (buyBtn) buyBtn.textContent = 'Kup teraz — ' + label;
       });
     });
+
+    if (buyBtn) {
+      buyBtn.addEventListener('click', () => {
+        console.log('Przejście do zakupu:', buyBtn.textContent);
+      });
+    }
   }
 
   function initStockCounter() {
