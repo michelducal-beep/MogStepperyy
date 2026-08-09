@@ -168,11 +168,17 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 .mog-nav-bound-injected { cursor: pointer !important; }
 
 /* ===== TOP BAR (dostawa gratis + e-book gratis) ===== */
-#mog-top-bar-injected { position: sticky; top: 0; z-index: 10000; width: 100%; box-sizing: border-box; background: linear-gradient(90deg, #FFC107, #FFE082, #FFC107); background-size: 200% 100%; animation: mogBarShift 5s linear infinite; color: #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; padding: 10px 16px; text-align: center; }
+/* Pasek promo stoi NAD paskiem strony (header z logo MogSteppery).
+   Header dostaje dynamiczny offset (--mog-topbar-h, liczony w JS),
+   dzięki czemu oba paski są ułożone jeden pod drugim i się nie zakrywają,
+   również gdy header jest sticky/fixed i nawet po przewinięciu strony. */
+:root { --mog-topbar-h: 40px; }
+#mog-top-bar-injected { position: sticky; top: 0; z-index: 10001; width: 100%; box-sizing: border-box; background: linear-gradient(90deg, #FFC107, #FFE082, #FFC107); background-size: 200% 100%; animation: mogBarShift 5s linear infinite; color: #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; padding: 10px 16px; text-align: center; }
 @keyframes mogBarShift { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
 .mog-top-bar-track-injected { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; max-width: 1100px; margin: 0 auto; }
 .mog-top-bar-sep-injected { opacity: .5; }
 @media (max-width: 480px) { #mog-top-bar-injected { font-size: 11.5px; padding: 8px 10px; } }
+header { position: sticky !important; top: var(--mog-topbar-h) !important; z-index: 9999 !important; }
 
 /* ===== KOMUNIKAT O NISKIM STANIE MAGAZYNOWYM ===== */
 .mog-stock-notice-injected { display: flex; align-items: center; justify-content: center; gap: 6px; color: #ffb020; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; background: rgba(255, 176, 32, 0.08); border: 1px solid rgba(255, 176, 32, 0.3); border-radius: 999px; padding: 8px 16px; max-width: 420px; margin: 0 auto 16px; text-align: center; }
@@ -240,6 +246,22 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 <div id="root"></div>
 <script>
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+
+<!-- ============ OFFSET PASKA PROMO WZGLĘDEM HEADERA ============ -->
+<script>
+(function() {
+  function syncTopBarOffset() {
+    const bar = document.getElementById('mog-top-bar-injected');
+    if (!bar) return;
+    const h = bar.getBoundingClientRect().height;
+    document.documentElement.style.setProperty('--mog-topbar-h', h + 'px');
+  }
+  syncTopBarOffset();
+  window.addEventListener('resize', syncTopBarOffset);
+  const syncInterval = setInterval(syncTopBarOffset, 400);
+  setTimeout(() => clearInterval(syncInterval), 6000);
+})();
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 
@@ -374,6 +396,40 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
   }, 50);
 </script>
 
+<!-- ============ GLOBALNA PODMIANA CENY 59,99 -> 69,99 (na wszelki wypadek, np. natywne dane Shopify) ============ -->
+<script>
+(function() {
+  const OLD_PRICE_RE = /59[.,]99(\s*zł)?/gi;
+
+  function replacePricesInTree(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    const nodes = [];
+    let n;
+    while ((n = walker.nextNode())) {
+      if (n.parentElement && n.parentElement.closest('[id*="injected"], [class*="injected"], script, style')) continue;
+      if (OLD_PRICE_RE.test(n.nodeValue)) nodes.push(n);
+      OLD_PRICE_RE.lastIndex = 0;
+    }
+    nodes.forEach((node) => {
+      node.nodeValue = node.nodeValue.replace(OLD_PRICE_RE, (m, suffix) => '69,99' + (suffix || ''));
+    });
+  }
+
+  function runPriceSync() {
+    replacePricesInTree(document.body);
+  }
+
+  runPriceSync();
+  const priceSyncInterval = setInterval(runPriceSync, 500);
+  setTimeout(() => clearInterval(priceSyncInterval), 10000);
+  const root = document.getElementById('root');
+  if (root && 'MutationObserver' in window) {
+    const mo = new MutationObserver(() => runPriceSync());
+    mo.observe(root, { childList: true, subtree: true, characterData: true });
+  }
+})();
+</script>
+
 <script>
 (function() {
 
@@ -403,7 +459,10 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
       const txt = el.textContent.trim();
       if (OLD_CTA_PATTERN.test(txt) && txt.length < 40) {
         el.textContent = CTA_LABEL;
-        if (!ctaAnchorEl) ctaAnchorEl = el;
+        if (!ctaAnchorEl) {
+          ctaAnchorEl = el;
+          window.__mogCtaEl = ctaAnchorEl;
+        }
       }
     });
   }
@@ -1124,13 +1183,13 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 })();
 </script>
 
-<!-- ============ SELEKTOR PAKIETÓW + STOCK + EBOOK MOCKUP + FINALNY BOX ZAKUPOWY (INJECTED) ============ -->
+<!-- ============ SELEKTOR PAKIETÓW + STOCK (W HERO) + WIZUALIZACJA E-BOOKA I FINALNY BOX ZAKUPOWY (SEKCJA "ZAMÓW TERAZ" NA DOLE) ============ -->
 <script>
 (function() {
 
   // Ceny — jedno miejsce edycji, jeśli trzeba je kiedyś zmienić
   const PRICE_SINGLE = 69.99;
-  const PRICE_DOUBLE = 99.00;
+  const PRICE_DOUBLE = 99.99;
   const PRICE_DOUBLE_BASE = PRICE_SINGLE * 2; // 139,98 zł — punkt odniesienia dla "oszczędzasz"
   const SAVE_DOUBLE = PRICE_DOUBLE_BASE - PRICE_DOUBLE; // ok. 40 zł
   const SAVE_DOUBLE_PCT = Math.round((SAVE_DOUBLE / PRICE_DOUBLE_BASE) * 100); // ok. -29%
@@ -1139,6 +1198,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 
   const fmt = (n) => n.toFixed(2).replace('.', ',') + ' zł';
 
+  // --- Blok 1: zostaje w Hero, tuż przy przycisku CTA (zgodnie z briefem) ---
   const purchaseBlockHTML = `
   <div id="mog-purchase-enhancements-injected" class="mog-reveal-injected">
     <div class="mog-stock-notice-injected" id="mog-stock-notice-injected">
@@ -1163,50 +1223,102 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
         </div>
       </div>
     </div>
-
-    <div class="mog-ebook-mockup-injected">
-      <div class="mog-ebook-device-injected">
-        <div class="mog-ebook-device-screen-injected">
-          <span class="mog-ebook-pdf-badge-injected">PDF</span>
-          <span class="mog-ebook-icon-lines-injected"></span>
-          <span class="mog-ebook-icon-lines-injected" style="width:20px;"></span>
-        </div>
-      </div>
-      <div class="mog-ebook-text-injected">
-        <div class="mog-ebook-title-injected">E-book „Jak zyskać pewność siebie”</div>
-        <div class="mog-ebook-desc-injected">Gratis do każdego zamówienia — wysyłamy od razu na Twój e-mail.</div>
-        <span class="mog-ebook-tag-injected">✓ Wartość 49 zł — GRATIS</span>
-      </div>
-    </div>
-
-    <div class="mog-final-box-injected">
-      <div class="mog-final-pricerow-injected">
-        <span class="mog-final-oldprice-injected">${OLD_PRICE_FINAL} zł</span>
-        <span class="mog-final-newprice-injected">${fmt(PRICE_SINGLE)}</span>
-        <span class="mog-final-percent-injected">${FINAL_PCT}%</span>
-      </div>
-      <div class="mog-final-shipping-injected">Darmowa dostawa</div>
-      <ul class="mog-final-bullets-injected">
-        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Wysyłka InPost 24h z Polski</li>
-        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Darmowa dostawa</li>
-        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> W zestawie: E-book „Jak zyskać pewność siebie” (PDF na maila)</li>
-      </ul>
-    </div>
   </div>
   `;
 
+  // --- Blok 2: osobna sekcja "Zamów teraz" na dole strony (miejsce finalizacji zakupu) ---
+  const checkoutBlockHTML = `
+  <section class="cro-section-injected mog-reveal-injected" id="mog-checkout-section-injected">
+    <div class="cro-inner-injected">
+      <div class="cro-eyebrow-injected">Zamów teraz</div>
+      <h2 class="cro-title-injected">Twoja metamorfoza zaczyna się tutaj</h2>
+      <p class="cro-subtitle-injected">Wybrałeś pakiet wyżej — teraz wystarczy jeden klik, żeby dokończyć zamówienie.</p>
+
+      <div class="mog-ebook-mockup-injected">
+        <div class="mog-ebook-device-injected">
+          <div class="mog-ebook-device-screen-injected">
+            <span class="mog-ebook-pdf-badge-injected">PDF</span>
+            <span class="mog-ebook-icon-lines-injected"></span>
+            <span class="mog-ebook-icon-lines-injected" style="width:20px;"></span>
+          </div>
+        </div>
+        <div class="mog-ebook-text-injected">
+          <div class="mog-ebook-title-injected">E-book „Jak zyskać pewność siebie”</div>
+          <div class="mog-ebook-desc-injected">Gratis do każdego zamówienia — wysyłamy od razu na Twój e-mail.</div>
+          <span class="mog-ebook-tag-injected">✓ Wartość 49 zł — GRATIS</span>
+        </div>
+      </div>
+
+      <div class="mog-final-box-injected">
+        <div class="mog-final-pricerow-injected">
+          <span class="mog-final-oldprice-injected">${OLD_PRICE_FINAL} zł</span>
+          <span class="mog-final-newprice-injected">${fmt(PRICE_SINGLE)}</span>
+          <span class="mog-final-percent-injected">${FINAL_PCT}%</span>
+        </div>
+        <div class="mog-final-shipping-injected">Darmowa dostawa</div>
+        <ul class="mog-final-bullets-injected">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Wysyłka InPost 24h z Polski</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Darmowa dostawa</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> W zestawie: E-book „Jak zyskać pewność siebie” (PDF na maila)</li>
+        </ul>
+      </div>
+
+      <div id="mog-checkout-cta-injected" role="button" tabindex="0" style="max-width:320px; margin:18px auto 0; background:#141414; border:1px solid var(--border-color); border-radius:14px; padding:14px; text-align:center; cursor:pointer; font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15px; color:var(--primary-yellow); transition: border-color .2s ease;">
+        Zamów teraz →
+      </div>
+    </div>
+  </section>
+  `;
+
   function insertPurchaseBlock() {
-    if (document.getElementById('mog-purchase-enhancements-injected')) return;
-    const panel = document.getElementById('cro-cta-panel-injected');
-    if (!panel || !panel.parentElement) return;
-    panel.insertAdjacentHTML('beforebegin', purchaseBlockHTML);
-    bindSelector();
-    initStockCounter();
-    initRevealAnimation();
+    if (!document.getElementById('mog-purchase-enhancements-injected')) {
+      const panel = document.getElementById('cro-cta-panel-injected');
+      if (panel && panel.parentElement) {
+        panel.insertAdjacentHTML('beforebegin', purchaseBlockHTML);
+        bindSelector();
+        initStockCounter();
+        initRevealAnimation('mog-purchase-enhancements-injected');
+      }
+    }
+    insertCheckoutBlock();
   }
 
-  function initRevealAnimation() {
-    const el = document.getElementById('mog-purchase-enhancements-injected');
+  function insertCheckoutBlock() {
+    if (document.getElementById('mog-checkout-section-injected')) return;
+    const sellerTrust = document.getElementById('injected-seller-trust');
+    if (sellerTrust && sellerTrust.parentElement) {
+      sellerTrust.insertAdjacentHTML('beforebegin', checkoutBlockHTML);
+    } else {
+      // Sekcja z danymi sprzedawcy jeszcze się nie pojawiła — dokładamy na
+      // razie na końcu body, skrypt sprzedawcy i tak doda się jeszcze niżej.
+      document.body.insertAdjacentHTML('beforeend', checkoutBlockHTML);
+    }
+    bindCheckoutCta();
+    initRevealAnimation('mog-checkout-section-injected');
+  }
+
+  function bindCheckoutCta() {
+    const btn = document.getElementById('mog-checkout-cta-injected');
+    if (!btn || btn.dataset.bound) return;
+    btn.dataset.bound = 'true';
+    const activate = () => {
+      if (window.__mogCtaEl) {
+        window.__mogCtaEl.click();
+      } else {
+        const panel = document.getElementById('cro-cta-panel-injected');
+        if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+    btn.addEventListener('click', activate);
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+    });
+    btn.addEventListener('mouseenter', () => { btn.style.borderColor = 'var(--primary-yellow)'; });
+    btn.addEventListener('mouseleave', () => { btn.style.borderColor = 'var(--border-color)'; });
+  }
+
+  function initRevealAnimation(id) {
+    const el = document.getElementById(id);
     if (!el) return;
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
@@ -1225,16 +1337,17 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 
   // React renderuje #root i przy re-renderach może wyczyścić ręcznie
   // wstawione węzły DOM (nie istnieją w jego Virtual DOM). Ten obserwator
-  // pilnuje bloku zakupowego i odtwarza go natychmiast, jeśli zniknie —
-  // dzięki temu selektor/stock/e-book/finalny box przetrwają animacje
-  // i re-rendery strony zamiast znikać po kilku sekundach.
+  // pilnuje obu bloków zakupowych i odtwarza je natychmiast, jeśli znikną —
+  // dzięki temu selektor/stock w Hero oraz sekcja "Zamów teraz" na dole
+  // przetrwają animacje i re-rendery strony zamiast znikać po kilku sekundach.
   function watchAndHeal() {
     const root = document.getElementById('root');
     if (!root) return;
     let healTimeout = null;
     const observer = new MutationObserver(() => {
-      if (document.getElementById('mog-purchase-enhancements-injected')) return;
-      if (!document.getElementById('cro-cta-panel-injected')) return;
+      const heroMissing = document.getElementById('cro-cta-panel-injected') && !document.getElementById('mog-purchase-enhancements-injected');
+      const checkoutMissing = !document.getElementById('mog-checkout-section-injected');
+      if (!heroMissing && !checkoutMissing) return;
       clearTimeout(healTimeout);
       healTimeout = setTimeout(insertPurchaseBlock, 150);
     });
