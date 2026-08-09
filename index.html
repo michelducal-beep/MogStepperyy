@@ -167,17 +167,21 @@ h1 { font-size: clamp(26px, 5.5vw, 44px) !important; line-height: 1.2 !important
 header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(.cro-bestseller-pill-injected) { display: none !important; }
 .mog-nav-bound-injected { cursor: pointer !important; }
 
-/* ===== TOP BAR (dostawa gratis + e-book gratis) ===== */
+/* ===== TOP BAR (dostawa gratis + e-book gratis + promo 2 pary) ===== */
 /* Pasek promo stoi NAD paskiem strony (header z logo MogSteppery).
-   Header dostaje dynamiczny offset (--mog-topbar-h, liczony w JS),
-   dzięki czemu oba paski są ułożone jeden pod drugim i się nie zakrywają,
-   również gdy header jest sticky/fixed i nawet po przewinięciu strony. */
+   Header dostaje dynamiczny offset (--mog-topbar-h, liczony w JS
+   i wymuszany też przez inline style z !important na samym elemencie
+   headera — patrz skrypt "wymuszenie pozycji headera" niżej), dzięki
+   czemu oba paski są ułożone jeden pod drugim i się NIE zakrywają,
+   nawet jeśli natywny, skompilowany CSS strony ustawia header na
+   position: fixed z własnym !important o wyższej specyficzności niż
+   prosty selektor "header" w tym pliku. */
 :root { --mog-topbar-h: 40px; }
 #mog-top-bar-injected { position: sticky; top: 0; z-index: 10001; width: 100%; box-sizing: border-box; background: linear-gradient(90deg, #FFC107, #FFE082, #FFC107); background-size: 200% 100%; animation: mogBarShift 5s linear infinite; color: #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; padding: 10px 16px; text-align: center; }
 @keyframes mogBarShift { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
 .mog-top-bar-track-injected { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; max-width: 1100px; margin: 0 auto; }
 .mog-top-bar-sep-injected { opacity: .5; }
-@media (max-width: 480px) { #mog-top-bar-injected { font-size: 11.5px; padding: 8px 10px; } }
+@media (max-width: 480px) { #mog-top-bar-injected { font-size: 11px; padding: 8px 10px; } .mog-top-bar-track-injected { gap: 6px 8px; } }
 header { position: sticky !important; top: var(--mog-topbar-h) !important; z-index: 9999 !important; }
 
 /* ===== KOMUNIKAT O NISKIM STANIE MAGAZYNOWYM ===== */
@@ -196,6 +200,14 @@ header { position: sticky !important; top: var(--mog-topbar-h) !important; z-ind
 .mog-option-price-injected { color: var(--primary-yellow); font-size: 21px; font-weight: 700; line-height: 1.2; }
 .mog-option-save-injected { color: #5fd76a; font-size: 11px; font-weight: 700; margin-top: 4px; }
 .mog-option-perks-injected { color: var(--text-gray); font-size: 10.5px; margin-top: 8px; line-height: 1.55; font-family: 'Inter', sans-serif; }
+
+/* ===== BLOK PANELI DOSTAWIANY POD NATYWNYM PANELEM SPRZEDAŻY ===== */
+/* Ten kontener NIE trafia już do sekcji Hero na górze strony — jest
+   doklejany bezpośrednio POD natywną kartą zakupową (obrazek + nazwa +
+   cena + przycisk "Kup teraz"), dokładnie tak, jak wygląda to na
+   zrzucie ekranu nr 1 od klienta. Patrz skrypt lokalizujący kartę
+   zakupową niżej w pliku (funkcja findNativeBuyCard). */
+.mog-panels-anchor-injected { width: 100%; box-sizing: border-box; padding: 18px 20px 4px; }
 
 /* ===== WIZUALIZACJA E-BOOKA (mockup 3D CSS) ===== */
 .mog-ebook-mockup-injected { display: flex; align-items: center; gap: 16px; max-width: 480px; margin: 16px auto; background: #0f0f0f; border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; }
@@ -241,6 +253,8 @@ header { position: sticky !important; top: var(--mog-topbar-h) !important; z-ind
     <span>🚚 Darmowa dostawa na wszystko!</span>
     <span class="mog-top-bar-sep-injected">|</span>
     <span>🎁 Do każdego zamówienia e-book „Pewność Siebie” GRATIS!</span>
+    <span class="mog-top-bar-sep-injected">|</span>
+    <span>👟 2 wkładki za 99,99 zł (zamiast 139,98 zł)!</span>
   </div>
 </div>
 <div id="root"></div>
@@ -248,19 +262,36 @@ header { position: sticky !important; top: var(--mog-topbar-h) !important; z-ind
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
 
-<!-- ============ OFFSET PASKA PROMO WZGLĘDEM HEADERA ============ -->
+<!-- ============ OFFSET PASKA PROMO WZGLĘDEM HEADERA (wersja wzmocniona) ============ -->
 <script>
 (function() {
+  // Ten skrypt robi DWIE rzeczy, żeby pasek promo na pewno nie zakrywał
+  // headera ze strony (napis "MogSteppery" + menu):
+  // 1) liczy realną wysokość paska promo i zapisuje ją w zmiennej CSS
+  //    --mog-topbar-h, z której korzysta reguła "header { top: ... }".
+  // 2) dodatkowo wymusza tę pozycję BEZPOŚREDNIO na elemencie <header>
+  //    przez inline style z priorytetem "important" — to gwarantuje
+  //    zwycięstwo nad jakimkolwiek natywnym, skompilowanym CSS strony
+  //    (np. position: fixed ustawionym z większą specyficznością niż
+  //    prosty selektor "header" w naszym <style>).
   function syncTopBarOffset() {
     const bar = document.getElementById('mog-top-bar-injected');
     if (!bar) return;
     const h = bar.getBoundingClientRect().height;
     document.documentElement.style.setProperty('--mog-topbar-h', h + 'px');
+
+    const header = document.querySelector('header');
+    if (header) {
+      header.style.setProperty('position', 'sticky', 'important');
+      header.style.setProperty('top', h + 'px', 'important');
+      header.style.setProperty('z-index', '9999', 'important');
+    }
   }
   syncTopBarOffset();
   window.addEventListener('resize', syncTopBarOffset);
+  window.addEventListener('scroll', syncTopBarOffset, { passive: true });
   const syncInterval = setInterval(syncTopBarOffset, 400);
-  setTimeout(() => clearInterval(syncInterval), 6000);
+  setTimeout(() => clearInterval(syncInterval), 10000);
 })();
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
@@ -396,10 +427,15 @@ header { position: sticky !important; top: var(--mog-topbar-h) !important; z-ind
   }, 50);
 </script>
 
-<!-- ============ GLOBALNA PODMIANA CENY 59,99 -> 69,99 (na wszelki wypadek, np. natywne dane Shopify) ============ -->
+<!-- ============ GLOBALNA PODMIANA CENY 59,99 / 59 zł -> 69,99 zł ============ -->
 <script>
 (function() {
-  const OLD_PRICE_RE = /59[.,]99(\s*zł)?/gi;
+  // Łapiemy zarówno "59,99 zł" / "59.99 zł" jak i samo "59 zł" (bez
+  // grosza), żeby wyłapać też natywne karty produktowe, które potrafią
+  // wyświetlać cenę bez części dziesiętnej (tak jak na zrzucie klienta).
+  // Cena porównawcza "100 zł" pozostaje nietknięta — to punkt odniesienia
+  // do przekreślenia, a nie cena do zmiany.
+  const OLD_PRICE_RE = /59(?:[.,]99)?\s*zł/gi;
 
   function replacePricesInTree(root) {
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
@@ -411,7 +447,7 @@ header { position: sticky !important; top: var(--mog-topbar-h) !important; z-ind
       OLD_PRICE_RE.lastIndex = 0;
     }
     nodes.forEach((node) => {
-      node.nodeValue = node.nodeValue.replace(OLD_PRICE_RE, (m, suffix) => '69,99' + (suffix || ''));
+      node.nodeValue = node.nodeValue.replace(OLD_PRICE_RE, '69,99 zł');
     });
   }
 
@@ -421,7 +457,7 @@ header { position: sticky !important; top: var(--mog-topbar-h) !important; z-ind
 
   runPriceSync();
   const priceSyncInterval = setInterval(runPriceSync, 500);
-  setTimeout(() => clearInterval(priceSyncInterval), 10000);
+  setTimeout(() => clearInterval(priceSyncInterval), 12000);
   const root = document.getElementById('root');
   if (root && 'MutationObserver' in window) {
     const mo = new MutationObserver(() => runPriceSync());
@@ -1183,7 +1219,7 @@ header { position: sticky !important; top: var(--mog-topbar-h) !important; z-ind
 })();
 </script>
 
-<!-- ============ SELEKTOR PAKIETÓW + STOCK (W HERO) + WIZUALIZACJA E-BOOKA I FINALNY BOX ZAKUPOWY (SEKCJA "ZAMÓW TERAZ" NA DOLE) ============ -->
+<!-- ============ SELEKTOR PAKIETÓW + STOCK — DOKLEJANE POD NATYWNYM PANELEM ZAKUPOWYM (KARTA ZE ZDJĘCIA NR 1) + WIZUALIZACJA E-BOOKA I FINALNY BOX ZAKUPOWY (SEKCJA "ZAMÓW TERAZ" NA DOLE) ============ -->
 <script>
 (function() {
 
@@ -1198,9 +1234,13 @@ header { position: sticky !important; top: var(--mog-topbar-h) !important; z-ind
 
   const fmt = (n) => n.toFixed(2).replace('.', ',') + ' zł';
 
-  // --- Blok 1: zostaje w Hero, tuż przy przycisku CTA (zgodnie z briefem) ---
+  // --- Blok "selektor pakietów + stan magazynowy" ---
+  // WAŻNE: ten blok NIE jest już wstawiany w sekcji Hero na górze strony.
+  // Zgodnie z uwagami klienta trafia bezpośrednio POD natywną kartę
+  // zakupową — czyli dokładnie tam, gdzie na zrzucie ekranu nr 1 widać
+  // zdjęcie wkładki + nazwę produktu + cenę + przycisk "Kup teraz".
   const purchaseBlockHTML = `
-  <div id="mog-purchase-enhancements-injected" class="mog-reveal-injected">
+  <div id="mog-purchase-enhancements-injected" class="mog-reveal-injected mog-panels-anchor-injected">
     <div class="mog-stock-notice-injected" id="mog-stock-notice-injected">
       ⚡ Zostało tylko <span id="mog-stock-count-injected">14</span> szt. w tej cenie promocyjnej w bieżącej dostawie
     </div>
@@ -1270,11 +1310,39 @@ header { position: sticky !important; top: var(--mog-topbar-h) !important; z-ind
   </section>
   `;
 
+  // Znajduje natywną kartę zakupową (obrazek produktu + nazwa + cena +
+  // przycisk "Kup teraz"), dokładnie taką jak widoczna na zrzucie
+  // ekranu nr 1 od klienta. Szukamy przycisku/linku z tekstem
+  // pasującym do "Kup teraz", ignorując wszystko, co sami wstrzyknęliśmy
+  // (np. nasz własny przycisk "Zamów teraz →" w sekcji checkoutu).
+  function findNativeBuyCard() {
+    const clickable = document.querySelectorAll('button, a');
+    for (const el of clickable) {
+      if (el.closest('[id*="injected"], [class*="injected"]')) continue;
+      const txt = el.textContent.trim();
+      if (/kup\s*teraz/i.test(txt) && txt.length < 60) {
+        // Idziemy w górę do sensownego kontenera karty (max 8 poziomów),
+        // żeby nasz blok wylądował POD całą kartą, a nie w jej środku.
+        let node = el;
+        let depth = 0;
+        while (node.parentElement && depth < 8) {
+          node = node.parentElement;
+          depth++;
+          // Zatrzymujemy się, gdy kontener zawiera też obrazek — to
+          // znak, że złapaliśmy całą kartę produktu, a nie tylko przycisk.
+          if (node.querySelector('img')) return node;
+        }
+        return el.parentElement || el;
+      }
+    }
+    return null;
+  }
+
   function insertPurchaseBlock() {
     if (!document.getElementById('mog-purchase-enhancements-injected')) {
-      const panel = document.getElementById('cro-cta-panel-injected');
-      if (panel && panel.parentElement) {
-        panel.insertAdjacentHTML('beforebegin', purchaseBlockHTML);
+      const card = findNativeBuyCard();
+      if (card && card.parentElement) {
+        card.insertAdjacentHTML('afterend', purchaseBlockHTML);
         bindSelector();
         initStockCounter();
         initRevealAnimation('mog-purchase-enhancements-injected');
@@ -1338,14 +1406,16 @@ header { position: sticky !important; top: var(--mog-topbar-h) !important; z-ind
   // React renderuje #root i przy re-renderach może wyczyścić ręcznie
   // wstawione węzły DOM (nie istnieją w jego Virtual DOM). Ten obserwator
   // pilnuje obu bloków zakupowych i odtwarza je natychmiast, jeśli znikną —
-  // dzięki temu selektor/stock w Hero oraz sekcja "Zamów teraz" na dole
-  // przetrwają animacje i re-rendery strony zamiast znikać po kilku sekundach.
+  // dzięki temu selektor/stock pod natywną kartą zakupową oraz sekcja
+  // "Zamów teraz" na dole przetrwają animacje i re-rendery strony zamiast
+  // znikać po kilku sekundach.
   function watchAndHeal() {
     const root = document.getElementById('root');
     if (!root) return;
     let healTimeout = null;
     const observer = new MutationObserver(() => {
-      const heroMissing = document.getElementById('cro-cta-panel-injected') && !document.getElementById('mog-purchase-enhancements-injected');
+      const card = findNativeBuyCard();
+      const heroMissing = card && !document.getElementById('mog-purchase-enhancements-injected');
       const checkoutMissing = !document.getElementById('mog-checkout-section-injected');
       if (!heroMissing && !checkoutMissing) return;
       clearTimeout(healTimeout);
