@@ -243,7 +243,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
   <div class="mog-top-bar-track-injected">
     <span>🚚 Darmowa dostawa na wszystko!</span>
     <span class="mog-top-bar-sep-injected">|</span>
-    <span>🎁 Do każdego zamówienia e-book „Pewność Siebie” GRATIS!</span>
+    <span>🎁 Do każdego zamówienia e-book „Pewność Siebie" GRATIS!</span>
     <span class="mog-top-bar-sep-injected">|</span>
     <span>👟 2 wkładki za 99,99 zł (zamiast 139,98 zł)!</span>
   </div>
@@ -259,22 +259,6 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 <!-- ============ OFFSET PASKA PROMO WZGLĘDEM HEADERA (wersja odporna) ============ -->
 <script>
 (function() {
-  // Ten skrypt dba o to, żeby pasek promo (#mog-top-bar-injected) NIGDY
-  // nie zakrywał nagłówka strony z logo "MogSteppery" i menu.
-  //
-  // Poprzednia wersja polegała wyłącznie na selektorze CSS "header",
-  // co zawodzi, jeśli skompilowany bundle Reacta (index-BW_yiXVd.js)
-  // renderuje logo w innym elemencie (div/nav bez tagu <header>) albo
-  // nadpisuje inline style przy każdym renderze. Ta wersja:
-  //  1) szuka prawdziwego nagłówka po tagu <header>, a jeśli go nie ma —
-  //     szuka najmniejszego elementu zawierającego tekst "MogSteppery"
-  //     i traktuje jego najbliższego "sekcyjnego" rodzica jako nagłówek;
-  //  2) wymusza pozycję przez klasę + inline style z !important;
-  //  3) pilnuje tego w pętli requestAnimationFrame (bez limitu czasu)
-  //     oraz przez MutationObserver na atrybucie style/class nagłówka,
-  //     więc nawet jeśli React nadpisze styl przy re-renderze, wracamy
-  //     do poprawnej pozycji w kolejnej klatce.
-
   let headerEl = null;
   let headerObserver = null;
 
@@ -282,12 +266,10 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     const native = document.querySelector('header');
     if (native) return native;
 
-    // Fallback: znajdź element z tekstem "MogSteppery" i wyjdź w górę
-    // do najbliższego rozsądnego kontenera (max 6 poziomów).
     const all = document.querySelectorAll('div, nav, section, span, a');
     for (const el of all) {
       if (el.closest('[id*="injected"], [class*="injected"]')) continue;
-      if (el.children.length > 3) continue; // pomijamy duże kontenery
+      if (el.children.length > 3) continue;
       if (/MogSteppery/.test(el.textContent || '') && el.textContent.trim().length < 40) {
         let node = el;
         let depth = 0;
@@ -499,9 +481,6 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     const mo = new MutationObserver(() => runPriceSync());
     mo.observe(root, { childList: true, subtree: true, characterData: true });
   }
-  // Bez setTimeout(clearInterval, ...) — synchronizacja ceny działa
-  // przez cały czas życia strony, więc każdy późniejszy re-render
-  // Reacta (np. po interakcji użytkownika) też zostanie poprawiony.
 })();
 </script>
 
@@ -1238,7 +1217,10 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 })();
 </script>
 
-<!-- ============ SELEKTOR PAKIETÓW + STOCK — DOKLEJANE POD NATYWNYM PANELEM ZAKUPOWYM (KARTA ZE ZDJĘCIA NR 1) + WIZUALIZACJA E-BOOKA I FINALNY BOX ZAKUPOWY (SEKCJA "ZAMÓW TERAZ" NA DOLE) ============ -->
+<!-- ============ SELEKTOR PAKIETÓW + STOCK — DOKLEJANE POD NATYWNYM PANELEM ZAKUPOWYM + WIZUALIZACJA E-BOOKA I FINALNY BOX ZAKUPOWY ============ -->
+<!-- ============ NAPRAWIONO: usunięto zdublowany/uszkodzony fragment funkcji findNativeBuyCard(),
+     który zawierał instrukcję return poza jakąkolwiek funkcją (SyntaxError) i wysadzał
+     cały ten blok skryptu — dlatego panel wcześniej w ogóle się nie renderował. ============ -->
 <script>
 (function() {
 
@@ -1286,7 +1268,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
         </div>
       </div>
       <div class="mog-ebook-text-injected">
-        <div class="mog-ebook-title-injected">E-book „Jak zyskać pewność siebie”</div>
+        <div class="mog-ebook-title-injected">E-book „Jak zyskać pewność siebie"</div>
         <div class="mog-ebook-desc-injected">Gratis do każdego zamówienia — wysyłamy od razu na Twój e-mail.</div>
         <span class="mog-ebook-tag-injected">✓ Wartość 49 zł — GRATIS</span>
       </div>
@@ -1298,170 +1280,95 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
       <ul class="mog-final-bullets-injected">
         <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Wysyłka InPost 24h z Polski</li>
         <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Darmowa dostawa</li>
-        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> W zestawie: E-book „Jak zyskać pewność siebie” (PDF na maila)</li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> W zestawie: E-book „Jak zyskać pewność siebie" (PDF na maila)</li>
       </ul>
     </div>
   </div>
   `;
 
-  // Znajduje natywną kartę zakupową (obrazek + nazwa + cena + "Kup teraz"),
-  // dokładnie taką jak na zrzucie ekranu nr 3 od klienta.
+  // Znajduje natywną kartę zakupową (kontener otaczający Shopify Buy Button),
+  // pomijając kontenery obejmujące praktycznie cały ekran (np. całe Hero).
   function findNativeBuyCard() {
-  const shopifyButton = document.querySelector('.shopify-buy-button');
+    const shopifyButton = document.querySelector('.shopify-buy-button');
+    if (!shopifyButton) return null;
 
-  if (!shopifyButton) return null;
+    let node = shopifyButton;
+    let bestCard = shopifyButton;
 
-  /*
-   * Shopify Buy Button siedzi wewnątrz karty produktu.
-   * Nie chcemy wychodzić aż do Hero.
-   *
-   * Szukamy najmniejszego kontenera, który:
-   * - zawiera Shopify Buy Button
-   * - jest rzeczywistym blokiem karty
-   * - nie jest całym Hero
-   */
+    for (let i = 0; i < 12; i++) {
+      if (!node.parentElement) break;
 
-  let node = shopifyButton;
-  let bestCard = shopifyButton;
+      const parent = node.parentElement;
 
-  for (let i = 0; i < 12; i++) {
-    if (!node.parentElement) break;
-
-    const parent = node.parentElement;
-
-    if (
-      parent.id === 'root' ||
-      parent.tagName === 'BODY' ||
-      parent.tagName === 'MAIN'
-    ) {
-      break;
-    }
-
-    const rect = parent.getBoundingClientRect();
-
-    /*
-     * Pomijamy kontenery obejmujące praktycznie cały ekran.
-     * To właśnie one powodowały wcześniejsze wyskakiwanie
-     * panelu obok całego Hero.
-     */
-    const isWholeHero =
-      rect.width >= window.innerWidth * 0.9 &&
-      rect.height >= window.innerHeight * 0.7;
-
-    if (!isWholeHero) {
-      bestCard = parent;
-    }
-
-    node = parent;
-  }
-
-  return bestCard;
-}
-  }
-
-  /*
-   * Shopify Buy Button znajduje się wewnątrz
-   * prawej części karty produktu.
-   *
-   * Szukamy najwyższego sensownego kontenera,
-   * ale NIE wychodzimy do całego Hero.
-   */
-
-  let node = buyButton;
-
-  for (let i = 0; i < 8; i++) {
-    if (!node.parentElement) break;
-
-    const parent = node.parentElement;
-    const rect = parent.getBoundingClientRect();
-
-    if (
-      rect.width > 300 &&
-      rect.width < window.innerWidth * 0.75 &&
-      rect.height > 150
-    ) {
-      node = parent;
-    } else {
-      break;
-    }
-  }
-
-  return node;
-}
-    const clickable = document.querySelectorAll('button, a');
-    for (const el of clickable) {
-      if (el.closest('[id*="injected"], [class*="injected"]')) continue;
-      const txt = el.textContent.trim();
-      if (/kup\s*teraz/i.test(txt) && txt.length < 60) {
-        let node = el;
-        let depth = 0;
-        while (node.parentElement && depth < 8) {
-          node = node.parentElement;
-          depth++;
-          if (node.querySelector('img')) return node;
-        }
-        return el.parentElement || el;
+      if (
+        parent.id === 'root' ||
+        parent.tagName === 'BODY' ||
+        parent.tagName === 'MAIN'
+      ) {
+        break;
       }
+
+      const rect = parent.getBoundingClientRect();
+
+      // Pomijamy kontenery obejmujące praktycznie cały ekran (całe Hero).
+      const isWholeHero =
+        rect.width >= window.innerWidth * 0.9 &&
+        rect.height >= window.innerHeight * 0.7;
+
+      if (!isWholeHero) {
+        bestCard = parent;
+      }
+
+      node = parent;
     }
-    return null;
-  }
-function insertPurchaseBlock() {
-  const panelId = 'mog-purchase-enhancements-injected';
 
-  // Panel już istnieje — tylko podpinamy górny przycisk
-  if (document.getElementById(panelId)) {
-    bindTopQuickBuy(document.getElementById(panelId));
-    return;
+    return bestCard;
   }
 
-  // To jest prawdziwy kontener Shopify Buy Button
-  const shopifyButton = document.querySelector('.shopify-buy-button');
+  function insertPurchaseBlock() {
+    const panelId = 'mog-purchase-enhancements-injected';
 
-  if (!shopifyButton) {
-    return;
-  }
+    // Panel już istnieje — tylko podpinamy górny przycisk
+    if (document.getElementById(panelId)) {
+      bindTopQuickBuy(document.getElementById(panelId));
+      return;
+    }
 
-  // Wstawiamy istniejące panele bezpośrednio po przycisku Shopify
-  shopifyButton.insertAdjacentHTML(
-    'afterend',
-    purchaseBlockHTML
-  );
+    // To jest prawdziwy kontener Shopify Buy Button
+    const shopifyButton = document.querySelector('.shopify-buy-button');
+    if (!shopifyButton) return;
 
-  const panel = document.getElementById(panelId);
+    // Wstawiamy panele bezpośrednio po przycisku Shopify
+    shopifyButton.insertAdjacentHTML('afterend', purchaseBlockHTML);
 
-  if (!panel) {
-    return;
-  }
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
 
-  // Panel ma być pełną sekcją pod zakupem,
-  // a nie elementem stojącym obok karty
-  panel.style.setProperty('display', 'block', 'important');
-  panel.style.setProperty('width', '100%', 'important');
-  panel.style.setProperty('max-width', '100%', 'important');
-  panel.style.setProperty('position', 'relative', 'important');
-  panel.style.setProperty('left', 'auto', 'important');
-  panel.style.setProperty('right', 'auto', 'important');
-  panel.style.setProperty('top', 'auto', 'important');
-  panel.style.setProperty('bottom', 'auto', 'important');
-  panel.style.setProperty('float', 'none', 'important');
-  panel.style.setProperty('clear', 'both', 'important');
-  panel.style.setProperty('flex-basis', '100%', 'important');
-  panel.style.setProperty('grid-column', '1 / -1', 'important');
+    // Panel ma być pełną sekcją pod zakupem, a nie elementem stojącym obok karty
+    panel.style.setProperty('display', 'block', 'important');
+    panel.style.setProperty('width', '100%', 'important');
+    panel.style.setProperty('max-width', '100%', 'important');
+    panel.style.setProperty('position', 'relative', 'important');
+    panel.style.setProperty('left', 'auto', 'important');
+    panel.style.setProperty('right', 'auto', 'important');
+    panel.style.setProperty('top', 'auto', 'important');
+    panel.style.setProperty('bottom', 'auto', 'important');
+    panel.style.setProperty('float', 'none', 'important');
+    panel.style.setProperty('clear', 'both', 'important');
+    panel.style.setProperty('flex-basis', '100%', 'important');
+    panel.style.setProperty('grid-column', '1 / -1', 'important');
 
-  bindSelector();
-  initStockCounter();
-  initRevealAnimation(panelId);
+    bindSelector();
+    initStockCounter();
+    initRevealAnimation(panelId);
 
-  // Górne "KUP TERAZ" przewija do panelu
-  bindTopQuickBuy(panel);
-}
-  
+    // Górne "KUP TERAZ" przewija do panelu
+    bindTopQuickBuy(panel);
   }
 
   // Przycisk "Kup teraz" na samej górze strony (nad paskiem promo) ma
-  // przewijać dokładnie do tej natywnej karty zakupowej (zdjęcie nr 3),
-  // pod którą dokładamy nasze panele — a NIE do sekcji "Zamów teraz"
-  // na dole, bo to inny, odrębny blok dla tego samego produktu.
+  // przewijać dokładnie do natywnej karty zakupowej, pod którą dokładamy
+  // nasze panele.
   function bindTopQuickBuy(card) {
     const btn = document.getElementById('mog-top-quickbuy-btn-injected');
     if (!btn || btn.dataset.bound) return;
@@ -1517,7 +1424,6 @@ function insertPurchaseBlock() {
       opt.addEventListener('click', () => {
         opts.forEach((o) => o.classList.remove('mog-active-injected'));
         opt.classList.add('mog-active-injected');
-        const price = opt.getAttribute('data-price');
         const label = opt.getAttribute('data-option') === 'double' ? '99,99 zł' : '69,99 zł';
         if (buyBtn) buyBtn.textContent = 'Kup teraz — ' + label;
       });
