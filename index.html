@@ -166,9 +166,77 @@ h1 { font-size: clamp(26px, 5.5vw, 44px) !important; line-height: 1.2 !important
 .cro-bestseller-wrap-injected { text-align: center; }
 header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(.cro-bestseller-pill-injected) { display: none !important; }
 .mog-nav-bound-injected { cursor: pointer !important; }
+
+/* ===== TOP BAR (dostawa gratis + e-book gratis) ===== */
+#mog-top-bar-injected { position: sticky; top: 0; z-index: 10000; width: 100%; box-sizing: border-box; background: linear-gradient(90deg, #FFC107, #FFE082, #FFC107); background-size: 200% 100%; animation: mogBarShift 5s linear infinite; color: #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; padding: 10px 16px; text-align: center; }
+@keyframes mogBarShift { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
+.mog-top-bar-track-injected { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; max-width: 1100px; margin: 0 auto; }
+.mog-top-bar-sep-injected { opacity: .5; }
+@media (max-width: 480px) { #mog-top-bar-injected { font-size: 11.5px; padding: 8px 10px; } }
+
+/* ===== KOMUNIKAT O NISKIM STANIE MAGAZYNOWYM ===== */
+.mog-stock-notice-injected { display: flex; align-items: center; justify-content: center; gap: 6px; color: #ffb020; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; background: rgba(255, 176, 32, 0.08); border: 1px solid rgba(255, 176, 32, 0.3); border-radius: 999px; padding: 8px 16px; max-width: 420px; margin: 0 auto 16px; text-align: center; }
+
+/* ===== PRODUCT SELECTOR (pojedyncza para / pakiet 2 pary) ===== */
+.mog-selector-wrap-injected { max-width: 480px; margin: 0 auto 8px; display: flex; flex-direction: column; gap: 10px; font-family: 'Space Grotesk', sans-serif; }
+.mog-selector-label-injected { color: var(--text-gray); font-size: 11.5px; text-transform: uppercase; letter-spacing: .8px; font-weight: 700; text-align: center; margin-bottom: 2px; }
+.mog-selector-grid-injected { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mog-option-injected { position: relative; background: #111; border: 1.5px solid var(--border-color); border-radius: 14px; padding: 18px 12px 14px; cursor: pointer; transition: all .2s ease; text-align: center; }
+.mog-option-injected:hover { border-color: rgba(255,193,7,.5); }
+.mog-option-injected.mog-active-injected { border-color: var(--primary-yellow); background: rgba(255,193,7,.07); box-shadow: 0 0 0 1px var(--primary-yellow) inset; }
+.mog-option-badge-injected { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--primary-yellow); color: #000; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.mog-option-name-injected { color: var(--text-light); font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.mog-option-oldprice-injected { color: var(--text-gray); font-size: 12px; text-decoration: line-through; }
+.mog-option-price-injected { color: var(--primary-yellow); font-size: 21px; font-weight: 700; line-height: 1.2; }
+.mog-option-save-injected { color: #5fd76a; font-size: 11px; font-weight: 700; margin-top: 4px; }
+.mog-option-perks-injected { color: var(--text-gray); font-size: 10.5px; margin-top: 8px; line-height: 1.55; font-family: 'Inter', sans-serif; }
+
+/* ===== WIZUALIZACJA E-BOOKA (mockup 3D CSS) ===== */
+.mog-ebook-mockup-injected { display: flex; align-items: center; gap: 16px; max-width: 480px; margin: 16px auto; background: #0f0f0f; border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; }
+.mog-ebook-device-injected { flex-shrink: 0; width: 66px; height: 92px; border-radius: 8px; background: linear-gradient(145deg, #1e1e1e, #000); border: 1px solid #333; transform: perspective(600px) rotateY(-22deg) rotateX(4deg); box-shadow: 12px 14px 24px rgba(0,0,0,.55), 0 0 0 1px rgba(255,193,7,.12) inset; position: relative; display: flex; align-items: center; justify-content: center; }
+.mog-ebook-device-screen-injected { position: absolute; inset: 6px; border-radius: 5px; background: linear-gradient(160deg, #1c1c1c, #0a0a0a); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+.mog-ebook-pdf-badge-injected { background: var(--primary-yellow); color: #000; font-size: 8px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: .4px; font-family: 'Space Grotesk', sans-serif; }
+.mog-ebook-icon-lines-injected { width: 30px; height: 2px; background: #333; border-radius: 2px; }
+.mog-ebook-text-injected { flex: 1; text-align: left; }
+.mog-ebook-title-injected { color: var(--text-light); font-weight: 700; font-size: 13.5px; margin-bottom: 3px; font-family: 'Space Grotesk', sans-serif; }
+.mog-ebook-desc-injected { color: var(--text-gray); font-size: 11.5px; font-family: 'Inter', sans-serif; line-height: 1.5; }
+.mog-ebook-tag-injected { display: inline-block; margin-top: 6px; color: var(--primary-yellow); font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; font-family: 'Space Grotesk', sans-serif; }
+
+/* ===== FINALNY BOX ZAKUPOWY (cena, dostawa, bullet pointy) ===== */
+.mog-final-box-injected { max-width: 480px; margin: 6px auto 4px; background: #111; border: 1.5px solid var(--primary-yellow); border-radius: 16px; padding: 18px 18px 16px; text-align: center; }
+.mog-final-pricerow-injected { display: flex; align-items: baseline; justify-content: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+.mog-final-oldprice-injected { color: var(--text-gray); font-size: 16px; text-decoration: line-through; font-family: 'Space Grotesk', sans-serif; }
+.mog-final-newprice-injected { color: var(--primary-yellow); font-size: 30px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+.mog-final-percent-injected { background: #ff3b30; color: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; font-family: 'Space Grotesk', sans-serif; }
+.mog-final-shipping-injected { color: #5fd76a; font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 14px; font-family: 'Space Grotesk', sans-serif; }
+.mog-final-bullets-injected { list-style: none; padding: 0; margin: 0; text-align: left; display: inline-flex; flex-direction: column; gap: 8px; }
+.mog-final-bullets-injected li { color: var(--text-light); font-size: 13px; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 8px; }
+.mog-final-bullets-injected li svg { color: #5fd76a; flex-shrink: 0; }
+
+/* ===== LIVE SALES POPUPS ===== */
+#mog-toast-container-injected { position: fixed; left: 16px; bottom: 16px; z-index: 9998; display: flex; flex-direction: column; gap: 10px; max-width: 300px; pointer-events: none; }
+.mog-toast-injected { background: #111; border: 1px solid var(--border-color); border-left: 3px solid var(--primary-yellow); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.5); font-family: 'Inter', sans-serif; opacity: 0; transform: translateY(20px); transition: all .4s ease; pointer-events: auto; }
+.mog-toast-injected.mog-toast-show-injected { opacity: 1; transform: translateY(0); }
+.mog-toast-avatar-injected { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,193,7,.12); border: 1px solid rgba(255,193,7,.3); color: var(--primary-yellow); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; font-family: 'Space Grotesk', sans-serif; }
+.mog-toast-text-injected { font-size: 12px; color: var(--text-light); line-height: 1.4; }
+.mog-toast-text-injected b { color: var(--primary-yellow); }
+.mog-toast-time-injected { color: var(--text-gray); font-size: 10.5px; margin-top: 2px; }
+.mog-toast-close-injected { position: absolute; top: 6px; right: 8px; color: var(--text-gray); font-size: 12px; cursor: pointer; background: none; border: none; }
+@media (max-width: 480px) { #mog-toast-container-injected { left: 10px; right: 10px; bottom: 10px; max-width: none; } }
+
+/* ===== ANIMACJA WEJŚCIA (spójna z resztą strony) ===== */
+.mog-reveal-injected { opacity: 0; transform: translateY(16px); transition: opacity .6s cubic-bezier(0.4, 0, 0.2, 1), transform .6s cubic-bezier(0.4, 0, 0.2, 1); }
+.mog-reveal-injected.mog-reveal-visible-injected { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
+<div id="mog-top-bar-injected">
+  <div class="mog-top-bar-track-injected">
+    <span>🚚 Darmowa dostawa na wszystko!</span>
+    <span class="mog-top-bar-sep-injected">|</span>
+    <span>🎁 Do każdego zamówienia e-book „Pewność Siebie” GRATIS!</span>
+  </div>
+</div>
 <div id="root"></div>
 <script>
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -1053,6 +1121,233 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
       });
     }, 1500);
   });
+})();
+</script>
+
+<!-- ============ SELEKTOR PAKIETÓW + STOCK + EBOOK MOCKUP + FINALNY BOX ZAKUPOWY (INJECTED) ============ -->
+<script>
+(function() {
+
+  // Ceny — jedno miejsce edycji, jeśli trzeba je kiedyś zmienić
+  const PRICE_SINGLE = 69.99;
+  const PRICE_DOUBLE = 99.00;
+  const PRICE_DOUBLE_BASE = PRICE_SINGLE * 2; // 139,98 zł — punkt odniesienia dla "oszczędzasz"
+  const SAVE_DOUBLE = PRICE_DOUBLE_BASE - PRICE_DOUBLE; // ok. 40 zł
+  const SAVE_DOUBLE_PCT = Math.round((SAVE_DOUBLE / PRICE_DOUBLE_BASE) * 100); // ok. -29%
+  const OLD_PRICE_FINAL = 100;
+  const FINAL_PCT = Math.round(((OLD_PRICE_FINAL - PRICE_SINGLE) / OLD_PRICE_FINAL) * 100); // ok. -30%
+
+  const fmt = (n) => n.toFixed(2).replace('.', ',') + ' zł';
+
+  const purchaseBlockHTML = `
+  <div id="mog-purchase-enhancements-injected" class="mog-reveal-injected">
+    <div class="mog-stock-notice-injected" id="mog-stock-notice-injected">
+      ⚡ Zostało tylko <span id="mog-stock-count-injected">14</span> szt. w tej cenie promocyjnej w bieżącej dostawie
+    </div>
+
+    <div class="mog-selector-wrap-injected" id="mog-selector-wrap-injected">
+      <div class="mog-selector-label-injected">Wybierz swój pakiet</div>
+      <div class="mog-selector-grid-injected">
+        <div class="mog-option-injected" data-option="single">
+          <div class="mog-option-name-injected">Pojedyncza para</div>
+          <div class="mog-option-price-injected">${fmt(PRICE_SINGLE)}</div>
+          <div class="mog-option-perks-injected">Darmowa dostawa<br>E-book PDF gratis</div>
+        </div>
+        <div class="mog-option-injected mog-active-injected" data-option="double">
+          <span class="mog-option-badge-injected">Najczęściej wybierane</span>
+          <div class="mog-option-name-injected">Pakiet 2 pary</div>
+          <div class="mog-option-oldprice-injected">${fmt(PRICE_DOUBLE_BASE)}</div>
+          <div class="mog-option-price-injected">${fmt(PRICE_DOUBLE)}</div>
+          <div class="mog-option-save-injected">Oszczędzasz ${fmt(SAVE_DOUBLE)} (${SAVE_DOUBLE_PCT}%)</div>
+          <div class="mog-option-perks-injected">Darmowa dostawa<br>E-book PDF gratis</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mog-ebook-mockup-injected">
+      <div class="mog-ebook-device-injected">
+        <div class="mog-ebook-device-screen-injected">
+          <span class="mog-ebook-pdf-badge-injected">PDF</span>
+          <span class="mog-ebook-icon-lines-injected"></span>
+          <span class="mog-ebook-icon-lines-injected" style="width:20px;"></span>
+        </div>
+      </div>
+      <div class="mog-ebook-text-injected">
+        <div class="mog-ebook-title-injected">E-book „Jak zyskać pewność siebie”</div>
+        <div class="mog-ebook-desc-injected">Gratis do każdego zamówienia — wysyłamy od razu na Twój e-mail.</div>
+        <span class="mog-ebook-tag-injected">✓ Wartość 49 zł — GRATIS</span>
+      </div>
+    </div>
+
+    <div class="mog-final-box-injected">
+      <div class="mog-final-pricerow-injected">
+        <span class="mog-final-oldprice-injected">${OLD_PRICE_FINAL} zł</span>
+        <span class="mog-final-newprice-injected">${fmt(PRICE_SINGLE)}</span>
+        <span class="mog-final-percent-injected">${FINAL_PCT}%</span>
+      </div>
+      <div class="mog-final-shipping-injected">Darmowa dostawa</div>
+      <ul class="mog-final-bullets-injected">
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Wysyłka InPost 24h z Polski</li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Darmowa dostawa</li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> W zestawie: E-book „Jak zyskać pewność siebie” (PDF na maila)</li>
+      </ul>
+    </div>
+  </div>
+  `;
+
+  function insertPurchaseBlock() {
+    if (document.getElementById('mog-purchase-enhancements-injected')) return;
+    const panel = document.getElementById('cro-cta-panel-injected');
+    if (!panel || !panel.parentElement) return;
+    panel.insertAdjacentHTML('beforebegin', purchaseBlockHTML);
+    bindSelector();
+    initStockCounter();
+    initRevealAnimation();
+  }
+
+  function initRevealAnimation() {
+    const el = document.getElementById('mog-purchase-enhancements-injected');
+    if (!el) return;
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('mog-reveal-visible-injected');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      io.observe(el);
+    } else {
+      el.classList.add('mog-reveal-visible-injected');
+    }
+  }
+
+  // React renderuje #root i przy re-renderach może wyczyścić ręcznie
+  // wstawione węzły DOM (nie istnieją w jego Virtual DOM). Ten obserwator
+  // pilnuje bloku zakupowego i odtwarza go natychmiast, jeśli zniknie —
+  // dzięki temu selektor/stock/e-book/finalny box przetrwają animacje
+  // i re-rendery strony zamiast znikać po kilku sekundach.
+  function watchAndHeal() {
+    const root = document.getElementById('root');
+    if (!root) return;
+    let healTimeout = null;
+    const observer = new MutationObserver(() => {
+      if (document.getElementById('mog-purchase-enhancements-injected')) return;
+      if (!document.getElementById('cro-cta-panel-injected')) return;
+      clearTimeout(healTimeout);
+      healTimeout = setTimeout(insertPurchaseBlock, 150);
+    });
+    observer.observe(root, { childList: true, subtree: true });
+  }
+
+  function bindSelector() {
+    const wrap = document.getElementById('mog-selector-wrap-injected');
+    if (!wrap || wrap.dataset.bound) return;
+    wrap.dataset.bound = 'true';
+    const opts = wrap.querySelectorAll('.mog-option-injected');
+    opts.forEach((opt) => {
+      opt.addEventListener('click', () => {
+        opts.forEach((o) => o.classList.remove('mog-active-injected'));
+        opt.classList.add('mog-active-injected');
+      });
+    });
+  }
+
+  function initStockCounter() {
+    const el = document.getElementById('mog-stock-count-injected');
+    if (!el || el.dataset.bound) return;
+    el.dataset.bound = 'true';
+    let count = parseInt(sessionStorage.getItem('mogStockCount') || '', 10);
+    if (!count || isNaN(count)) {
+      count = 12 + Math.floor(Math.random() * 4); // 12–15
+    }
+    el.textContent = count;
+    sessionStorage.setItem('mogStockCount', count);
+    setInterval(() => {
+      if (count > 6) {
+        count -= 1;
+        el.textContent = count;
+        sessionStorage.setItem('mogStockCount', count);
+      }
+    }, 45000 + Math.random() * 30000);
+  }
+
+  const purchaseInterval = setInterval(insertPurchaseBlock, 500);
+  setTimeout(() => clearInterval(purchaseInterval), 12000);
+  watchAndHeal();
+
+})();
+</script>
+
+<!-- ============ LIVE SALES POPUPS (dynamiczne powiadomienia o zakupach) ============ -->
+<script>
+(function() {
+
+  const MOG_TOASTS = [
+    { name: 'Kacper', city: 'Warszawy', product: 'pakiet 2 par' },
+    { name: 'Bartek', city: 'Krakowa', product: 'pojedynczą parę' },
+    { name: 'Zuzia', city: 'Wrocławia', product: 'pakiet 2 par' },
+    { name: 'Dawid', city: 'Poznania', product: 'pojedynczą parę' },
+    { name: 'Mateusz', city: 'Gdańska', product: 'pakiet 2 par' },
+    { name: 'Marta', city: 'Łodzi', product: 'pojedynczą parę' },
+    { name: 'Kuba', city: 'Katowic', product: 'pakiet 2 par' },
+    { name: 'Ola', city: 'Szczecina', product: 'pojedynczą parę' },
+    { name: 'Michał', city: 'Lublina', product: 'pakiet 2 par' },
+    { name: 'Ania', city: 'Bydgoszczy', product: 'pojedynczą parę' }
+  ];
+
+  function ensureToastContainer() {
+    if (document.getElementById('mog-toast-container-injected')) return;
+    document.body.insertAdjacentHTML('beforeend', '<div id="mog-toast-container-injected"></div>');
+  }
+
+  function showRandomToast() {
+    ensureToastContainer();
+    const container = document.getElementById('mog-toast-container-injected');
+    if (!container) return;
+    const data = MOG_TOASTS[Math.floor(Math.random() * MOG_TOASTS.length)];
+    const initials = data.name.charAt(0);
+
+    const toast = document.createElement('div');
+    toast.className = 'mog-toast-injected';
+    toast.style.position = 'relative';
+    toast.innerHTML = `
+      <div class="mog-toast-avatar-injected">${initials}</div>
+      <div>
+        <div class="mog-toast-text-injected"><b>${data.name}</b> z ${data.city} właśnie zamówił ${data.product}</div>
+        <div class="mog-toast-time-injected">przed chwilą</div>
+      </div>
+      <button class="mog-toast-close-injected" aria-label="Zamknij">✕</button>
+    `;
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('mog-toast-show-injected'));
+
+    const removeToast = () => {
+      toast.classList.remove('mog-toast-show-injected');
+      setTimeout(() => toast.remove(), 400);
+    };
+    const autoHide = setTimeout(removeToast, 4800);
+    toast.querySelector('.mog-toast-close-injected').addEventListener('click', () => {
+      clearTimeout(autoHide);
+      removeToast();
+    });
+  }
+
+  function loopToasts() {
+    const tick = () => {
+      showRandomToast();
+      setTimeout(tick, 9000 + Math.random() * 9000); // co 9–18 sek.
+    };
+    setTimeout(tick, 5000); // pierwszy popup po 5 sek. od wejścia
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loopToasts);
+  } else {
+    loopToasts();
+  }
+
 })();
 </script>
 
