@@ -197,34 +197,8 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 .mog-option-save-injected { color: #5fd76a; font-size: 11px; font-weight: 700; margin-top: 4px; }
 .mog-option-perks-injected { color: var(--text-gray); font-size: 10.5px; margin-top: 8px; line-height: 1.55; font-family: 'Inter', sans-serif; }
 
-/* ===== BLOK PANELI DOSTAWIANY POD NATYWNYM PANELEM SPRZEDAŻY =====
-   Blok MUSI zawsze renderować się jako pełnoszerokościowy element blokowy,
-   niezależnie od tego, w jakim kontekście layoutu (flex/grid) wyląduje
-   jego rodzic po wstawieniu przez insertAdjacentHTML. Bez tych reguł
-   potrafił "wyskoczyć" jako kolejny element flex obok sekcji hero i
-   zasłaniać pół ekranu (patrz zgłoszenie z 09.08.2026). */
-.mog-panels-anchor-injected,
-#mog-purchase-enhancements-injected {
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-  display: block !important;
-  position: static !important;
-  top: auto !important;
-  left: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-  float: none !important;
-  clear: both !important;
-  flex: 1 1 100% !important;
-  flex-basis: 100% !important;
-  grid-column: 1 / -1 !important;
-  align-self: stretch !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  z-index: 1 !important;
-  padding: 18px 20px 4px;
-}
+/* ===== BLOK PANELI DOSTAWIANY POD NATYWNYM PANELEM SPRZEDAŻY ===== */
+.mog-panels-anchor-injected { width: 100%; box-sizing: border-box; padding: 18px 20px 4px; }
 
 /* ===== WIZUALIZACJA E-BOOKA (mockup 3D CSS) ===== */
 .mog-ebook-mockup-injected { display: flex; align-items: center; gap: 16px; max-width: 480px; margin: 16px auto; background: #0f0f0f; border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; }
@@ -986,7 +960,6 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
   const NAV_TARGETS = [
     { match: /^opinie$/i, targetId: 'cro-testimonials-injected' },
     { match: /^produkt$/i, targetId: 'cro-size-info-injected' },
-    { match: /^kup\s*teraz$/i, targetId: 'mog-purchase-enhancements-injected', headerOnly: true },
   ];
 
   function bindNavLinks() {
@@ -998,13 +971,6 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
       const txt = el.textContent.trim();
       const rule = NAV_TARGETS.find(r => r.match.test(txt));
       if (!rule) return;
-      // Reguły oznaczone jako headerOnly wiążemy WYŁĄCZNIE, jeśli element
-      // faktycznie leży w nagłówku/nawigacji. Dzięki temu "Kup teraz" w
-      // menu (mały link nawigacyjny) przewija do panelu zakupowego, ale
-      // NIGDY nie podepniemy tego pod prawdziwy przycisk zakupu produktu
-      // (ten ma zostać nietknięty, bo odpowiada za realne dodanie do
-      // koszyka / przejście do checkoutu Shopify).
-      if (rule.headerOnly && !el.closest('header, nav')) return;
 
       const clickableEl = el.closest('a, button') || el;
       clickableEl.classList.add('mog-nav-bound-injected');
@@ -1272,1006 +1238,267 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 })();
 </script>
 
-})();
-</script>
+<!-- ============ SELEKTOR PAKIETÓW + STOCK — DOKLEJANE POD NATYWNYM PANELEM ZAKUPOWYM (KARTA ZE ZDJĘCIA NR 1) + WIZUALIZACJA E-BOOKA I FINALNY BOX ZAKUPOWY (SEKCJA "ZAMÓW TERAZ" NA DOLE) ============ -->
 <script>
-(function () {
-  'use strict';
-
-  const PANEL_ID = 'mog-purchase-enhancements-injected';
+(function() {
 
   const PRICE_SINGLE = 69.99;
   const PRICE_DOUBLE = 99.99;
+  const PRICE_DOUBLE_BASE = PRICE_SINGLE * 2;
+  const SAVE_DOUBLE = PRICE_DOUBLE_BASE - PRICE_DOUBLE;
+  const SAVE_DOUBLE_PCT = Math.round((SAVE_DOUBLE / PRICE_DOUBLE_BASE) * 100);
+  const OLD_PRICE_FINAL = 100;
+  const FINAL_PCT = Math.round(((OLD_PRICE_FINAL - PRICE_SINGLE) / OLD_PRICE_FINAL) * 100);
 
-  function money(n) {
-    return n.toFixed(2).replace('.', ',') + ' zł';
-  }
-
-  /*
-   * ============================================================
-   * PANEL ZAKUPOWY
-   * ============================================================
-   */
+  const fmt = (n) => n.toFixed(2).replace('.', ',') + ' zł';
 
   const purchaseBlockHTML = `
-    <section id="${PANEL_ID}" aria-label="Wybierz swój pakiet">
+  <div id="mog-purchase-enhancements-injected" class="mog-reveal-injected mog-panels-anchor-injected">
+    <div class="mog-stock-notice-injected" id="mog-stock-notice-injected">
+      ⚡ Zostało tylko <span id="mog-stock-count-injected">14</span> szt. w tej cenie promocyjnej w bieżącej dostawie
+    </div>
 
-      <div class="mog-purchase-inner">
-
-        <div class="mog-stock-notice">
-          ⚡ Zostało tylko <span id="mog-stock-count">14</span> szt. w tej cenie
+    <div class="mog-selector-wrap-injected" id="mog-selector-wrap-injected">
+      <div class="mog-selector-label-injected">Wybierz swój pakiet</div>
+      <div class="mog-selector-grid-injected">
+        <div class="mog-option-injected" data-option="single">
+          <div class="mog-option-name-injected">Pojedyncza para</div>
+          <div class="mog-option-price-injected">${fmt(PRICE_SINGLE)}</div>
+          <div class="mog-option-perks-injected">Darmowa dostawa<br>E-book PDF gratis</div>
         </div>
-
-        <div class="mog-selector-label">
-          WYBIERZ SWÓJ PAKIET
+        <div class="mog-option-injected mog-active-injected" data-option="double">
+          <span class="mog-option-badge-injected">Najczęściej wybierane</span>
+          <div class="mog-option-name-injected">Pakiet 2 pary</div>
+          <div class="mog-option-oldprice-injected">${fmt(PRICE_DOUBLE_BASE)}</div>
+          <div class="mog-option-price-injected">${fmt(PRICE_DOUBLE)}</div>
+          <div class="mog-option-save-injected">Oszczędzasz ${fmt(SAVE_DOUBLE)} (${SAVE_DOUBLE_PCT}%)</div>
+          <div class="mog-option-perks-injected">Darmowa dostawa<br>E-book PDF gratis</div>
         </div>
-
-        <div class="mog-selector-grid">
-
-          <button
-            type="button"
-            class="mog-option"
-            data-package="single"
-          >
-            <span class="mog-option-name">
-              Pojedyncza para
-            </span>
-
-            <strong class="mog-option-price">
-              ${money(PRICE_SINGLE)}
-            </strong>
-
-            <span class="mog-option-perks">
-              Darmowa dostawa<br>
-              E-book PDF GRATIS
-            </span>
-          </button>
-
-
-          <button
-            type="button"
-            class="mog-option mog-option-active"
-            data-package="double"
-          >
-
-            <span class="mog-popular">
-              NAJCZĘŚCIEJ WYBIERANE
-            </span>
-
-            <span class="mog-option-name">
-              Pakiet 2 pary
-            </span>
-
-            <span class="mog-option-old">
-              ${money(PRICE_SINGLE * 2)}
-            </span>
-
-            <strong class="mog-option-price">
-              ${money(PRICE_DOUBLE)}
-            </strong>
-
-            <span class="mog-save">
-              Oszczędzasz ${money(PRICE_SINGLE * 2 - PRICE_DOUBLE)}
-            </span>
-
-            <span class="mog-option-perks">
-              Darmowa dostawa<br>
-              E-book PDF GRATIS
-            </span>
-
-          </button>
-
-        </div>
-
-
-        <div class="mog-ebook">
-
-          <div class="mog-ebook-icon">
-            PDF
-          </div>
-
-          <div>
-            <strong>
-              E-book „Jak zyskać pewność siebie”
-            </strong>
-
-            <p>
-              Gratis do każdego zamówienia — wysyłamy na e-mail.
-            </p>
-
-            <span>
-              ✓ Wartość 49 zł — GRATIS
-            </span>
-          </div>
-
-        </div>
-
-
-        <div class="mog-final-box">
-
-          <div class="mog-final-price">
-            <del>100 zł</del>
-            <strong id="mog-final-price">
-              ${money(PRICE_DOUBLE)}
-            </strong>
-          </div>
-
-          <div class="mog-free-shipping">
-            ✓ Darmowa dostawa
-          </div>
-
-          <div class="mog-final-info">
-            ✓ Wysyłka InPost 24h z Polski<br>
-            ✓ Darmowa dostawa<br>
-            ✓ E-book „Jak zyskać pewność siebie”
-          </div>
-
-        </div>
-
       </div>
+    </div>
 
-    </section>
+    <div class="mog-ebook-mockup-injected">
+      <div class="mog-ebook-device-injected">
+        <div class="mog-ebook-device-screen-injected">
+          <span class="mog-ebook-pdf-badge-injected">PDF</span>
+          <span class="mog-ebook-icon-lines-injected"></span>
+          <span class="mog-ebook-icon-lines-injected" style="width:20px;"></span>
+        </div>
+      </div>
+      <div class="mog-ebook-text-injected">
+        <div class="mog-ebook-title-injected">E-book „Jak zyskać pewność siebie”</div>
+        <div class="mog-ebook-desc-injected">Gratis do każdego zamówienia — wysyłamy od razu na Twój e-mail.</div>
+        <span class="mog-ebook-tag-injected">✓ Wartość 49 zł — GRATIS</span>
+      </div>
+    </div>
+
+    <div class="mog-final-box-injected">
+      <div class="mog-final-pricerow-injected">
+        <span class="mog-final-oldprice-injected">${OLD_PRICE_FINAL} zł</span>
+        <span class="mog-final-newprice-injected">${fmt(PRICE_SINGLE)}</span>
+        <span class="mog-final-percent-injected">${FINAL_PCT}%</span>
+      </div>
+      <div class="mog-final-shipping-injected">Darmowa dostawa</div>
+      <ul class="mog-final-bullets-injected">
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Wysyłka InPost 24h z Polski</li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Darmowa dostawa</li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> W zestawie: E-book „Jak zyskać pewność siebie” (PDF na maila)</li>
+      </ul>
+    </div>
+  </div>
   `;
 
-
-  /*
-   * ============================================================
-   * CSS
-   * ============================================================
-   */
-
-  const style = document.createElement('style');
-
-  style.textContent = `
-
-    /*
-     * NAJWAŻNIEJSZE:
-     *
-     * Panel jest osobną sekcją strony.
-     * NIE jest flex-itemem Hero.
-     * NIE jest sticky.
-     * NIE jest absolute.
-     */
-
-    #${PANEL_ID} {
-      position: relative !important;
-
-      display: block !important;
-
-      width: 100% !important;
-      max-width: 100% !important;
-
-      height: auto !important;
-
-      margin: 0 !important;
-      padding: 35px 20px 50px !important;
-
-      left: auto !important;
-      right: auto !important;
-      top: auto !important;
-      bottom: auto !important;
-
-      transform: none !important;
-
-      float: none !important;
-
-      clear: both !important;
-
-      flex: none !important;
-
-      grid-column: auto !important;
-
-      z-index: 1 !important;
-
-      background: #0a0a0a !important;
-
-      box-sizing: border-box !important;
-
-      scroll-margin-top: 80px;
-    }
-
-
-    .mog-purchase-inner {
-      width: 100%;
-      max-width: 520px;
-
-      margin: 0 auto;
-    }
-
-
-    .mog-stock-notice {
-      width: fit-content;
-      max-width: 100%;
-
-      margin: 0 auto 18px;
-
-      padding: 8px 14px;
-
-      border-radius: 999px;
-
-      border: 1px solid rgba(255,176,32,.3);
-
-      background: rgba(255,176,32,.08);
-
-      color: #ffb020;
-
-      font-family: Inter, sans-serif;
-
-      font-size: 12px;
-
-      text-align: center;
-    }
-
-
-    .mog-selector-label {
-      margin-bottom: 12px;
-
-      text-align: center;
-
-      color: #999;
-
-      font-family: 'Space Grotesk', sans-serif;
-
-      font-size: 11px;
-
-      font-weight: 700;
-
-      letter-spacing: .8px;
-    }
-
-
-    .mog-selector-grid {
-      display: grid;
-
-      grid-template-columns: 1fr 1fr;
-
-      gap: 10px;
-    }
-
-
-    .mog-option {
-      position: relative;
-
-      display: flex;
-
-      flex-direction: column;
-
-      align-items: center;
-
-      justify-content: center;
-
-      min-height: 155px;
-
-      padding: 20px 12px 14px;
-
-      border-radius: 15px;
-
-      border: 1.5px solid #1a1a1a;
-
-      background: #111;
-
-      color: white;
-
-      cursor: pointer;
-
-      font-family: 'Space Grotesk', sans-serif;
-
-      transition: .2s ease;
-    }
-
-
-    .mog-option:hover {
-      border-color: rgba(255,193,7,.6);
-    }
-
-
-    .mog-option-active {
-      border-color: #FFC107 !important;
-
-      background: rgba(255,193,7,.07) !important;
-
-      box-shadow:
-        0 0 0 1px #FFC107 inset;
-    }
-
-
-    .mog-popular {
-      position: absolute;
-
-      top: -11px;
-
-      left: 50%;
-
-      transform: translateX(-50%);
-
-      white-space: nowrap;
-
-      padding: 4px 10px;
-
-      border-radius: 999px;
-
-      background: #FFC107;
-
-      color: #000;
-
-      font-size: 9px;
-
-      font-weight: 800;
-    }
-
-
-    .mog-option-name {
-      margin-bottom: 7px;
-
-      font-size: 13px;
-
-      font-weight: 700;
-    }
-
-
-    .mog-option-old {
-      color: #777;
-
-      font-size: 11px;
-
-      text-decoration: line-through;
-    }
-
-
-    .mog-option-price {
-      color: #FFC107;
-
-      font-size: 22px;
-
-      line-height: 1.2;
-    }
-
-
-    .mog-save {
-      margin-top: 4px;
-
-      color: #5fd76a;
-
-      font-size: 10px;
-
-      font-weight: 700;
-    }
-
-
-    .mog-option-perks {
-      margin-top: 9px;
-
-      color: #999;
-
-      font-family: Inter, sans-serif;
-
-      font-size: 10px;
-
-      line-height: 1.5;
-
-      text-align: center;
-    }
-
-
-    .mog-ebook {
-      display: flex;
-
-      align-items: center;
-
-      gap: 14px;
-
-      margin-top: 16px;
-
-      padding: 16px;
-
-      border: 1px solid #1a1a1a;
-
-      border-radius: 15px;
-
-      background: #0f0f0f;
-
-      color: white;
-
-      font-family: Inter, sans-serif;
-    }
-
-
-    .mog-ebook-icon {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      flex-shrink: 0;
-
-      width: 55px;
-
-      height: 75px;
-
-      border-radius: 7px;
-
-      background: #050505;
-
-      border: 1px solid #333;
-
-      color: #FFC107;
-
-      font-size: 11px;
-
-      font-weight: 800;
-    }
-
-
-    .mog-ebook strong {
-      display: block;
-
-      margin-bottom: 4px;
-
-      font-family: 'Space Grotesk', sans-serif;
-
-      font-size: 13px;
-    }
-
-
-    .mog-ebook p {
-      margin: 0 0 5px;
-
-      color: #999;
-
-      font-size: 11px;
-
-      line-height: 1.45;
-    }
-
-
-    .mog-ebook span {
-      color: #FFC107;
-
-      font-size: 10px;
-
-      font-weight: 700;
-    }
-
-
-    .mog-final-box {
-      margin-top: 16px;
-
-      padding: 20px;
-
-      border-radius: 16px;
-
-      border: 1px solid rgba(255,193,7,.35);
-
-      background: rgba(255,193,7,.05);
-
-      text-align: center;
-
-      font-family: Inter, sans-serif;
-    }
-
-
-    .mog-final-price {
-      display: flex;
-
-      align-items: baseline;
-
-      justify-content: center;
-
-      gap: 10px;
-    }
-
-
-    .mog-final-price del {
-      color: #777;
-
-      font-size: 14px;
-    }
-
-
-    .mog-final-price strong {
-      color: #FFC107;
-
-      font-family: 'Space Grotesk', sans-serif;
-
-      font-size: 28px;
-    }
-
-
-    .mog-free-shipping {
-      margin-top: 6px;
-
-      color: #5fd76a;
-
-      font-size: 12px;
-
-      font-weight: 700;
-    }
-
-
-    .mog-final-info {
-      margin-top: 14px;
-
-      color: #aaa;
-
-      font-size: 11px;
-
-      line-height: 1.8;
-    }
-
-
-    @media (max-width: 480px) {
-
-      #${PANEL_ID} {
-        padding: 28px 14px 40px !important;
-      }
-
-      .mog-selector-grid {
-        gap: 8px;
-      }
-
-      .mog-option {
-        padding-left: 8px;
-        padding-right: 8px;
-      }
-
-      .mog-option-price {
-        font-size: 20px;
-      }
-
-    }
-
-  `;
-
-  document.head.appendChild(style);
-
-
-  /*
-   * ============================================================
-   * ZNAJDUJEMY HERO / GŁÓWNĄ SEKCJĘ PRODUKTU
-   * ============================================================
-   *
-   * Nie szukamy "rodzica Kup teraz".
-   *
-   * To był właśnie problem.
-   *
-   * Zamiast tego znajdujemy najwyższy element będący
-   * bezpośrednim dzieckiem #root.
-   *
-   * Następnie panel umieszczamy PO CAŁYM HERO.
-   *
-   */
-
-  function findHeroRoot() {
-
-    const root = document.getElementById('root');
-
-    if (!root) return null;
-
-
-    const children =
-      Array.from(root.children);
-
-
-    /*
-     * Szukamy elementu, który zawiera
-     * przycisk "Kup teraz".
-     */
-
-    for (const child of children) {
-
-      const text =
-        child.innerText || '';
-
-      if (
-        /kup\s*teraz/i.test(text)
-      ) {
-        return child;
-      }
-
-    }
-
-
-    /*
-     * Jeżeli nie znaleźliśmy bezpośrednio,
-     * szukamy głębiej.
-     */
-
-    const buyButtons =
-      root.querySelectorAll(
-        'button, a'
-      );
-
-
-    for (const btn of buyButtons) {
-
-      const text =
-        btn.textContent
-          .replace(/\s+/g, ' ')
-          .trim();
-
-
-      if (
-        /^kup\s*teraz$/i.test(text)
-      ) {
-
-        let node = btn;
-
-
-        /*
-         * Wspinamy się DO BEZPOŚREDNIEGO
-         * DZIECKA #root.
-         */
-
-        while (
-          node.parentElement &&
-          node.parentElement !== root
-        ) {
-
+  // Znajduje natywną kartę zakupową (obrazek + nazwa + cena + "Kup teraz"),
+  // dokładnie taką jak na zrzucie ekranu nr 3 od klienta.
+  function findNativeBuyCard() {
+    const clickable = document.querySelectorAll('button, a');
+    for (const el of clickable) {
+      if (el.closest('[id*="injected"], [class*="injected"]')) continue;
+      const txt = el.textContent.trim();
+      if (/kup\s*teraz/i.test(txt) && txt.length < 60) {
+        let node = el;
+        let depth = 0;
+        while (node.parentElement && depth < 8) {
           node = node.parentElement;
-
+          depth++;
+          if (node.querySelector('img')) return node;
         }
-
-
-        if (
-          node.parentElement === root
-        ) {
-          return node;
-        }
-
+        return el.parentElement || el;
       }
-
     }
-
-
     return null;
   }
 
-
-  /*
-   * ============================================================
-   * WSTAWIENIE PANELU
-   * ============================================================
-   */
-
-  function placePanel() {
-
-    let panel =
-      document.getElementById(PANEL_ID);
-
-
-    /*
-     * Jeżeli panel nie istnieje,
-     * tworzymy go.
-     */
-
-    if (!panel) {
-
-      const hero =
-        findHeroRoot();
-
-      if (!hero) return;
-
-
-      /*
-       * Panel trafia jako RODZEŃSTWO Hero.
-       *
-       * Nie do Hero.
-       * Nie do jego flexa.
-       * Nie do karty.
-       *
-       * PO CAŁYM HERO.
-       */
-
-      hero.insertAdjacentHTML(
-        'afterend',
-        purchaseBlockHTML
-      );
-
-
-      panel =
-        document.getElementById(
-          PANEL_ID
-        );
-
+  function insertPurchaseBlock() {
+    if (document.getElementById('mog-purchase-enhancements-injected')) return;
+    const card = findNativeBuyCard();
+    if (card && card.parentElement) {
+      card.insertAdjacentHTML('afterend', purchaseBlockHTML);
+      bindSelector();
+      initStockCounter();
+      initRevealAnimation('mog-purchase-enhancements-injected');
+      bindTopQuickBuy(card);
     }
-
-
-    if (!panel) return;
-
-
-    /*
-     * Jeżeli React przeniósł panel gdzieś
-     * indziej — ponownie ustawiamy go
-     * bezpośrednio po Hero.
-     */
-
-    const hero =
-      findHeroRoot();
-
-
-    if (
-      hero &&
-      panel.previousElementSibling !== hero
-    ) {
-
-      hero.insertAdjacentElement(
-        'afterend',
-        panel
-      );
-
-    }
-
-
-    /*
-     * Wymuszamy layout.
-     */
-
-    panel.style.setProperty(
-      'position',
-      'relative',
-      'important'
-    );
-
-    panel.style.setProperty(
-      'display',
-      'block',
-      'important'
-    );
-
-    panel.style.setProperty(
-      'width',
-      '100%',
-      'important'
-    );
-
-    panel.style.setProperty(
-      'max-width',
-      '100%',
-      'important'
-    );
-
-    panel.style.setProperty(
-      'transform',
-      'none',
-      'important'
-    );
-
-    panel.style.setProperty(
-      'float',
-      'none',
-      'important'
-    );
-
-    panel.style.setProperty(
-      'flex',
-      'none',
-      'important'
-    );
-
-
-    bindPackageSelector();
-    bindTopButton();
   }
 
-
-  /*
-   * ============================================================
-   * WYBÓR PAKIETU
-   * ============================================================
-   */
-
-  function bindPackageSelector() {
-
-    const panel =
-      document.getElementById(
-        PANEL_ID
-      );
-
-    if (!panel) return;
-
-    if (
-      panel.dataset.bound === 'true'
-    ) {
-      return;
-    }
-
-    panel.dataset.bound = 'true';
-
-
-    const options =
-      panel.querySelectorAll(
-        '.mog-option'
-      );
-
-
-    options.forEach(function (option) {
-
-      option.addEventListener(
-        'click',
-        function () {
-
-          options.forEach(function (o) {
-            o.classList.remove(
-              'mog-option-active'
-            );
-          });
-
-
-          option.classList.add(
-            'mog-option-active'
-          );
-
-
-          const price =
-            option.dataset.package ===
-            'double'
-              ? PRICE_DOUBLE
-              : PRICE_SINGLE;
-
-
-          const priceEl =
-            document.getElementById(
-              'mog-final-price'
-            );
-
-
-          if (priceEl) {
-            priceEl.textContent =
-              money(price);
-          }
-
-        }
-      );
-
+  // Przycisk "Kup teraz" na samej górze strony (nad paskiem promo) ma
+  // przewijać dokładnie do tej natywnej karty zakupowej (zdjęcie nr 3),
+  // pod którą dokładamy nasze panele — a NIE do sekcji "Zamów teraz"
+  // na dole, bo to inny, odrębny blok dla tego samego produktu.
+  function bindTopQuickBuy(card) {
+    const btn = document.getElementById('mog-top-quickbuy-btn-injected');
+    if (!btn || btn.dataset.bound) return;
+    btn.dataset.bound = 'true';
+    btn.addEventListener('click', () => {
+      const target = card || findNativeBuyCard();
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-
   }
 
-
-  /*
-   * ============================================================
-   * GÓRNY "KUP TERAZ"
-   * ============================================================
-   */
-
-  function bindTopButton() {
-
-    const btn =
-      document.getElementById(
-        'mog-top-quickbuy-btn-injected'
-      );
-
-
-    if (!btn) return;
-
-
-    btn.onclick = function (event) {
-
-      event.preventDefault();
-
-
-      const panel =
-        document.getElementById(
-          PANEL_ID
-        );
-
-
-      if (!panel) {
-
-        placePanel();
-
-        return;
-
-      }
-
-
-      panel.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-
-    };
-
-  }
-
-
-  /*
-   * ============================================================
-   * PILNOWANIE REACTA
-   * ============================================================
-   */
-
-  let timer = null;
-
-
-  function schedule() {
-
-    clearTimeout(timer);
-
-
-    timer =
-      setTimeout(
-        placePanel,
-        100
-      );
-
-  }
-
-
-  function start() {
-
-    placePanel();
-
-
-    const root =
-      document.getElementById(
-        'root'
-      );
-
-
-    if (!root) return;
-
-
-    const observer =
-      new MutationObserver(
-        schedule
-      );
-
-
-    observer.observe(
-      root,
-      {
-        childList: true,
-        subtree: true
-      }
-    );
-
-
-    /*
-     * Dodatkowa kontrola przez kilka sekund
-     * po załadowaniu strony.
-     */
-
-    let count = 0;
-
-
-    const interval =
-      setInterval(
-        function () {
-
-          placePanel();
-
-          count++;
-
-          if (count >= 30) {
-            clearInterval(interval);
+  function initRevealAnimation(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('mog-reveal-visible-injected');
+            io.unobserve(entry.target);
           }
-
-        },
-        500
-      );
-
+        });
+      }, { threshold: 0.15 });
+      io.observe(el);
+    } else {
+      el.classList.add('mog-reveal-visible-injected');
+    }
   }
 
+  // React może wyczyścić ręcznie wstawione węzły DOM przy re-renderze
+  // (nie istnieją w jego Virtual DOM). Ten obserwator pilnuje bloku
+  // i odtwarza go natychmiast, jeśli zniknie.
+  function watchAndHeal() {
+    const root = document.getElementById('root');
+    if (!root) return;
+    let healTimeout = null;
+    const observer = new MutationObserver(() => {
+      const card = findNativeBuyCard();
+      const missing = card && !document.getElementById('mog-purchase-enhancements-injected');
+      if (!missing) return;
+      clearTimeout(healTimeout);
+      healTimeout = setTimeout(insertPurchaseBlock, 150);
+    });
+    observer.observe(root, { childList: true, subtree: true });
+  }
 
-  if (
-    document.readyState ===
-    'loading'
-  ) {
+  function bindSelector() {
+    const wrap = document.getElementById('mog-selector-wrap-injected');
+    if (!wrap || wrap.dataset.bound) return;
+    wrap.dataset.bound = 'true';
+    const opts = wrap.querySelectorAll('.mog-option-injected');
+    opts.forEach((opt) => {
+      opt.addEventListener('click', () => {
+        opts.forEach((o) => o.classList.remove('mog-active-injected'));
+        opt.classList.add('mog-active-injected');
+      });
+    });
+  }
 
-    document.addEventListener(
-      'DOMContentLoaded',
-      start
-    );
+  function initStockCounter() {
+    const el = document.getElementById('mog-stock-count-injected');
+    if (!el || el.dataset.bound) return;
+    el.dataset.bound = 'true';
+    let count = parseInt(sessionStorage.getItem('mogStockCount') || '', 10);
+    if (!count || isNaN(count)) {
+      count = 12 + Math.floor(Math.random() * 4);
+    }
+    el.textContent = count;
+    sessionStorage.setItem('mogStockCount', count);
+    setInterval(() => {
+      if (count > 6) {
+        count -= 1;
+        el.textContent = count;
+        sessionStorage.setItem('mogStockCount', count);
+      }
+    }, 45000 + Math.random() * 30000);
+  }
 
+  const purchaseInterval = setInterval(insertPurchaseBlock, 500);
+  setTimeout(() => clearInterval(purchaseInterval), 12000);
+  watchAndHeal();
+
+})();
+</script>
+
+<!-- ============ LIVE SALES POPUPS (dynamiczne powiadomienia o zakupach) ============ -->
+<script>
+(function() {
+
+  const MOG_TOASTS = [
+    { name: 'Kacper', city: 'Warszawy', product: 'pakiet 2 par' },
+    { name: 'Bartek', city: 'Krakowa', product: 'pojedynczą parę' },
+    { name: 'Zuzia', city: 'Wrocławia', product: 'pakiet 2 par' },
+    { name: 'Dawid', city: 'Poznania', product: 'pojedynczą parę' },
+    { name: 'Mateusz', city: 'Gdańska', product: 'pakiet 2 par' },
+    { name: 'Marta', city: 'Łodzi', product: 'pojedynczą parę' },
+    { name: 'Kuba', city: 'Katowic', product: 'pakiet 2 par' },
+    { name: 'Ola', city: 'Szczecina', product: 'pojedynczą parę' },
+    { name: 'Michał', city: 'Lublina', product: 'pakiet 2 par' },
+    { name: 'Ania', city: 'Bydgoszczy', product: 'pojedynczą parę' }
+  ];
+
+  function ensureToastContainer() {
+    if (document.getElementById('mog-toast-container-injected')) return;
+    document.body.insertAdjacentHTML('beforeend', '<div id="mog-toast-container-injected"></div>');
+  }
+
+  function showRandomToast() {
+    ensureToastContainer();
+    const container = document.getElementById('mog-toast-container-injected');
+    if (!container) return;
+    const data = MOG_TOASTS[Math.floor(Math.random() * MOG_TOASTS.length)];
+    const initials = data.name.charAt(0);
+
+    const toast = document.createElement('div');
+    toast.className = 'mog-toast-injected';
+    toast.style.position = 'relative';
+    toast.innerHTML = `
+      <div class="mog-toast-avatar-injected">${initials}</div>
+      <div>
+        <div class="mog-toast-text-injected"><b>${data.name}</b> z ${data.city} właśnie zamówił ${data.product}</div>
+        <div class="mog-toast-time-injected">przed chwilą</div>
+      </div>
+      <button class="mog-toast-close-injected" aria-label="Zamknij">✕</button>
+    `;
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('mog-toast-show-injected'));
+
+    const removeToast = () => {
+      toast.classList.remove('mog-toast-show-injected');
+      setTimeout(() => toast.remove(), 400);
+    };
+    const autoHide = setTimeout(removeToast, 4800);
+    toast.querySelector('.mog-toast-close-injected').addEventListener('click', () => {
+      clearTimeout(autoHide);
+      removeToast();
+    });
+  }
+
+  function loopToasts() {
+    const tick = () => {
+      showRandomToast();
+      setTimeout(tick, 9000 + Math.random() * 9000);
+    };
+    setTimeout(tick, 5000);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loopToasts);
   } else {
-
-    start();
-
+    loopToasts();
   }
 
 })();
 </script>
+
 </body>
 </html>
