@@ -209,7 +209,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
   max-width: 100% !important;
   box-sizing: border-box !important;
   display: block !important;
-  position: relative !important;
+  position: static !important;
   top: auto !important;
   left: auto !important;
   right: auto !important;
@@ -1368,17 +1368,30 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
       if (el.closest('[id*="injected"], [class*="injected"]')) continue;
       const txt = el.textContent.trim();
       if (/kup\s*teraz/i.test(txt) && txt.length < 60) {
+        // WAŻNE (druga poprawka): pierwsza wersja zatrzymywała wspinaczkę
+        // na najbliższym napotkanym <section> — ale przycisk "Kup teraz"
+        // leży w SEKCJI ZAGNIEŻDŻONEJ wewnątrz Hero (który ma warstwowy
+        // układ: tło ze zdjęciem + tekst + karta zakupowa nałożone na
+        // siebie). Wstawienie panelu "afterend" tej wewnętrznej sekcji
+        // wciąż lądowało w obrębie tego samego kontekstu nakładania Hero,
+        // więc panel dalej zasłaniał tekst i zdjęcie.
+        //
+        // Teraz priorytetem jest wspięcie się AŻ do poziomu bezpośrednich
+        // dzieci #root/body/main — czyli poza CAŁY blok Hero. Dopiero
+        // gdyby to się nie udało w rozsądnej liczbie kroków, używamy
+        // najbliższej napotkanej <section> jako zapasowego celu.
         let node = el;
         let depth = 0;
-        while (node && node.parentElement && depth < 12) {
+        let lastSection = null;
+        while (node && node.parentElement && depth < 20) {
           node = node.parentElement;
           depth++;
-          if (node.tagName === 'SECTION') return node;
+          if (node.tagName === 'SECTION' && !lastSection) lastSection = node;
           if (node.parentElement && (node.parentElement.id === 'root' || node.parentElement.tagName === 'BODY' || node.parentElement.tagName === 'MAIN')) {
-            return node;
+            return node; // pełne wyjście poza Hero — zawsze preferowane
           }
         }
-        return el.parentElement || el;
+        return lastSection || el.parentElement || el;
       }
     }
     return null;
