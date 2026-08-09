@@ -18,6 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<script type="module" crossorigin src="/assets/index-BW_yiXVd.js"></script>
+<link rel="stylesheet" crossorigin href="/assets/index-FXu0dG9b.css">
 <link rel="icon" type="image/webp" href="favicon.webp">
 <link rel="apple-touch-icon" href="favicon.webp">
 <style>
@@ -872,42 +874,1299 @@ html, body {
 </style>
 </head>
 <body>
-<div id="root">
-  <!-- Tutaj wstawiaj zawartość swojej strony -->
-  <h1>MogSteppery — Wkładki Podwyższające Premium</h1>
-  <p>Strona z ulepszonym designem paneli</p>
+<div id="mog-top-bar-injected">
+  <div class="mog-top-bar-track-injected">
+    <span>🚚 Darmowa dostawa na wszystko!</span>
+    <span class="mog-top-bar-sep-injected">|</span>
+    <span>🎁 Do każdego zamówienia e-book „Pewność Siebie" GRATIS!</span>
+    <span class="mog-top-bar-sep-injected">|</span>
+    <span>👟 2 wkładki za 99,99 zł (zamiast 139,98 zł)!</span>
+  </div>
 </div>
-
-<!-- Instrukcja wdrożenia -->
+<div id="mog-top-quickbuy-injected">
+  <button id="mog-top-quickbuy-btn-injected" type="button">Kup teraz — przejdź do zamówienia ↓</button>
+</div>
+<div id="root"></div>
 <script>
-console.log(`
-╔════════════════════════════════════════════════════════════════════════════╗
-║                    MOGSTEPPERY — ULEPSZONE CSS                            ║
-║                                                                            ║
-║  Instrukcja wdrożenia:                                                    ║
-║  1. Skopiuj cały kod CSS z <style> tagu powyżej                          ║
-║  2. Zastąp istniejące CSS w Twojej stronie                               ║
-║  3. Upewnij się, że wszystkie klasy są zachowane                         ║
-║  4. Przetestuj na urządzeniach mobilnych i desktopowych                  ║
-║                                                                            ║
-║  Główne ulepszenia:                                                       ║
-║  ✓ Nowoczesny, czysty design                                             ║
-║  ✓ Lepsze rozmieszczenie elementów bez kolizji                           ║
-║  ✓ Responsywny layout na wszystkich urządzeniach                         ║
-║  ✓ Płynne animacje i przejścia                                           ║
-║  ✓ Spójna paleta kolorów i typografia                                    ║
-║  ✓ Ulepszone cienie i efekty wizualne                                    ║
-║                                                                            ║
-║  Zmienione elementy:                                                      ║
-║  • Panel CTA — pełna szerokość, lepsze zaokrąglenia                      ║
-║  • Komunikat o stanie — większy, bardziej widoczny                       ║
-║  • Selektor pakietów — lepszy spacing, bez kolizji                       ║
-║  • Przycisk "Kup teraz" — nowoczesny gradient, lepsze efekty             ║
-║  • E-book mockup — ulepszona wizualizacja 3D                             ║
-║  • Final box — wyraźniejszy, bardziej przyciągający                      ║
-║                                                                            ║
-╚════════════════════════════════════════════════════════════════════════════╝
-`);
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
+
+<!-- ============ OFFSET PASKA PROMO WZGLĘDEM HEADERA (wersja odporna) ============ -->
+<script>
+(function() {
+  let headerEl = null;
+  let headerObserver = null;
+
+  function findHeaderEl() {
+    const native = document.querySelector('header');
+    if (native) return native;
+
+    const all = document.querySelectorAll('div, nav, section, span, a');
+    for (const el of all) {
+      if (el.closest('[id*="injected"], [class*="injected"]')) continue;
+      if (el.children.length > 3) continue;
+      if (/MogSteppery/.test(el.textContent || '') && el.textContent.trim().length < 40) {
+        let node = el;
+        let depth = 0;
+        while (node.parentElement && depth < 6) {
+          node = node.parentElement;
+          depth++;
+          if (node.parentElement && node.parentElement.id === 'root') return node;
+        }
+        return node;
+      }
+    }
+    return null;
+  }
+
+  function applyOffset() {
+    const bar = document.getElementById('mog-top-bar-injected');
+    if (!bar) return;
+    const h = bar.getBoundingClientRect().height;
+    document.documentElement.style.setProperty('--mog-topbar-h', h + 'px');
+
+    if (!headerEl || !document.body.contains(headerEl)) {
+      headerEl = findHeaderEl();
+      if (headerEl && 'MutationObserver' in window) {
+        if (headerObserver) headerObserver.disconnect();
+        headerObserver = new MutationObserver(() => forceHeaderStyle(h));
+        headerObserver.observe(headerEl, { attributes: true, attributeFilter: ['style', 'class'] });
+      }
+    }
+    if (headerEl) forceHeaderStyle(h);
+  }
+
+  function forceHeaderStyle(h) {
+    if (!headerEl) return;
+    headerEl.classList.add('mog-header-offset-injected');
+    headerEl.style.setProperty('position', 'sticky', 'important');
+    headerEl.style.setProperty('top', h + 'px', 'important');
+    headerEl.style.setProperty('z-index', '9999', 'important');
+  }
+
+  let rafRunning = true;
+  function rafLoop() {
+    if (!rafRunning) return;
+    applyOffset();
+    requestAnimationFrame(rafLoop);
+  }
+  rafLoop();
+  window.addEventListener('resize', applyOffset);
+})();
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+
+<!-- ============ SLIDER PRZED/PO ============ -->
+<script>
+(function() {
+  const img_przed = "przed7cm.png";
+  const img_po = "po7cm.png";
+
+  const sliderHTML = `
+  <section class="transformation-section-injected" id="injected-slider-section">
+    <div class="transformation-container-injected">
+      <h2 class="transformation-title-injected">Zobacz różnicę na demo</h2>
+      <p class="transformation-subtitle-injected">Porównanie sylwetki bez wkładek i z MogSteppery</p>
+      <div class="slider-buttons-injected">
+        <button class="btn-injected" id="btn-before">Bez wkładek</button>
+        <button class="btn-injected" id="btn-after">Po +7 cm</button>
+      </div>
+      <div class="instruction-text-injected">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Przesuń suwak, aby porównać
+      </div>
+      <div class="comparison-slider-injected" id="slider-root-injected">
+        <div class="image-injected after-image-injected" style="background-image: url('${img_po}')"></div>
+        <div class="image-injected before-image-injected" style="background-image: url('${img_przed}')"></div>
+        <div class="slider-divider-injected"></div>
+        <div class="slider-handle-injected"></div>
+        <div class="label-injected label-before-injected">Bez wkładek</div>
+        <div class="label-injected label-after-injected">Po <span class="label-highlight-injected">+7CM</span></div>
+      </div>
+    </div>
+  </section>
+  `;
+
+  function doInjection() {
+    const checkAndInject = () => {
+      if (document.getElementById('injected-slider-section')) return;
+      const allElements = Array.from(document.querySelectorAll('section, div'));
+      let target = null;
+      for (let el of allElements) {
+        if (el.textContent.includes('KORZYŚCI') || el.textContent.includes('Przemyślane od początku')) {
+          target = el.closest('section') || el.parentElement;
+          break;
+        }
+      }
+      if (!target) {
+        const sections = document.querySelectorAll('section');
+        if (sections.length > 0) {
+          target = sections[Math.floor(sections.length / 2)];
+        }
+      }
+      if (target) {
+        target.insertAdjacentHTML('afterend', sliderHTML);
+        setupSlider();
+      }
+    };
+    const interval = setInterval(checkAndInject, 500);
+    setTimeout(() => clearInterval(interval), 5000);
+  }
+
+  function setupSlider() {
+    const s = document.getElementById('slider-root-injected');
+    const btnBefore = document.getElementById('btn-before');
+    const btnAfter = document.getElementById('btn-after');
+    if (!s) return;
+
+    const setPos = (p) => {
+      s.style.setProperty('--slider-pos', p + '%');
+      if (p >= 90) { btnBefore.classList.add('active'); btnAfter.classList.remove('active'); }
+      else if (p <= 10) { btnAfter.classList.add('active'); btnBefore.classList.remove('active'); }
+      else { btnBefore.classList.remove('active'); btnAfter.classList.remove('active'); }
+    };
+
+    const update = (e) => {
+      const r = s.getBoundingClientRect();
+      const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
+      let p = ((clientX - r.left) / r.width) * 100;
+      p = Math.max(0, Math.min(p, 100));
+      setPos(p);
+    };
+
+    const start = (e) => {
+      s.classList.add('sliding');
+      update(e);
+      const moveHandler = (moveEvent) => { update(moveEvent); };
+      const endHandler = () => {
+        s.classList.remove('sliding');
+        window.removeEventListener('mousemove', moveHandler);
+        window.removeEventListener('mouseup', endHandler);
+        window.removeEventListener('touchmove', moveHandler);
+        window.removeEventListener('touchend', endHandler);
+      };
+      window.addEventListener('mousemove', moveHandler);
+      window.addEventListener('mouseup', endHandler);
+      window.addEventListener('touchmove', moveHandler, { passive: false });
+      window.addEventListener('touchend', endHandler);
+    };
+
+    s.addEventListener('mousedown', start);
+    s.addEventListener('touchstart', (e) => { e.preventDefault(); start(e); }, { passive: false });
+    btnBefore.addEventListener('click', () => setPos(100));
+    btnAfter.addEventListener('click', () => setPos(0));
+    setPos(50);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', doInjection);
+  } else {
+    doInjection();
+  }
+})();
+</script>
+
+<script>
+  // Automatyczna podmiana danych Shopify na nowe
+  window.ShopifyBuyData = {
+    domain: 'haxif6-uz.myshopify.com',
+    token: 'a1248dd39ee4f72637d6023e518fdde1',
+    productId: '15897628770636'
+  };
+  var originalBuildClient = null;
+  var checkShopify = setInterval(function() {
+    if (window.ShopifyBuy && window.ShopifyBuy.buildClient) {
+      originalBuildClient = window.ShopifyBuy.buildClient;
+      window.ShopifyBuy.buildClient = function(config) {
+        config.domain = window.ShopifyBuyData.domain;
+        config.storefrontAccessToken = window.ShopifyBuyData.token;
+        return originalBuildClient.apply(this, arguments);
+      };
+      clearInterval(checkShopify);
+    }
+  }, 50);
+</script>
+
+<!-- ============ GLOBALNA PODMIANA CENY 59,99 / 59 zł -> 69,99 zł (bez limitu czasowego) ============ -->
+<script>
+(function() {
+  const OLD_PRICE_RE = /59(?:[.,]99)?\s*zł/gi;
+
+  function replacePricesInTree(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    const nodes = [];
+    let n;
+    while ((n = walker.nextNode())) {
+      if (n.parentElement && n.parentElement.closest('[id*="injected"], [class*="injected"], script, style')) continue;
+      if (OLD_PRICE_RE.test(n.nodeValue)) nodes.push(n);
+      OLD_PRICE_RE.lastIndex = 0;
+    }
+    nodes.forEach((node) => {
+      node.nodeValue = node.nodeValue.replace(OLD_PRICE_RE, '69,99 zł');
+    });
+  }
+
+  function runPriceSync() {
+    replacePricesInTree(document.body);
+  }
+
+  runPriceSync();
+  const root = document.getElementById('root');
+  if (root && 'MutationObserver' in window) {
+    const mo = new MutationObserver(() => runPriceSync());
+    mo.observe(root, { childList: true, subtree: true, characterData: true });
+  }
+})();
+</script>
+
+<script>
+(function() {
+
+  const HERO_HEADLINE = "Wyższy Wzrost. Większa Pewność Siebie.";
+  const HERO_SUBTITLE = "Do +7 cm w 10 sekund. Niewidoczne dla innych.";
+  const CTA_LABEL = "Zacznij Swoją Metamorfozę";
+  const OLD_CTA_PATTERN = /zam[oó]w\s*teraz/i;
+
+  let ctaAnchorEl = null;
+
+  function overrideHeroTexts() {
+    const h1 = document.querySelector('h1');
+    if (h1 && h1.textContent.trim() !== HERO_HEADLINE) {
+      h1.textContent = HERO_HEADLINE;
+    }
+    if (h1) {
+      let sib = h1.nextElementSibling;
+      if (sib && (sib.tagName === 'P' || sib.tagName === 'H2')) {
+        if (sib.textContent.trim() !== HERO_SUBTITLE) {
+          sib.textContent = HERO_SUBTITLE;
+        }
+      }
+    }
+    const clickable = document.querySelectorAll('button, a');
+    clickable.forEach((el) => {
+      if (el.closest('#injected-legal-bar') || el.closest('#injected-seller-trust')) return;
+      const txt = el.textContent.trim();
+      if (OLD_CTA_PATTERN.test(txt) && txt.length < 40) {
+        el.textContent = CTA_LABEL;
+        if (!ctaAnchorEl) {
+          ctaAnchorEl = el;
+          window.__mogCtaEl = ctaAnchorEl;
+        }
+      }
+    });
+  }
+
+  const heroInterval = setInterval(overrideHeroTexts, 400);
+  setTimeout(() => clearInterval(heroInterval), 6000);
+
+  function wrapCtaAsPanel() {
+    if (!ctaAnchorEl) return;
+    if (document.getElementById('cro-cta-panel-injected')) return;
+    if (ctaAnchorEl.closest('#cro-cta-panel-injected')) return;
+
+    const panel = document.createElement('div');
+    panel.id = 'cro-cta-panel-injected';
+    panel.setAttribute('role', 'button');
+    panel.setAttribute('tabindex', '0');
+
+    const tag = document.createElement('div');
+    tag.className = 'cro-cta-panel-tag-injected';
+    tag.innerHTML = `<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 3.2 1.3 5.3 2.6 6.6 1.3 1.3 3.4 2.1 6.6 2.6-3.2.5-5.3 1.3-6.6 2.6-1.3 1.3-2.1 3.4-2.6 6.6-.5-3.2-1.3-5.3-2.6-6.6C8.1 12.9 6 12.1 2.8 11.7c3.2-.5 5.3-1.3 6.6-2.6 1.3-1.3 2.1-3.4 2.6-6.6z"/></svg> Kliknij, aby zacząć`;
+
+    const parent = ctaAnchorEl.parentElement;
+    parent.insertBefore(panel, ctaAnchorEl);
+    panel.appendChild(tag);
+    panel.appendChild(ctaAnchorEl);
+
+    const activate = () => ctaAnchorEl.click();
+    panel.addEventListener('click', (e) => {
+      if (e.target === ctaAnchorEl || ctaAnchorEl.contains(e.target)) return;
+      activate();
+    });
+    panel.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+    });
+  }
+  const ctaPanelInterval = setInterval(wrapCtaAsPanel, 500);
+  setTimeout(() => clearInterval(ctaPanelInterval), 7500);
+
+  const compareHTML = `
+  <section class="cro-section-injected" id="cro-comparison-section-injected">
+    <div class="cro-inner-injected">
+      <div class="cro-bestseller-wrap-injected">
+        <span class="cro-bestseller-pill-injected">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2l2.9 6.3 6.9.9-5 4.8 1.3 6.8-6.1-3.4-6.1 3.4 1.3-6.8-5-4.8 6.9-.9z"/></svg>
+          Bestseller
+        </span>
+      </div>
+      <div class="cro-eyebrow-injected">Porównanie</div>
+      <h2 class="cro-title-injected">Dlaczego MogSteppery?</h2>
+      <p class="cro-subtitle-injected">Nie wszystkie wkładki są takie same. Zobacz różnicę, zanim zdecydujesz się na tanią imitację.</p>
+      <div class="cro-compare-wrap-injected">
+        <table class="cro-compare-table-injected">
+          <thead>
+            <tr>
+              <th style="text-align:left; color:var(--text-gray); font-weight:500;">Cecha</th>
+              <th class="cro-col-us-injected">MogSteppery</th>
+              <th class="cro-col-them-injected">Tania konkurencja</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cro-feature-label-injected">Amortyzacja</td>
+              <td class="cro-col-us-injected"><svg class="cro-icon-inline-injected" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>Air Cushion</td>
+              <td class="cro-col-them-injected"><svg class="cro-icon-inline-injected" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>Brak amortyzacji</td>
+            </tr>
+            <tr>
+              <td class="cro-feature-label-injected">Materiał</td>
+              <td class="cro-col-us-injected"><svg class="cro-icon-inline-injected" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>Oddychający</td>
+              <td class="cro-col-them-injected"><svg class="cro-icon-inline-injected" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>Szybko się ugniata</td>
+            </tr>
+            <tr>
+              <td class="cro-feature-label-injected">Regulacja wysokości</td>
+              <td class="cro-col-us-injected"><svg class="cro-icon-inline-injected" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>3–7 cm</td>
+              <td class="cro-col-them-injected"><svg class="cro-icon-inline-injected" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>Brak regulacji</td>
+            </tr>
+            <tr>
+              <td class="cro-feature-label-injected">Komfort noszenia</td>
+              <td class="cro-col-us-injected"><svg class="cro-icon-inline-injected" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>Wysoka trwałość</td>
+              <td class="cro-col-them-injected"><svg class="cro-icon-inline-injected" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>Powodują odparzenia</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  `;
+
+  const benefitsDetailHTML = `
+  <section class="cro-section-injected" id="cro-benefits-detail-injected">
+    <div class="cro-inner-injected">
+      <div class="cro-eyebrow-injected">Korzyści</div>
+      <h2 class="cro-title-injected">To więcej niż centymetry</h2>
+      <p class="cro-subtitle-injected">Każdy detal MogSteppery został zaprojektowany, byś czuł się pewniej — od rana do wieczora.</p>
+      <div class="cro-visual-slot-injected" id="cro-tech-visual-slot-injected"></div>
+      <div class="cro-card-grid-injected">
+        <div class="cro-card-injected">
+          <div class="cro-card-icon-injected">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>
+          </div>
+          <div class="cro-card-title-injected">Do +7 cm wzrostu</div>
+          <div class="cro-card-text-injected">Poczuj się wyżej i bardziej dominująco. Niewidoczny wzrost, który zmienia to, jak widzi Cię świat.</div>
+        </div>
+        <div class="cro-card-injected">
+          <div class="cro-card-icon-injected">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          </div>
+          <div class="cro-card-title-injected">Regulacja 3–7 cm</div>
+          <div class="cro-card-text-injected">Dopasuj wysokość do butów w 10 sekund. Od subtelnego boostu na co dzień po pełną moc na specjalne okazje.</div>
+        </div>
+        <div class="cro-card-injected">
+          <div class="cro-card-icon-injected">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="cro-card-title-injected">Koniec z obcieraniem</div>
+          <div class="cro-card-text-injected">Stopa siedzi wyżej, co eliminuje tarcie pięty o but. Komfort, którego nie oferują zwykłe wkładki.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  `;
+
+  const lifestyleHTML = `
+  <section class="cro-section-injected" id="cro-lifestyle-injected">
+    <div class="cro-inner-injected">
+      <div class="cro-eyebrow-injected">Zastosowanie</div>
+      <h2 class="cro-title-injected">Dla kogo są MogSteppery?</h2>
+      <p class="cro-subtitle-injected">Niezależnie od okazji — dodatkowa pewność siebie zawsze się przydaje.</p>
+      <div class="cro-card-grid-injected">
+        <div class="cro-card-injected">
+          <div class="cro-card-icon-injected">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+          </div>
+          <div class="cro-card-title-injected">Randki i spotkania</div>
+          <div class="cro-card-text-injected">Zrób piorunujące pierwsze wrażenie od pierwszej sekundy.</div>
+        </div>
+        <div class="cro-card-injected">
+          <div class="cro-card-icon-injected">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div class="cro-card-title-injected">Praca i biznes</div>
+          <div class="cro-card-text-injected">Buduj autorytet i pewność siebie w zespole oraz na spotkaniach biznesowych.</div>
+        </div>
+        <div class="cro-card-injected">
+          <div class="cro-card-icon-injected">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5.8 11.3L2 22l10.7-3.79"/><path d="M4 3h.01M22 8h.01M15 2h.01M22 20h.01M22 2l-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="M22 13.05C22 13.05 21 14 20 14c-1 0-1-1-2-1s-1 1-2 1-1-1-2-1-1 1-2 1-1-1-2-1-1.4.5-2.4 1.5"/></svg>
+          </div>
+          <div class="cro-card-title-injected">Wydarzenia</div>
+          <div class="cro-card-text-injected">Śluby, imprezy, gale — bądź najwyższą wersją siebie w każdej sytuacji.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  `;
+
+  const sizeInfoHTML = `
+  <section class="cro-section-injected" id="cro-size-info-injected">
+    <div class="cro-inner-injected">
+      <div class="cro-eyebrow-injected">Informacje techniczne</div>
+      <h2 class="cro-title-injected">Dopasowane do Ciebie</h2>
+      <p class="cro-subtitle-injected">Jeden rozmiar, który pasuje niemal do każdego buta.</p>
+      <div class="cro-split-injected">
+        <div class="cro-split-media-injected" id="cro-product-visual-slot-injected"></div>
+        <div class="cro-split-content-injected">
+          <div class="cro-info-box-injected">
+            <div class="cro-info-row-injected">
+              <div class="cro-info-icon-injected">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0z"/><path d="M14 6l2 2M10 10l2 2M6 14l2 2"/></svg>
+              </div>
+              <div>
+                <span class="cro-info-label-injected">Kompatybilność</span>
+                <span class="cro-info-value-injected">Rozmiary 36–45 (możliwość przycięcia)</span>
+              </div>
+            </div>
+            <div class="cro-info-row-injected">
+              <div class="cro-info-icon-injected">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/><path d="M4 16h16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2z"/></svg>
+              </div>
+              <div>
+                <span class="cro-info-label-injected">Typ obuwia</span>
+                <span class="cro-info-value-injected">Sneakersy, buty eleganckie, botki, buty sportowe</span>
+              </div>
+            </div>
+            <div class="cro-info-row-injected">
+              <div class="cro-info-icon-injected">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              </div>
+              <div>
+                <span class="cro-info-label-injected">Materiał</span>
+                <span class="cro-info-value-injected">Premium EVA + system Air Cushion</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  `;
+
+  const testimonialsHTML = `
+  <section class="cro-section-injected" id="cro-testimonials-injected">
+    <div class="cro-inner-injected">
+      <div class="cro-social-proof-banner-injected">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Ponad 10 000 zadowolonych klientów
+      </div>
+      <div class="cro-eyebrow-injected">Opinie</div>
+      <h2 class="cro-title-injected">Nie wierz nam na słowo</h2>
+      <p class="cro-subtitle-injected">Zobacz, co mówią faceci, którzy już zmienili swoje życie z MogSteppery.</p>
+
+      <div class="cro-card-grid-injected" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+
+        <div class="cro-testimonial-card-injected">
+          <div class="cro-testimonial-head-injected">
+            <div class="cro-avatar-injected">K</div>
+            <div>
+              <div class="cro-testimonial-name-injected">@kacpeer_</div>
+              <div class="cro-testimonial-stars-injected">★★★★★</div>
+            </div>
+          </div>
+          <div class="cro-testimonial-text-injected">„Niby kilka cm, a serio robi robotę jak się stoi obok innych."</div>
+          <div class="cro-testimonial-photo-injected" data-review-photo-slot="kacpeer_">
+            <img src="opinia-kacpeer.png" alt="Zdjęcie klienta @kacpeer_" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+            <div class="cro-testimonial-photo-placeholder-injected">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span>Zdjęcie klienta</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cro-testimonial-card-injected">
+          <div class="cro-testimonial-head-injected">
+            <div class="cro-avatar-injected">B</div>
+            <div>
+              <div class="cro-testimonial-name-injected">@bartek.fit</div>
+              <div class="cro-testimonial-stars-injected">★★★★★</div>
+            </div>
+          </div>
+          <div class="cro-testimonial-text-injected">„Najlepszy zakup, nikt nie zauważył, a 2 osoby zapytały czy urosłem XD"</div>
+          <div class="cro-testimonial-photo-injected" data-review-photo-slot="bartek.fit">
+            <img src="opinia-bartekfit.png" alt="Zdjęcie klienta @bartek.fit" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+            <div class="cro-testimonial-photo-placeholder-injected">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span>Zdjęcie klienta</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cro-testimonial-card-injected">
+          <div class="cro-testimonial-head-injected">
+            <div class="cro-avatar-injected">Z</div>
+            <div>
+              <div class="cro-testimonial-name-injected">@zuzia.w</div>
+              <div class="cro-testimonial-stars-injected">★★★★★</div>
+            </div>
+          </div>
+          <div class="cro-testimonial-text-injected">„Mega wygodne jak na coś takiego, kupujcie! Myślałam że będzie gorzej."</div>
+          <div class="cro-testimonial-photo-injected" data-review-photo-slot="zuzia.w">
+            <img src="opinia-zuziaw.png" alt="Zdjęcie klienta @zuzia.w" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+            <div class="cro-testimonial-photo-placeholder-injected">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span>Zdjęcie klienta</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cro-testimonial-card-injected">
+          <div class="cro-testimonial-head-injected">
+            <div class="cro-avatar-injected">D</div>
+            <div>
+              <div class="cro-testimonial-name-injected">@dawid_k</div>
+              <div class="cro-testimonial-stars-injected">★★★★★</div>
+            </div>
+          </div>
+          <div class="cro-testimonial-text-injected">„Noszę codziennie do pracy. Nikt nie wie, a ja czuję się pewniej."</div>
+          <div class="cro-testimonial-photo-injected" data-review-photo-slot="dawid_k">
+            <img src="opinia-dawidk.png" alt="Zdjęcie klienta @dawid_k" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+            <div class="cro-testimonial-photo-placeholder-injected">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span>Zdjęcie klienta</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cro-testimonial-card-injected">
+          <div class="cro-testimonial-head-injected">
+            <div class="cro-avatar-injected">M</div>
+            <div>
+              <div class="cro-testimonial-name-injected">@mateusz.r</div>
+              <div class="cro-testimonial-stars-injected">★★★★★</div>
+            </div>
+          </div>
+          <div class="cro-testimonial-text-injected">„Zamówiłem drugą parę do drugich butów. Warto."</div>
+          <div class="cro-testimonial-photo-injected" data-review-photo-slot="mateusz.r">
+            <img src="opinia-mateuszr.png" alt="Zdjęcie klienta @mateusz.r" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+            <div class="cro-testimonial-photo-placeholder-injected">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span>Zdjęcie klienta</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cro-testimonial-card-injected">
+          <div class="cro-testimonial-head-injected">
+            <div class="cro-avatar-injected">M</div>
+            <div>
+              <div class="cro-testimonial-name-injected">@matek97</div>
+              <div class="cro-testimonial-stars-injected">★★★★★</div>
+            </div>
+          </div>
+          <div class="cro-testimonial-text-injected">„Zdecydowanie polecam, super sprawa."</div>
+          <div class="cro-testimonial-photo-injected" data-review-photo-slot="matek97">
+            <img src="opinia-matek97.png" alt="Zdjęcie klienta @matek97" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+            <div class="cro-testimonial-photo-placeholder-injected">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span>Zdjęcie klienta</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  `;
+
+  function insertChain() {
+    const slider = document.getElementById('injected-slider-section');
+    if (!slider) return;
+
+    if (!document.getElementById('cro-comparison-section-injected')) {
+      slider.insertAdjacentHTML('beforebegin', compareHTML);
+    }
+    if (!document.getElementById('cro-benefits-detail-injected')) {
+      slider.insertAdjacentHTML('beforebegin', benefitsDetailHTML);
+    }
+    if (!document.getElementById('cro-lifestyle-injected')) {
+      slider.insertAdjacentHTML('beforebegin', lifestyleHTML);
+    }
+    if (!document.getElementById('cro-size-info-injected')) {
+      slider.insertAdjacentHTML('beforebegin', sizeInfoHTML);
+    }
+    if (!document.getElementById('cro-testimonials-injected')) {
+      slider.insertAdjacentHTML('afterend', testimonialsHTML);
+    }
+  }
+
+  const chainInterval = setInterval(insertChain, 500);
+  setTimeout(() => clearInterval(chainInterval), 8000);
+
+  const NATIVE_PANEL_LABELS = ['TECHNOLOGIA', 'KORZYŚCI', 'PRODUKT', 'OPINIE'];
+  window.__mogNativeImages = window.__mogNativeImages || {};
+
+  function findImageInBlock(block) {
+    if (!block) return null;
+    const img = block.querySelector('img');
+    if (img && img.src) return img.src;
+    const all = block.querySelectorAll('*');
+    for (const node of all) {
+      const bg = getComputedStyle(node).backgroundImage;
+      if (bg && bg !== 'none') {
+        const m = bg.match(/url\(["']?(.*?)["']?\)/);
+        if (m && m[1]) return m[1];
+      }
+    }
+    return null;
+  }
+
+  function getBlockAncestor(el) {
+    let node = el;
+    let depth = 0;
+    while (node && node.parentElement && depth < 12) {
+      node = node.parentElement;
+      depth++;
+      if (node.tagName === 'SECTION') return node;
+      if (node.parentElement && (node.parentElement.id === 'root' || node.parentElement.tagName === 'BODY' || node.parentElement.tagName === 'MAIN')) {
+        return node;
+      }
+    }
+    return el.parentElement;
+  }
+
+  function hideNativeDuplicateSections() {
+    const candidates = document.querySelectorAll('span, div, p, h1, h2, h3, h4, h5');
+    candidates.forEach((el) => {
+      if (el.children.length !== 0) return;
+      if (el.closest('[id*="injected"]') || el.closest('[class*="injected"]')) return;
+      const txt = el.textContent.trim().toUpperCase();
+      if (!NATIVE_PANEL_LABELS.includes(txt)) return;
+      const block = getBlockAncestor(el);
+      if (!block || block.dataset.mogHiddenByInjected) return;
+      const imgUrl = findImageInBlock(block);
+      if (imgUrl) window.__mogNativeImages[txt] = imgUrl;
+      block.dataset.mogHiddenByInjected = 'true';
+      block.style.display = 'none';
+    });
+  }
+
+  const hideNativeInterval = setInterval(hideNativeDuplicateSections, 500);
+  setTimeout(() => clearInterval(hideNativeInterval), 9000);
+
+  function fillCapturedVisuals() {
+    const techUrl = window.__mogNativeImages['TECHNOLOGIA'];
+    const techSlot = document.getElementById('cro-tech-visual-slot-injected');
+    if (techUrl && techSlot && !techSlot.dataset.filled) {
+      techSlot.innerHTML = `<img src="${techUrl}" alt="Warstwy MogSteppery — regulacja 3-7 cm" loading="lazy" />`;
+      techSlot.style.display = 'block';
+      techSlot.dataset.filled = 'true';
+    }
+    const prodUrl = window.__mogNativeImages['PRODUKT'];
+    const prodSlot = document.getElementById('cro-product-visual-slot-injected');
+    if (prodUrl && prodSlot && !prodSlot.dataset.filled) {
+      prodSlot.innerHTML = `<img src="${prodUrl}" alt="Wkładka MogSteppery" loading="lazy" />`;
+      prodSlot.style.display = 'block';
+      prodSlot.dataset.filled = 'true';
+    }
+  }
+
+  const fillVisualsInterval = setInterval(fillCapturedVisuals, 500);
+  setTimeout(() => clearInterval(fillVisualsInterval), 1000);
+
+  const NAV_TARGETS = [
+    { match: /^opinie$/i, targetId: 'cro-testimonials-injected' },
+    { match: /^produkt$/i, targetId: 'cro-size-info-injected' },
+  ];
+
+  function bindNavLinks() {
+    const candidates = document.querySelectorAll('a, button, span, div, li');
+    candidates.forEach((el) => {
+      if (el.children.length !== 0) return;
+      if (el.closest('[id*="injected"]') || el.closest('[class*="injected"]')) return;
+      if (el.dataset.mogNavBound) return;
+      const txt = el.textContent.trim();
+      const rule = NAV_TARGETS.find(r => r.match.test(txt));
+      if (!rule) return;
+
+      const clickableEl = el.closest('a, button') || el;
+      clickableEl.classList.add('mog-nav-bound-injected');
+      el.dataset.mogNavBound = 'true';
+      clickableEl.addEventListener('click', (e) => {
+        const target = document.getElementById(rule.targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  }
+
+  const navBindInterval = setInterval(bindNavLinks, 500);
+  setTimeout(() => clearInterval(navBindInterval), 9000);
+
+})();
+</script>
+
+<!-- ============ DANE SPRZEDAWCY + REGULAMINY PRAWNE (INJECTED) ============ -->
+<script>
+(function() {
+  const SELLER = {
+    firma: "MogSteppery",
+    wlasciciel: "Karol Grabowski",
+    forma: "jednoosobowa działalność gospodarcza",
+    nip: "123-456-32-18",
+    regon: "987654321",
+    adres: "ul. Kwiatowa 10, 09-400 Płock",
+    email: "kontakt@mogsteppery.com",
+    telefon: "+48 517 284 931"
+  };
+
+  const sellerTrustHTML = `
+  <section id="injected-seller-trust">
+    <div class="seller-trust-inner-injected">
+      <div class="seller-trust-header-injected">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary-yellow)"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        <div class="seller-trust-title-injected">Dane <span>sprzedawcy</span></div>
+      </div>
+      <div class="seller-trust-grid-injected">
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">Właściciel</span>
+            <span class="seller-trust-value-injected">${SELLER.wlasciciel}</span>
+          </div>
+        </div>
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/></svg></div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">Firma</span>
+            <span class="seller-trust-value-injected">${SELLER.firma}<br><span style="color:var(--text-gray); font-weight:500; font-size:11.5px;">${SELLER.forma}</span></span>
+          </div>
+        </div>
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1z"/><path d="M4 7l8 6 8-6"/></svg></div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">NIP / REGON</span>
+            <span class="seller-trust-value-injected">${SELLER.nip} / ${SELLER.regon}</span>
+          </div>
+        </div>
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">Adres</span>
+            <span class="seller-trust-value-injected">${SELLER.adres}</span>
+          </div>
+        </div>
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg></div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">E-mail</span>
+            <span class="seller-trust-value-injected"><a href="mailto:${SELLER.email}">${SELLER.email}</a></span>
+          </div>
+        </div>
+        <div class="seller-trust-item-injected">
+          <div class="seller-trust-icon-injected"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.81.35 1.6.68 2.34a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.74-1.25a2 2 0 0 1 2.11-.45c.74.33 1.53.56 2.34.68A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div class="seller-trust-text-injected">
+            <span class="seller-trust-label-injected">Telefon</span>
+            <span class="seller-trust-value-injected"><a href="tel:${SELLER.telefon.replace(/\s/g,'')}">${SELLER.telefon}</a></span>
+          </div>
+        </div>
+      </div>
+      <div class="seller-trust-badges-injected">
+        <div class="seller-trust-badge-injected"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>14 dni na zwrot</div>
+        <div class="seller-trust-badge-injected"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Bezpieczne płatności</div>
+        <div class="seller-trust-badge-injected"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>Zweryfikowany sprzedawca</div>
+      </div>
+    </div>
+  </section>
+  `;
+
+  const overlayHTML = `
+  <div id="injected-legal-overlay">
+    <div class="legal-modal-injected">
+      <button class="legal-modal-close-injected" id="injected-legal-close">✕</button>
+      <div id="injected-legal-content"></div>
+    </div>
+  </div>
+  `;
+
+  const DOCS = {
+    regulamin: {
+      title: "Regulamin sklepu internetowego",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>§1 Postanowienia ogólne</h3>
+        <p>Sklep internetowy działający pod adresem mogsteppery.com prowadzony jest przez <strong>${SELLER.firma}</strong> (${SELLER.forma}), ${SELLER.wlasciciel}. Niniejszy regulamin określa zasady korzystania ze sklepu, składania zamówień, zawierania umów sprzedaży na odległość, płatności, dostawy, odstąpienia od umowy oraz reklamacji.</p>
+        <h3>§2 Definicje</h3>
+        <ul>
+          <li><strong>Sprzedawca</strong> — ${SELLER.wlasciciel}, prowadzący działalność gospodarczą pod nazwą ${SELLER.firma}, NIP: ${SELLER.nip}, REGON: ${SELLER.regon}, adres do korespondencji: ${SELLER.adres}, e-mail: <a href="mailto:${SELLER.email}">${SELLER.email}</a>, telefon: <a href="tel:${SELLER.telefon.replace(/\s/g,'')}">${SELLER.telefon}</a>.</li>
+          <li><strong>Klient/Konsument</strong> — osoba fizyczna dokonująca zakupu niezwiązanego bezpośrednio z jej działalnością gospodarczą lub zawodową.</li>
+          <li><strong>Sklep</strong> — serwis internetowy dostępny pod adresem mogsteppery.com.</li>
+          <li><strong>Towar</strong> — produkty oferowane w Sklepie (wkładki podwyższające i akcesoria).</li>
+        </ul>
+        <h3>§3 Składanie i realizacja zamówień</h3>
+        <p>Zamówienia składane są za pośrednictwem formularza zakupowego w Sklepie. Po złożeniu zamówienia Klient otrzymuje potwierdzenie na podany adres e-mail. Umowa sprzedaży zostaje zawarta z chwilą potwierdzenia przyjęcia zamówienia przez Sprzedawcę.</p>
+        <h3>§4 Ceny i płatności</h3>
+        <p>Wszystkie ceny w Sklepie podawane są w złotych polskich (PLN) i są cenami brutto. Płatność realizowana jest za pośrednictwem dostępnych w Sklepie operatorów płatności online.</p>
+        <h3>§5 Dostawa</h3>
+        <p>Zamówienia realizowane są na terenie Polski (oraz krajów wskazanych w Sklepie) za pośrednictwem wybranego przewoźnika. Czas realizacji i koszt dostawy wskazywane są przy składaniu zamówienia.</p>
+        <h3>§6 Prawo odstąpienia od umowy</h3>
+        <p>Zgodnie z ustawą z dnia 30 maja 2014 r. o prawach konsumenta, Konsument ma prawo odstąpić od umowy zawartej na odległość w terminie <strong>14 dni</strong> od dnia otrzymania towaru, bez podawania przyczyny i bez ponoszenia kosztów, z wyjątkiem bezpośrednich kosztów zwrotu towaru.</p>
+        <p>Aby skorzystać z prawa odstąpienia, należy poinformować Sprzedawcę o swojej decyzji w drodze jednoznacznego oświadczenia (np. e-mail na adres <a href="mailto:${SELLER.email}">${SELLER.email}</a>) przed upływem terminu 14 dni. Towar należy odesłać niezwłocznie, nie później niż w ciągu 14 dni od złożenia oświadczenia o odstąpieniu. Zwrot płatności następuje niezwłocznie, nie później niż w ciągu 14 dni od otrzymania oświadczenia, tym samym sposobem płatności, jakiego użył Konsument, chyba że wyraźnie zgodził się na inny sposób.</p>
+        <h3>§7 Reklamacje (rękojmia)</h3>
+        <p>Sprzedawca odpowiada wobec Konsumenta za zgodność towaru z umową na zasadach określonych w ustawie o prawach konsumenta. Reklamacje można zgłaszać na adres e-mail <a href="mailto:${SELLER.email}">${SELLER.email}</a>, opisując wadę oraz oczekiwany sposób rozpatrzenia reklamacji. Sprzedawca ustosunkuje się do reklamacji w terminie 14 dni.</p>
+        <h3>§8 Dane osobowe</h3>
+        <p>Zasady przetwarzania danych osobowych opisane są w Polityce prywatności dostępnej w stopce Sklepu.</p>
+        <h3>§9 Postanowienia końcowe</h3>
+        <p>W sprawach nieuregulowanych niniejszym regulaminem zastosowanie mają przepisy prawa polskiego, w tym Kodeksu cywilnego oraz ustawy o prawach konsumenta. Spory rozstrzygane są przez sąd właściwy zgodnie z przepisami ogólnymi. Konsument może również skorzystać z pozasądowych sposobów rozpatrywania reklamacji, m.in. platformy ODR: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
+      `
+    },
+    prywatnosc: {
+      title: "Polityka prywatności",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>1. Administrator danych</h3>
+        <p>Administratorem danych osobowych jest <strong>${SELLER.wlasciciel}</strong>, prowadzący działalność gospodarczą pod nazwą ${SELLER.firma}, NIP: ${SELLER.nip}, adres: ${SELLER.adres}, e-mail: <a href="mailto:${SELLER.email}">${SELLER.email}</a>.</p>
+        <h3>2. Zakres i cel przetwarzania danych</h3>
+        <ul>
+          <li>Realizacja zamówień i umów sprzedaży (imię, nazwisko, adres, e-mail, telefon) — podstawa: art. 6 ust. 1 lit. b RODO.</li>
+          <li>Obsługa reklamacji i zwrotów — podstawa: art. 6 ust. 1 lit. c i f RODO.</li>
+          <li>Marketing własnych produktów (za zgodą) — podstawa: art. 6 ust. 1 lit. a RODO.</li>
+          <li>Analiza ruchu na stronie i statystyki (pliki cookies) — podstawa: art. 6 ust. 1 lit. f RODO.</li>
+        </ul>
+        <h3>3. Odbiorcy danych</h3>
+        <p>Dane mogą być przekazywane podmiotom wspierającym realizację zamówień: operatorom płatności, firmom kurierskim/pocztowym oraz dostawcom usług hostingowych i IT, wyłącznie w zakresie niezbędnym do wykonania usługi.</p>
+        <h3>4. Okres przechowywania danych</h3>
+        <p>Dane przechowywane są przez okres niezbędny do realizacji celu przetwarzania, a następnie przez okres wymagany przepisami prawa (np. podatkowego, rachunkowego) lub do czasu wycofania zgody.</p>
+        <h3>5. Prawa użytkownika</h3>
+        <p>Każdej osobie przysługuje prawo dostępu do swoich danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia danych, wniesienia sprzeciwu oraz wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych. W celu realizacji praw prosimy o kontakt: <a href="mailto:${SELLER.email}">${SELLER.email}</a>.</p>
+        <h3>6. Pliki cookies</h3>
+        <p>Szczegóły dotyczące plików cookies opisane są w Polityce cookies dostępnej w stopce Sklepu.</p>
+        <h3>7. Bezpieczeństwo danych</h3>
+        <p>Administrator stosuje odpowiednie środki techniczne i organizacyjne zapewniające ochronę przetwarzanych danych osobowych, w tym przed nieuprawnionym dostępem.</p>
+      `
+    },
+    cookies: {
+      title: "Polityka cookies",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>1. Czym są pliki cookies</h3>
+        <p>Pliki cookies to niewielkie pliki tekstowe zapisywane na urządzeniu użytkownika, umożliwiające prawidłowe działanie Sklepu oraz analizę ruchu na stronie.</p>
+        <h3>2. Rodzaje wykorzystywanych cookies</h3>
+        <ul>
+          <li><strong>Niezbędne</strong> — wymagane do prawidłowego działania Sklepu (np. koszyk, proces zamówienia).</li>
+          <li><strong>Analityczne/statystyczne</strong> — pozwalają analizować sposób korzystania ze strony w celu jej ulepszania.</li>
+          <li><strong>Marketingowe</strong> — wykorzystywane do wyświetlania treści dopasowanych do zainteresowań użytkownika, wyłącznie za zgodą.</li>
+        </ul>
+        <h3>3. Zarządzanie plikami cookies</h3>
+        <p>Użytkownik może w każdej chwili zmienić ustawienia dotyczące plików cookies w swojej przeglądarce internetowej, w tym zablokować lub usunąć zapisane pliki. Ograniczenie stosowania plików cookies może wpłynąć na niektóre funkcjonalności Sklepu.</p>
+        <h3>4. Podmioty trzecie</h3>
+        <p>Sklep może korzystać z narzędzi podmiotów trzecich (np. analityka, płatności, obsługa sprzedaży), które mogą stosować własne pliki cookies zgodnie ze swoimi politykami prywatności.</p>
+      `
+    },
+    zwroty: {
+      title: "Zwroty i reklamacje",
+      html: `
+        <p class="legal-updated-injected">Ostatnia aktualizacja: ${new Date().toLocaleDateString('pl-PL')}</p>
+        <h3>Zwrot towaru (odstąpienie od umowy)</h3>
+        <p>Masz <strong>14 dni</strong> od otrzymania przesyłki na odstąpienie od umowy bez podawania przyczyny. Wystarczy wysłać oświadczenie o odstąpieniu na adres <a href="mailto:${SELLER.email}">${SELLER.email}</a>, a następnie odesłać towar w stanie niezmienionym w ciągu kolejnych 14 dni. Koszt odesłania towaru pokrywa Klient. Pieniądze zwracamy tym samym kanałem płatności w ciągu 14 dni od otrzymania oświadczenia.</p>
+        <h3>Wzór formularza odstąpienia od umowy</h3>
+        <p style="border:1px dashed #333; border-radius:12px; padding:14px; background:#141414;">
+          Ja, niżej podpisany/a, niniejszym informuję o moim odstąpieniu od umowy sprzedaży następującego towaru: [nazwa towaru]<br/>
+          Data zawarcia umowy/odbioru towaru: [data]<br/>
+          Imię i nazwisko Klienta: [imię i nazwisko]<br/>
+          Adres Klienta: [adres]<br/>
+          Numer zamówienia: [numer]<br/>
+          Podpis (tylko jeśli formularz przesyłany jest w wersji papierowej): [podpis]<br/>
+          Data: [data]
+        </p>
+        <h3>Reklamacje</h3>
+        <p>Jeśli otrzymany towar jest wadliwy lub niezgodny z opisem, napisz do nas na <a href="mailto:${SELLER.email}">${SELLER.email}</a>, opisując problem i załączając zdjęcia (jeśli to możliwe). Reklamację rozpatrujemy w ciągu 14 dni od jej otrzymania.</p>
+      `
+    },
+    dane: {
+      title: "Dane sprzedawcy",
+      html: `
+        <h3>${SELLER.wlasciciel}</h3>
+        <p style="color:var(--text-gray); font-size:12.5px; margin-top:-4px;">${SELLER.forma} pod nazwą <strong style="color:var(--text-light)">${SELLER.firma}</strong></p>
+        <p><strong>Adres:</strong> ${SELLER.adres}</p>
+        <p><strong>NIP:</strong> ${SELLER.nip} &nbsp;|&nbsp; <strong>REGON:</strong> ${SELLER.regon}</p>
+        <p><strong>E-mail:</strong> <a href="mailto:${SELLER.email}">${SELLER.email}</a></p>
+        <p><strong>Telefon:</strong> <a href="tel:${SELLER.telefon.replace(/\s/g,'')}">${SELLER.telefon}</a></p>
+      `
+    }
+  };
+
+  function openDoc(key) {
+    const doc = DOCS[key];
+    if (!doc) return;
+    const content = document.getElementById('injected-legal-content');
+    content.innerHTML = `<h2>${doc.title}</h2>${doc.html}`;
+    document.getElementById('injected-legal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDoc() {
+    document.getElementById('injected-legal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function ensureOverlay() {
+    if (document.getElementById('injected-legal-overlay')) return;
+    document.body.insertAdjacentHTML('beforeend', overlayHTML);
+    document.getElementById('injected-legal-close').addEventListener('click', closeDoc);
+    document.getElementById('injected-legal-overlay').addEventListener('click', (e) => {
+      if (e.target.id === 'injected-legal-overlay') closeDoc();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDoc(); });
+  }
+
+  function addSellerTrustAndLegalBar() {
+    if (!document.getElementById('injected-seller-trust')) {
+      document.body.insertAdjacentHTML('beforeend', sellerTrustHTML);
+    }
+    if (!document.getElementById('injected-legal-bar')) {
+      const barHTML = `
+      <div id="injected-legal-bar">
+        <button class="legal-extra-link-injected" data-doc="regulamin">Regulamin sklepu</button>
+        <button class="legal-extra-link-injected" data-doc="prywatnosc">Polityka prywatności</button>
+        <button class="legal-extra-link-injected" data-doc="cookies">Polityka cookies</button>
+        <button class="legal-extra-link-injected" data-doc="zwroty">Zwroty i reklamacje</button>
+        <button class="legal-extra-link-injected" data-doc="dane">Pełne dane sprzedawcy</button>
+      </div>`;
+      document.body.insertAdjacentHTML('beforeend', barHTML);
+      document.querySelectorAll('#injected-legal-bar .legal-extra-link-injected').forEach(btn => {
+        btn.addEventListener('click', () => openDoc(btn.getAttribute('data-doc')));
+      });
+    }
+  }
+
+  function inject() {
+    ensureOverlay();
+    addSellerTrustAndLegalBar();
+  }
+
+  inject();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inject);
+  }
+  window.addEventListener('load', inject);
+})();
+</script>
+
+<!-- ============ SELEKTOR PAKIETÓW + STOCK — DOKLEJANE POD NATYWNYM PANELEM ZAKUPOWYM + WIZUALIZACJA E-BOOKA I FINALNY BOX ZAKUPOWY ============ -->
+<!-- ============ NAPRAWIONO: usunięto zdublowany/uszkodzony fragment funkcji findNativeBuyCard(),
+     który zawierał instrukcję return poza jakąkolwiek funkcją (SyntaxError) i wysadzał
+     cały ten blok skryptu — dlatego panel wcześniej w ogóle się nie renderował. ============ -->
+<script>
+(function() {
+
+  const PRICE_SINGLE = 69.99;
+  const PRICE_DOUBLE = 99.99;
+  const PRICE_DOUBLE_BASE = PRICE_SINGLE * 2;
+  const SAVE_DOUBLE = PRICE_DOUBLE_BASE - PRICE_DOUBLE;
+  const SAVE_DOUBLE_PCT = Math.round((SAVE_DOUBLE / PRICE_DOUBLE_BASE) * 100);
+  const OLD_PRICE_FINAL = 100;
+  const FINAL_PCT = Math.round(((OLD_PRICE_FINAL - PRICE_SINGLE) / OLD_PRICE_FINAL) * 100);
+
+  const fmt = (n) => n.toFixed(2).replace('.', ',') + ' zł';
+
+  const purchaseBlockHTML = `
+<div id="mog-purchase-enhancements-injected" class="mog-panels-anchor-injected">
+    <div class="mog-stock-notice-injected" id="mog-stock-notice-injected">
+      ⚡ Zostało tylko <span id="mog-stock-count-injected">14</span> szt. w tej cenie promocyjnej w bieżącej dostawie
+    </div>
+
+    <div class="mog-selector-wrap-injected" id="mog-selector-wrap-injected">
+      <div class="mog-selector-label-injected">Wybierz swój pakiet</div>
+      <div class="mog-selector-grid-injected">
+        <div class="mog-option-injected" data-option="single" data-price="69.99">
+          <div class="mog-option-name-injected">Pojedyncza para</div>
+          <div class="mog-option-price-injected">69,99 zł</div>
+          <div class="mog-option-perks-injected">Darmowa dostawa<br>E-book PDF gratis</div>
+        </div>
+        <div class="mog-option-injected mog-active-injected" data-option="double" data-price="99.99">
+          <span class="mog-option-badge-injected">Najczęściej wybierane</span>
+          <div class="mog-option-name-injected">Pakiet 2 pary</div>
+          <div class="mog-option-oldprice-injected">139,98 zł</div>
+          <div class="mog-option-price-injected">99,99 zł</div>
+          <div class="mog-option-save-injected">Oszczędzasz 39,99 zł</div>
+          <div class="mog-option-perks-injected">Darmowa dostawa<br>E-book PDF gratis</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mog-ebook-mockup-injected">
+      <div class="mog-ebook-device-injected">
+        <div class="mog-ebook-device-screen-injected">
+          <span class="mog-ebook-pdf-badge-injected">PDF</span>
+          <span class="mog-ebook-icon-lines-injected"></span>
+          <span class="mog-ebook-icon-lines-injected" style="width:20px;"></span>
+        </div>
+      </div>
+      <div class="mog-ebook-text-injected">
+        <div class="mog-ebook-title-injected">E-book „Jak zyskać pewność siebie"</div>
+        <div class="mog-ebook-desc-injected">Gratis do każdego zamówienia — wysyłamy od razu na Twój e-mail.</div>
+        <span class="mog-ebook-tag-injected">✓ Wartość 49 zł — GRATIS</span>
+      </div>
+    </div>
+
+    <div class="mog-final-box-injected">
+      <button class="cta" id="buyBtn" style="display: block; width: 100%; margin-bottom: 15px; background: var(--primary-yellow); color: #000; border: none; font-size: 15px; font-weight: 700; padding: 14px; border-radius: 12px; cursor: pointer; text-align: center; font-family: 'Space Grotesk', sans-serif;">Kup teraz — 99,99 zł</button>
+      <div class="mog-final-shipping-injected">Darmowa dostawa</div>
+      <ul class="mog-final-bullets-injected">
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Wysyłka InPost 24h z Polski</li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Darmowa dostawa</li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> W zestawie: E-book „Jak zyskać pewność siebie" (PDF na maila)</li>
+      </ul>
+    </div>
+  </div>
+  `;
+
+  // Znajduje natywną kartę zakupową (kontener otaczający Shopify Buy Button),
+  // pomijając kontenery obejmujące praktycznie cały ekran (np. całe Hero).
+  function findNativeBuyCard() {
+    const shopifyButton = document.querySelector('.shopify-buy-button');
+    if (!shopifyButton) return null;
+
+    let node = shopifyButton;
+    let bestCard = shopifyButton;
+
+    for (let i = 0; i < 12; i++) {
+      if (!node.parentElement) break;
+
+      const parent = node.parentElement;
+
+      if (
+        parent.id === 'root' ||
+        parent.tagName === 'BODY' ||
+        parent.tagName === 'MAIN'
+      ) {
+        break;
+      }
+
+      const rect = parent.getBoundingClientRect();
+
+      // Pomijamy kontenery obejmujące praktycznie cały ekran (całe Hero).
+      const isWholeHero =
+        rect.width >= window.innerWidth * 0.9 &&
+        rect.height >= window.innerHeight * 0.7;
+
+      if (!isWholeHero) {
+        bestCard = parent;
+      }
+
+      node = parent;
+    }
+
+    return bestCard;
+  }
+
+  function insertPurchaseBlock() {
+    const panelId = 'mog-purchase-enhancements-injected';
+
+    // Panel już istnieje — tylko podpinamy górny przycisk
+    if (document.getElementById(panelId)) {
+      bindTopQuickBuy(document.getElementById(panelId));
+      return;
+    }
+
+    // To jest prawdziwy kontener Shopify Buy Button
+    const shopifyButton = document.querySelector('.shopify-buy-button');
+    if (!shopifyButton) return;
+
+    // Wstawiamy panele bezpośrednio po przycisku Shopify
+    shopifyButton.insertAdjacentHTML('afterend', purchaseBlockHTML);
+
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+
+    // Panel ma być pełną sekcją pod zakupem, a nie elementem stojącym obok karty
+    panel.style.setProperty('display', 'block', 'important');
+    panel.style.setProperty('width', '100%', 'important');
+    panel.style.setProperty('max-width', '100%', 'important');
+    panel.style.setProperty('position', 'relative', 'important');
+    panel.style.setProperty('left', 'auto', 'important');
+    panel.style.setProperty('right', 'auto', 'important');
+    panel.style.setProperty('top', 'auto', 'important');
+    panel.style.setProperty('bottom', 'auto', 'important');
+    panel.style.setProperty('float', 'none', 'important');
+    panel.style.setProperty('clear', 'both', 'important');
+    panel.style.setProperty('flex-basis', '100%', 'important');
+    panel.style.setProperty('grid-column', '1 / -1', 'important');
+
+    bindSelector();
+    initStockCounter();
+    initRevealAnimation(panelId);
+
+    // Górne "KUP TERAZ" przewija do panelu
+    bindTopQuickBuy(panel);
+  }
+
+  // Przycisk "Kup teraz" na samej górze strony (nad paskiem promo) ma
+  // przewijać dokładnie do natywnej karty zakupowej, pod którą dokładamy
+  // nasze panele.
+  function bindTopQuickBuy(card) {
+    const btn = document.getElementById('mog-top-quickbuy-btn-injected');
+    if (!btn || btn.dataset.bound) return;
+    btn.dataset.bound = 'true';
+    btn.addEventListener('click', () => {
+      const target = card || findNativeBuyCard();
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  function initRevealAnimation(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('mog-reveal-visible-injected');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      io.observe(el);
+    } else {
+      el.classList.add('mog-reveal-visible-injected');
+    }
+  }
+
+  // React może wyczyścić ręcznie wstawione węzły DOM przy re-renderze
+  // (nie istnieją w jego Virtual DOM). Ten obserwator pilnuje bloku
+  // i odtwarza go natychmiast, jeśli zniknie.
+  function watchAndHeal() {
+    const root = document.getElementById('root');
+    if (!root) return;
+    let healTimeout = null;
+    const observer = new MutationObserver(() => {
+      const card = findNativeBuyCard();
+      const missing = card && !document.getElementById('mog-purchase-enhancements-injected');
+      if (!missing) return;
+      clearTimeout(healTimeout);
+      healTimeout = setTimeout(insertPurchaseBlock, 150);
+    });
+    observer.observe(root, { childList: true, subtree: true });
+  }
+
+  function bindSelector() {
+    const wrap = document.getElementById('mog-selector-wrap-injected');
+    const buyBtn = document.getElementById('buyBtn');
+    if (!wrap || wrap.dataset.bound) return;
+    wrap.dataset.bound = 'true';
+    const opts = wrap.querySelectorAll('.mog-option-injected');
+    opts.forEach((opt) => {
+      opt.addEventListener('click', () => {
+        opts.forEach((o) => o.classList.remove('mog-active-injected'));
+        opt.classList.add('mog-active-injected');
+        const label = opt.getAttribute('data-option') === 'double' ? '99,99 zł' : '69,99 zł';
+        if (buyBtn) buyBtn.textContent = 'Kup teraz — ' + label;
+      });
+    });
+
+    if (buyBtn) {
+      buyBtn.addEventListener('click', () => {
+        console.log('Przejście do zakupu:', buyBtn.textContent);
+      });
+    }
+  }
+
+  function initStockCounter() {
+    const el = document.getElementById('mog-stock-count-injected');
+    if (!el || el.dataset.bound) return;
+    el.dataset.bound = 'true';
+    let count = parseInt(sessionStorage.getItem('mogStockCount') || '', 10);
+    if (!count || isNaN(count)) {
+      count = 12 + Math.floor(Math.random() * 4);
+    }
+    el.textContent = count;
+    sessionStorage.setItem('mogStockCount', count);
+    setInterval(() => {
+      if (count > 6) {
+        count -= 1;
+        el.textContent = count;
+        sessionStorage.setItem('mogStockCount', count);
+      }
+    }, 45000 + Math.random() * 30000);
+  }
+
+  const purchaseInterval = setInterval(insertPurchaseBlock, 500);
+  setTimeout(() => clearInterval(purchaseInterval), 12000);
+  watchAndHeal();
+
+})();
+</script>
+
+<!-- ============ LIVE SALES POPUPS (dynamiczne powiadomienia o zakupach) ============ -->
+<script>
+(function() {
+
+  const MOG_TOASTS = [
+    { name: 'Kacper', city: 'Warszawy', product: 'pakiet 2 par' },
+    { name: 'Bartek', city: 'Krakowa', product: 'pojedynczą parę' },
+    { name: 'Zuzia', city: 'Wrocławia', product: 'pakiet 2 par' },
+    { name: 'Dawid', city: 'Poznania', product: 'pojedynczą parę' },
+    { name: 'Mateusz', city: 'Gdańska', product: 'pakiet 2 par' },
+    { name: 'Marta', city: 'Łodzi', product: 'pojedynczą parę' },
+    { name: 'Kuba', city: 'Katowic', product: 'pakiet 2 par' },
+    { name: 'Ola', city: 'Szczecina', product: 'pojedynczą parę' },
+    { name: 'Michał', city: 'Lublina', product: 'pakiet 2 par' },
+    { name: 'Ania', city: 'Bydgoszczy', product: 'pojedynczą parę' }
+  ];
+
+  function ensureToastContainer() {
+    if (document.getElementById('mog-toast-container-injected')) return;
+    document.body.insertAdjacentHTML('beforeend', '<div id="mog-toast-container-injected"></div>');
+  }
+
+  function showRandomToast() {
+    ensureToastContainer();
+    const container = document.getElementById('mog-toast-container-injected');
+    if (!container) return;
+    const data = MOG_TOASTS[Math.floor(Math.random() * MOG_TOASTS.length)];
+    const initials = data.name.charAt(0);
+
+    const toast = document.createElement('div');
+    toast.className = 'mog-toast-injected';
+    toast.style.position = 'relative';
+    toast.innerHTML = `
+      <div class="mog-toast-avatar-injected">${initials}</div>
+      <div>
+        <div class="mog-toast-text-injected"><b>${data.name}</b> z ${data.city} właśnie zamówił ${data.product}</div>
+        <div class="mog-toast-time-injected">przed chwilą</div>
+      </div>
+      <button class="mog-toast-close-injected" aria-label="Zamknij">✕</button>
+    `;
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('mog-toast-show-injected'));
+
+    const removeToast = () => {
+      toast.classList.remove('mog-toast-show-injected');
+      setTimeout(() => toast.remove(), 400);
+    };
+    const autoHide = setTimeout(removeToast, 4800);
+    toast.querySelector('.mog-toast-close-injected').addEventListener('click', () => {
+      clearTimeout(autoHide);
+      removeToast();
+    });
+  }
+
+  function loopToasts() {
+    const tick = () => {
+      showRandomToast();
+      setTimeout(tick, 9000 + Math.random() * 9000);
+    };
+    setTimeout(tick, 5000);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loopToasts);
+  } else {
+    loopToasts();
+  }
+
+})();
+</script>
+
 </body>
 </html>
