@@ -1584,6 +1584,662 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 
 })();
 </script>
+<!-- =========================================================
+     MOGSTEPPER FIX — PANEL ZAKUPOWY + GÓRNY KUP TERAZ
+     Wklej bezpośrednio przed </body>
+========================================================= -->
 
+<style>
+  /* =========================================================
+     1. PANEL ZAKUPOWY NIGDY NIE MOŻE BYĆ FIXED/STICKY
+  ========================================================= */
+
+  #mog-purchase-enhancements-injected {
+    position: relative !important;
+    inset: auto !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin: 35px auto 0 !important;
+
+    transform: none !important;
+    z-index: 10 !important;
+
+    float: none !important;
+    clear: both !important;
+
+    box-sizing: border-box !important;
+  }
+
+  /* Jeżeli któryś z rodziców nadaje panelowi dziwne pozycjonowanie */
+  #mog-purchase-enhancements-injected * {
+    box-sizing: border-box;
+  }
+
+  /* Panel ma być normalnym elementem strony */
+  body.mog-purchase-fix-active
+  #mog-purchase-enhancements-injected {
+    display: block !important;
+  }
+
+  /* Kliknięcie "Kup teraz" ma przewijać z odstępem od sticky headera */
+  #mog-purchase-enhancements-injected {
+    scroll-margin-top: 90px !important;
+  }
+
+  @media (max-width: 768px) {
+    #mog-purchase-enhancements-injected {
+      scroll-margin-top: 75px !important;
+      margin-top: 25px !important;
+    }
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  const PANEL_ID = 'mog-purchase-enhancements-injected';
+
+  let movingPanel = false;
+  let observerStarted = false;
+
+  /* =========================================================
+     FUNKCJA: czy element jest widoczny?
+  ========================================================= */
+
+  function isVisible(el) {
+    if (!el) return false;
+
+    const rect = el.getBoundingClientRect();
+    const style = window.getComputedStyle(el);
+
+    return (
+      rect.width > 0 &&
+      rect.height > 0 &&
+      style.display !== 'none' &&
+      style.visibility !== 'hidden'
+    );
+  }
+
+
+  /* =========================================================
+     FUNKCJA: znajdź prawdziwy przycisk "Kup teraz"
+     
+     NIE wybieramy:
+     - headera
+     - nav
+     - naszego panelu
+     - sticky/fixed CTA
+  ========================================================= */
+
+  function findRealBuyButton() {
+
+    const elements = Array.from(
+      document.querySelectorAll('a, button')
+    );
+
+    const candidates = elements.filter(function (el) {
+
+      if (!isVisible(el)) return false;
+
+      /* Nie dotykamy naszego panelu */
+      if (el.closest('#' + PANEL_ID)) {
+        return false;
+      }
+
+      /* Nie dotykamy headera / nawigacji */
+      if (el.closest('header, nav')) {
+        return false;
+      }
+
+      const text = (el.textContent || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+
+      /* Musi być "Kup teraz" */
+      if (text !== 'kup teraz') {
+        return false;
+      }
+
+      const style = window.getComputedStyle(el);
+
+      /* Pomijamy sticky/fixed */
+      if (
+        style.position === 'fixed' ||
+        style.position === 'sticky'
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+
+
+    if (!candidates.length) {
+      return null;
+    }
+
+
+    /*
+      Szukamy przycisku znajdującego się
+      w rzeczywistej karcie produktu.
+    */
+
+    let best = null;
+    let bestScore = -9999;
+
+
+    candidates.forEach(function (button) {
+
+      let node = button;
+
+      for (let i = 0; i < 12 && node; i++) {
+
+        const text = node.innerText || '';
+        const rect = node.getBoundingClientRect();
+
+        const hasImage =
+          !!node.querySelector('img');
+
+        const hasPrice =
+          /\d+[,.]\d{2}\s*(zł|pln)/i.test(text);
+
+
+        if (
+          rect.width > 250 &&
+          rect.height > 100 &&
+          (hasImage || hasPrice)
+        ) {
+
+          let score = 0;
+
+          if (hasImage) score += 50;
+          if (hasPrice) score += 80;
+
+          /*
+            Preferujemy element znajdujący się
+            niżej na stronie, ponieważ nie chcemy
+            złapać elementu hero/headera.
+          */
+          score += Math.min(
+            rect.top / 20,
+            50
+          );
+
+          /*
+            Ogromny wrapper całej strony = minus
+          */
+          if (
+            rect.width >
+            window.innerWidth * 0.95
+          ) {
+            score -= 30;
+          }
+
+
+          if (score > bestScore) {
+            bestScore = score;
+            best = node;
+          }
+
+          break;
+        }
+
+        node = node.parentElement;
+      }
+    });
+
+
+    return best;
+  }
+
+
+  /* =========================================================
+     ZNAJDŹ NAJLEPSZE MIEJSCE POD KARTĄ PRODUKTU
+  ========================================================= */
+
+  function findProductAnchor() {
+
+    const button = findRealBuyButton();
+
+    if (!button) {
+      return null;
+    }
+
+
+    /*
+      Cofamy się do sensownego kontenera produktu.
+    */
+
+    let node = button;
+
+    for (let i = 0; i < 10 && node; i++) {
+
+      const rect = node.getBoundingClientRect();
+
+      const hasImage =
+        !!node.querySelector('img');
+
+      const hasPrice =
+        /\d+[,.]\d{2}\s*(zł|pln)/i.test(
+          node.innerText || ''
+        );
+
+
+      if (
+        hasImage &&
+        hasPrice &&
+        rect.width > 250 &&
+        rect.height > 150
+      ) {
+
+        /*
+          Nie chcemy całego #root.
+        */
+        if (
+          node.id === 'root' ||
+          node === document.body ||
+          node === document.documentElement
+        ) {
+          break;
+        }
+
+        return node;
+      }
+
+      node = node.parentElement;
+    }
+
+
+    /*
+      Awaryjnie sam przycisk.
+    */
+
+    return button;
+  }
+
+
+  /* =========================================================
+     PRZENOSZENIE PANELU
+  ========================================================= */
+
+  function movePurchasePanel() {
+
+    if (movingPanel) return;
+
+    const panel =
+      document.getElementById(PANEL_ID);
+
+    if (!panel) return;
+
+
+    const anchor = findProductAnchor();
+
+    if (!anchor) return;
+
+
+    /*
+      Chcemy mieć panel PO KARCIE PRODUKTU,
+      a nie wewnątrz hero/flex/grid.
+    */
+
+    /*
+      Jeżeli panel już jest bezpośrednio
+      po karcie produktu — nic nie robimy.
+    */
+
+    if (
+      panel.previousElementSibling === anchor
+    ) {
+      document.body.classList.add(
+        'mog-purchase-fix-active'
+      );
+
+      return;
+    }
+
+
+    movingPanel = true;
+
+
+    try {
+
+      /*
+        Najważniejsza operacja:
+        wyciągamy panel z obecnego
+        flex/grid/hero i wkładamy go
+        bezpośrednio za kartę produktu.
+      */
+
+      anchor.insertAdjacentElement(
+        'afterend',
+        panel
+      );
+
+
+      /*
+        Wymuszamy normalny layout.
+      */
+
+      panel.style.setProperty(
+        'position',
+        'relative',
+        'important'
+      );
+
+      panel.style.setProperty(
+        'inset',
+        'auto',
+        'important'
+      );
+
+      panel.style.setProperty(
+        'transform',
+        'none',
+        'important'
+      );
+
+      panel.style.setProperty(
+        'float',
+        'none',
+        'important'
+      );
+
+      panel.style.setProperty(
+        'width',
+        '100%',
+        'important'
+      );
+
+      panel.style.setProperty(
+        'max-width',
+        '100%',
+        'important'
+      );
+
+      panel.style.setProperty(
+        'margin-left',
+        'auto',
+        'important'
+      );
+
+      panel.style.setProperty(
+        'margin-right',
+        'auto',
+        'important'
+      );
+
+
+      document.body.classList.add(
+        'mog-purchase-fix-active'
+      );
+
+    } catch (error) {
+
+      console.warn(
+        'MogStepper purchase panel fix:',
+        error
+      );
+
+    }
+
+
+    movingPanel = false;
+  }
+
+
+  /* =========================================================
+     GÓRNY "KUP TERAZ"
+     
+     Kliknięcie przewija do panelu.
+  ========================================================= */
+
+  function bindTopBuyButtons() {
+
+    const elements =
+      document.querySelectorAll(
+        'a, button, span, div'
+      );
+
+
+    elements.forEach(function (el) {
+
+      if (el.dataset.mogTopBuyBound) {
+        return;
+      }
+
+
+      const text =
+        (el.textContent || '')
+          .replace(/\s+/g, ' ')
+          .trim()
+          .toLowerCase();
+
+
+      if (text !== 'kup teraz') {
+        return;
+      }
+
+
+      /*
+        Naszego prawdziwego przycisku
+        zakupowego NIE przechwytujemy.
+      */
+
+      if (
+        el.closest(
+          '#' + PANEL_ID
+        )
+      ) {
+        return;
+      }
+
+
+      /*
+        Jeżeli element znajduje się
+        w karcie produktu — nie ruszamy go.
+      */
+
+      const realBuy =
+        findRealBuyButton();
+
+
+      if (
+        realBuy &&
+        (
+          el === realBuy ||
+          el.contains(realBuy) ||
+          realBuy.contains(el)
+        )
+      ) {
+        return;
+      }
+
+
+      /*
+        Interesują nas głównie elementy
+        znajdujące się wysoko na stronie,
+        czyli CTA z headera/hero.
+      */
+
+      const rect =
+        el.getBoundingClientRect();
+
+
+      if (rect.top > 450) {
+        return;
+      }
+
+
+      el.dataset.mogTopBuyBound =
+        'true';
+
+
+      el.addEventListener(
+        'click',
+        function (event) {
+
+          const panel =
+            document.getElementById(
+              PANEL_ID
+            );
+
+
+          if (!panel) {
+            return;
+          }
+
+
+          event.preventDefault();
+          event.stopPropagation();
+
+
+          /*
+            Na wszelki wypadek przenieś panel
+            jeszcze raz przed scrollowaniem.
+          */
+
+          movePurchasePanel();
+
+
+          setTimeout(function () {
+
+            const freshPanel =
+              document.getElementById(
+                PANEL_ID
+              );
+
+            if (!freshPanel) return;
+
+
+            freshPanel.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+
+          }, 50);
+
+        },
+        true
+      );
+
+    });
+  }
+
+
+  /* =========================================================
+     OBSERWATOR
+     
+     React może ponownie zmienić DOM.
+     Dlatego cały mechanizm kontrolujemy
+     przez MutationObserver.
+  ========================================================= */
+
+  function startObserver() {
+
+    if (observerStarted) return;
+
+    observerStarted = true;
+
+
+    const observer =
+      new MutationObserver(
+        function () {
+
+          /*
+            Nie robimy tego synchronicznie
+            przy każdej zmianie DOM.
+          */
+
+          clearTimeout(
+            window.__mogPurchaseFixTimer
+          );
+
+
+          window.__mogPurchaseFixTimer =
+            setTimeout(function () {
+
+              movePurchasePanel();
+              bindTopBuyButtons();
+
+            }, 100);
+
+        }
+      );
+
+
+    observer.observe(
+      document.body,
+      {
+        childList: true,
+        subtree: true
+      }
+    );
+  }
+
+
+  /* =========================================================
+     START
+  ========================================================= */
+
+  function init() {
+
+    movePurchasePanel();
+    bindTopBuyButtons();
+    startObserver();
+
+
+    /*
+      React/Shopify może załadować
+      właściwy panel z opóźnieniem.
+    */
+
+    let attempts = 0;
+
+
+    const interval =
+      setInterval(function () {
+
+        movePurchasePanel();
+        bindTopBuyButtons();
+
+        attempts++;
+
+        if (attempts >= 40) {
+          clearInterval(interval);
+        }
+
+      }, 500);
+  }
+
+
+  /* =========================================================
+     URUCHOMIENIE
+  ========================================================= */
+
+  if (
+    document.readyState === 'loading'
+  ) {
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      init
+    );
+
+  } else {
+
+    init();
+
+  }
+
+})();
+</script>
 </body>
 </html>
