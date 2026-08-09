@@ -1329,30 +1329,47 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     return null;
   }
 
+  // Awaryjny punkt wstawienia, gdyby wykrywanie natywnej karty zakupowej
+  // (findNativeBuyCard) zawiodło na produkcyjnym froncie — wtedy blok
+  // trafia zaraz pod panel CTA "Zacznij Swoją Metamorfozę", żeby NIGDY
+  // nie zniknął całkowicie ze strony.
+  function findFallbackAnchor() {
+    return document.getElementById('cro-cta-panel-injected');
+  }
+
   function insertPurchaseBlock() {
-    if (document.getElementById('mog-purchase-enhancements-injected')) return;
+    if (document.getElementById('mog-purchase-enhancements-injected')) {
+      bindTopQuickBuy();
+      return;
+    }
     const card = findNativeBuyCard();
-    if (card && card.parentElement) {
-      card.insertAdjacentHTML('afterend', purchaseBlockHTML);
+    const anchor = card || findFallbackAnchor();
+    if (anchor && anchor.parentElement) {
+      anchor.insertAdjacentHTML('afterend', purchaseBlockHTML);
       bindSelector();
       initStockCounter();
       initRevealAnimation('mog-purchase-enhancements-injected');
-      bindTopQuickBuy(card);
     }
+    bindTopQuickBuy();
   }
 
   // Przycisk "Kup teraz" na samej górze strony (nad paskiem promo) ma
-  // przewijać dokładnie do tej natywnej karty zakupowej (zdjęcie nr 3),
-  // pod którą dokładamy nasze panele — a NIE do sekcji "Zamów teraz"
-  // na dole, bo to inny, odrębny blok dla tego samego produktu.
-  function bindTopQuickBuy(card) {
+  // przewijać dokładnie do panelu zakupowego (selektor + stock + e-book +
+  // finalna cena), który stoi pod natywną kartą "Kup teraz" (zrzut nr 3).
+  // Celujemy w sam panel (#mog-purchase-enhancements-injected), a nie w
+  // kartę — bo panel to konkretny, zawsze obecny element z ID, więc cel
+  // przewijania nigdy nie jest "martwy", nawet jeśli struktura natywnej
+  // karty się zmieni. Funkcja re-bindowana jest przy każdym wywołaniu
+  // insertPurchaseBlock (m.in. po healu), więc nasłuchiwacz kliknięcia
+  // zawsze wskazuje na aktualnie istniejący element.
+  function bindTopQuickBuy() {
     const btn = document.getElementById('mog-top-quickbuy-btn-injected');
-    if (!btn || btn.dataset.bound) return;
-    btn.dataset.bound = 'true';
-    btn.addEventListener('click', () => {
-      const target = card || findNativeBuyCard();
+    if (!btn) return;
+    btn.onclick = () => {
+      const panel = document.getElementById('mog-purchase-enhancements-injected');
+      const target = panel || findNativeBuyCard() || findFallbackAnchor();
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    };
   }
 
   function initRevealAnimation(id) {
@@ -1381,8 +1398,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     if (!root) return;
     let healTimeout = null;
     const observer = new MutationObserver(() => {
-      const card = findNativeBuyCard();
-      const missing = card && !document.getElementById('mog-purchase-enhancements-injected');
+      const missing = !document.getElementById('mog-purchase-enhancements-injected');
       if (!missing) return;
       clearTimeout(healTimeout);
       healTimeout = setTimeout(insertPurchaseBlock, 150);
@@ -1422,8 +1438,9 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     }, 45000 + Math.random() * 30000);
   }
 
+  insertPurchaseBlock();
   const purchaseInterval = setInterval(insertPurchaseBlock, 500);
-  setTimeout(() => clearInterval(purchaseInterval), 12000);
+  setTimeout(() => clearInterval(purchaseInterval), 20000);
   watchAndHeal();
 
 })();
