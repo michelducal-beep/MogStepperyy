@@ -197,8 +197,34 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 .mog-option-save-injected { color: #5fd76a; font-size: 11px; font-weight: 700; margin-top: 4px; }
 .mog-option-perks-injected { color: var(--text-gray); font-size: 10.5px; margin-top: 8px; line-height: 1.55; font-family: 'Inter', sans-serif; }
 
-/* ===== BLOK PANELI DOSTAWIANY POD NATYWNYM PANELEM SPRZEDAŻY ===== */
-.mog-panels-anchor-injected { width: 100%; box-sizing: border-box; padding: 18px 20px 4px; }
+/* ===== BLOK PANELI DOSTAWIANY POD NATYWNYM PANELEM SPRZEDAŻY =====
+   Blok MUSI zawsze renderować się jako pełnoszerokościowy element blokowy,
+   niezależnie od tego, w jakim kontekście layoutu (flex/grid) wyląduje
+   jego rodzic po wstawieniu przez insertAdjacentHTML. Bez tych reguł
+   potrafił "wyskoczyć" jako kolejny element flex obok sekcji hero i
+   zasłaniać pół ekranu (patrz zgłoszenie z 09.08.2026). */
+.mog-panels-anchor-injected,
+#mog-purchase-enhancements-injected {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  float: none !important;
+  clear: both !important;
+  flex: 1 1 100% !important;
+  flex-basis: 100% !important;
+  grid-column: 1 / -1 !important;
+  align-self: stretch !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  z-index: 1 !important;
+  padding: 18px 20px 4px;
+}
 
 /* ===== WIZUALIZACJA E-BOOKA (mockup 3D CSS) ===== */
 .mog-ebook-mockup-injected { display: flex; align-items: center; gap: 16px; max-width: 480px; margin: 16px auto; background: #0f0f0f; border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; }
@@ -960,6 +986,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
   const NAV_TARGETS = [
     { match: /^opinie$/i, targetId: 'cro-testimonials-injected' },
     { match: /^produkt$/i, targetId: 'cro-size-info-injected' },
+    { match: /^kup\s*teraz$/i, targetId: 'mog-purchase-enhancements-injected', headerOnly: true },
   ];
 
   function bindNavLinks() {
@@ -971,6 +998,13 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
       const txt = el.textContent.trim();
       const rule = NAV_TARGETS.find(r => r.match.test(txt));
       if (!rule) return;
+      // Reguły oznaczone jako headerOnly wiążemy WYŁĄCZNIE, jeśli element
+      // faktycznie leży w nagłówku/nawigacji. Dzięki temu "Kup teraz" w
+      // menu (mały link nawigacyjny) przewija do panelu zakupowego, ale
+      // NIGDY nie podepniemy tego pod prawdziwy przycisk zakupu produktu
+      // (ten ma zostać nietknięty, bo odpowiada za realne dodanie do
+      // koszyka / przejście do checkoutu Shopify).
+      if (rule.headerOnly && !el.closest('header, nav')) return;
 
       const clickableEl = el.closest('a, button') || el;
       clickableEl.classList.add('mog-nav-bound-injected');
@@ -1310,6 +1344,24 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 
   // Znajduje natywną kartę zakupową (obrazek + nazwa + cena + "Kup teraz"),
   // dokładnie taką jak na zrzucie ekranu nr 3 od klienta.
+  //
+  // WAŻNE: wcześniejsza wersja tej funkcji wspinała się po drzewie DOM
+  // maksymalnie 8 poziomów w górę i zwracała PIERWSZEGO przodka, który
+  // zawierał gdziekolwiek w środku jakikolwiek <img>. To zbyt luźne
+  // kryterium potrafiło złapać zbyt duży, nieprawidłowy kontener —
+  // np. cały wiersz flex/grid obejmujący jednocześnie sekcję hero i
+  // kartę zakupową. Wstawiany po nim panel (insertAdjacentHTML
+  // 'afterend') stawał się wtedy kolejnym elementem w TYM SAMYM
+  // wierszu flex, więc wizualnie "wyskakiwał" w bok i zasłaniał pół
+  // ekranu zamiast wylądować pod kartą na pełną szerokość.
+  //
+  // Teraz wspinamy się do najbliższego PEŁNOWYMIAROWEGO bloku:
+  // najbliższego <section> albo elementu, którego rodzicem jest już
+  // #root / <body> / <main>. To dokładnie ta sama, sprawdzona logika,
+  // która już wcześniej była używana w getBlockAncestor() do
+  // wykrywania natywnych sekcji (Technologia/Korzyści/Produkt/Opinie).
+  // Dzięki temu panel zawsze ląduje jako osobny, pełnowymiarowy blok
+  // bezpośrednio pod kartą zakupową — a nie obok niej.
   function findNativeBuyCard() {
     const clickable = document.querySelectorAll('button, a');
     for (const el of clickable) {
@@ -1318,10 +1370,13 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
       if (/kup\s*teraz/i.test(txt) && txt.length < 60) {
         let node = el;
         let depth = 0;
-        while (node.parentElement && depth < 8) {
+        while (node && node.parentElement && depth < 12) {
           node = node.parentElement;
           depth++;
-          if (node.querySelector('img')) return node;
+          if (node.tagName === 'SECTION') return node;
+          if (node.parentElement && (node.parentElement.id === 'root' || node.parentElement.tagName === 'BODY' || node.parentElement.tagName === 'MAIN')) {
+            return node;
+          }
         }
         return el.parentElement || el;
       }
