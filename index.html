@@ -1311,6 +1311,41 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
   // Znajduje natywną kartę zakupową (obrazek + nazwa + cena + "Kup teraz"),
   // dokładnie taką jak na zrzucie ekranu nr 3 od klienta.
   function findNativeBuyCard() {
+  const buyButton = document.querySelector('.shopify-buy-button');
+
+  if (!buyButton) {
+    return null;
+  }
+
+  /*
+   * Shopify Buy Button znajduje się wewnątrz
+   * prawej części karty produktu.
+   *
+   * Szukamy najwyższego sensownego kontenera,
+   * ale NIE wychodzimy do całego Hero.
+   */
+
+  let node = buyButton;
+
+  for (let i = 0; i < 8; i++) {
+    if (!node.parentElement) break;
+
+    const parent = node.parentElement;
+    const rect = parent.getBoundingClientRect();
+
+    if (
+      rect.width > 300 &&
+      rect.width < window.innerWidth * 0.75 &&
+      rect.height > 150
+    ) {
+      node = parent;
+    } else {
+      break;
+    }
+  }
+
+  return node;
+}
     const clickable = document.querySelectorAll('button, a');
     for (const el of clickable) {
       if (el.closest('[id*="injected"], [class*="injected"]')) continue;
