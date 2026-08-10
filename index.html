@@ -1332,10 +1332,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     float: none !important;
     transform: none !important;
 }#mog-purchase-enhancements-injected > * { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
-        font-family: 'Inter', sans-serif;
-        color: #fff;
-        margin-top: 20px;
-    }
+        
     .mog-stock-notice-injected {
         background: rgba(255, 193, 7, 0.1);
         border: 1px solid rgba(255, 193, 7, 0.3);
@@ -1579,7 +1576,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     const target = document.querySelector('.shopify-buy-button') || findNativeBuyCard();
     if (!target) return;
 
-target.parentElement.insertAdjacentHTML('afterend', purchaseBlockHTML);
+target.insertAdjacentHTML('afterend', purchaseBlockHTML);
     
     const panel = document.getElementById(panelId);
     if (!panel) return;
