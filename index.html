@@ -1320,7 +1320,18 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 
   const purchaseBlockHTML = `
 <style>
-    #mog-purchase-enhancements-injected { width: 100% !important; max-width: 100% !important; margin-top: 60px !important; padding: 0 !important; box-sizing: border-box !important; } #mog-purchase-enhancements-injected > * { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
+   #mog-purchase-enhancements-injected {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 180px 0 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    clear: both !important;
+    float: none !important;
+    transform: none !important;
+}#mog-purchase-enhancements-injected > * { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
         font-family: 'Inter', sans-serif;
         color: #fff;
         margin-top: 20px;
@@ -1568,7 +1579,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     const target = document.querySelector('.shopify-buy-button') || findNativeBuyCard();
     if (!target) return;
 
-    target.insertAdjacentHTML('afterend', purchaseBlockHTML);
+target.parentElement.insertAdjacentHTML('afterend', purchaseBlockHTML);
     
     const panel = document.getElementById(panelId);
     if (!panel) return;
