@@ -181,13 +181,13 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 #mog-top-quickbuy-injected button { background: var(--primary-yellow); color: #000; border: none; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; padding: 10px 20px; border-radius: 999px; cursor: pointer; }
 
 /* ===== KOMUNIKAT O NISKIM STANIE MAGAZYNOWYM ===== */
-.mog-stock-notice-injected { display: flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; color: #ffb020 !important; font-family: 'Inter', sans-serif; font-size: 13px !important; font-weight: 700 !important; background: rgba(255, 176, 32, 0.12) !important; border: 1.5px solid rgba(255, 176, 32, 0.4) !important; border-radius: 12px !important; padding: 12px 20px !important; width: 100% !important; max-width: 100% !important; margin: 20px 0 !important; box-sizing: border-box !important; text-align: center !important; clear: both !important; }
+.mog-stock-notice-injected { display: flex !important; align-items: center !important; justify-content: center !important; gap: 10px !important; color: #ffb020 !important; font-family: 'Inter', sans-serif; font-size: 14px !important; font-weight: 800 !important; background: #111 !important; border: 2px solid #ffb020 !important; border-radius: 16px !important; padding: 16px 20px !important; width: 100% !important; max-width: 100% !important; margin: 40px 0 20px !important; box-sizing: border-box !important; text-align: center !important; clear: both !important; position: relative !important; z-index: 10 !important; }
 
 /* ===== PRODUCT SELECTOR (pojedyncza para / pakiet 2 pary) ===== */
-.mog-selector-wrap-injected { width: 100% !important; max-width: 100% !important; margin: 40px 0 24px !important; padding: 0 20px !important; box-sizing: border-box !important; display: flex !important; flex-direction: column !important; gap: 16px !important; font-family: 'Space Grotesk', sans-serif; clear: both !important; }
+.mog-selector-wrap-injected { width: 100% !important; max-width: 100% !important; margin: 50px 0 30px !important; padding: 0 10px !important; box-sizing: border-box !important; display: flex !important; flex-direction: column !important; gap: 20px !important; font-family: 'Space Grotesk', sans-serif; clear: both !important; position: relative !important; z-index: 10 !important; }
 .mog-selector-label-injected { color: var(--text-gray); font-size: 11.5px; text-transform: uppercase; letter-spacing: .8px; font-weight: 700; text-align: center; margin-bottom: 2px; }
-.mog-selector-grid-injected { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 15px !important; align-items: stretch !important; width: 100% !important; }
-.mog-option-injected { position: relative !important; background: #111 !important; border: 2px solid var(--border-color) !important; border-radius: 16px !important; padding: 25px 15px !important; cursor: pointer !important; transition: all .2s ease !important; text-align: center !important; display: flex !important; flex-direction: column !important; justify-content: center !important; min-height: 120px !important; height: 100% !important; box-sizing: border-box !important; }
+.mog-selector-grid-injected { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 12px !important; align-items: stretch !important; width: 100% !important; max-width: 100% !important; }
+.mog-option-injected { position: relative !important; background: #0a0a0a !important; border: 2px solid #1a1a1a !important; border-radius: 20px !important; padding: 30px 10px !important; cursor: pointer !important; transition: all .2s ease !important; text-align: center !important; display: flex !important; flex-direction: column !important; justify-content: center !important; min-height: 140px !important; height: 100% !important; box-sizing: border-box !important; }
 .mog-option-injected:hover { border-color: rgba(255,193,7,.5); }
 .mog-option-injected.mog-active-injected { border-color: var(--primary-yellow); background: rgba(255,193,7,.07); box-shadow: 0 0 0 1px var(--primary-yellow) inset; }
 .mog-option-badge-injected { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--primary-yellow); color: #000; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
@@ -1320,7 +1320,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 
   const purchaseBlockHTML = `
 <style>
-    #mog-purchase-enhancements-injected {
+    #mog-purchase-enhancements-injected { width: 100% !important; max-width: 100% !important; margin-top: 60px !important; padding: 0 !important; box-sizing: border-box !important; } #mog-purchase-enhancements-injected > * { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
         font-family: 'Inter', sans-serif;
         color: #fff;
         margin-top: 20px;
@@ -1511,7 +1511,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     </div>
 
     <!-- 4. PRZYCISK ZAKUPU -->
-    <div class="mog-final-box-injected" style="background:rgba(255,193,7,0.05); border:1px solid rgba(255,193,7,0.2); border-radius:20px; padding:24px 20px; margin: 40px 0 20px !important; width: 100% !important; box-sizing: border-box !important; clear: both !important;">
+    <div class="mog-final-box-injected" style="background:rgba(255,193,7,0.05); border:1px solid rgba(255,193,7,0.2); border-radius:24px; padding:30px 20px; margin: 60px 0 40px !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; clear: both !important; position: relative !important; z-index: 10 !important;">
         <button class="cta" id="buyBtn" style="display: block; width: 100%; margin-bottom: 12px; background: #ffcc00; color: #000; border: none; font-size: 16px; font-weight: 800; padding: 16px; border-radius: 12px; cursor: pointer; text-align: center; text-transform: uppercase; letter-spacing: 0.5px;">Kup teraz — 99,99 zł</button>
         <div style="text-align:center; font-size:12px; color:#888; font-weight:600; text-transform:uppercase; letter-spacing:1px;">✓ Darmowa dostawa & E-book Gratis</div>
         <div style="text-align:center; margin-top: 15px;">
