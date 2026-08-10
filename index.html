@@ -1317,7 +1317,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 
   const fmt = (n) => n.toFixed(2).replace('.', ',') + ' zł';
 
- const purchaseBlockHTML = `
+  const purchaseBlockHTML = `
 <style>
     #mog-purchase-enhancements-injected {
         font-family: 'Inter', sans-serif;
@@ -1382,7 +1382,6 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
         font-weight: 900;
         color: #ffcc00;
     }
-
     /* PANELE DODATKÓW (ADD-ONS) */
     .mog-ultimate-panels-wrapper {
         display: grid;
@@ -1514,176 +1513,84 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     <div class="mog-final-box-injected" style="background:rgba(255,193,7,0.05); border:1px solid rgba(255,193,7,0.2); border-radius:20px; padding:20px;">
         <button class="cta" id="buyBtn" style="display: block; width: 100%; margin-bottom: 12px; background: #ffcc00; color: #000; border: none; font-size: 16px; font-weight: 800; padding: 16px; border-radius: 12px; cursor: pointer; text-align: center; text-transform: uppercase; letter-spacing: 0.5px;">Kup teraz — 99,99 zł</button>
         <div style="text-align:center; font-size:12px; color:#888; font-weight:600; text-transform:uppercase; letter-spacing:1px;">✓ Darmowa dostawa & E-book Gratis</div>
+        <div style="text-align:center; margin-top: 15px;">
+            <a href="https://github.com/michelducal-beep/MogStepperyy/blob/main/index.html" target="_blank" style="color: #555; font-size: 10px; text-decoration: none; opacity: 0.7;">View Source on GitHub</a>
+        </div>
     </div>
 </div>
 `;
 
-  // Znajduje natywną kartę zakupową (obrazek + nazwa + cena + "Kup teraz"),
-  // dokładnie taką jak na zrzucie ekranu nr 3 od klienta.
+(function() {
   function findNativeBuyCard() {
-  const shopifyButton = document.querySelector('.shopify-buy-button');
+    const shopifyButton = document.querySelector('.shopify-buy-button');
+    if (shopifyButton) return shopifyButton;
 
-  if (!shopifyButton) return null;
-
-  /*
-   * Shopify Buy Button siedzi wewnątrz karty produktu.
-   * Nie chcemy wychodzić aż do Hero.
-   *
-   * Szukamy najmniejszego kontenera, który:
-   * - zawiera Shopify Buy Button
-   * - jest rzeczywistym blokiem karty
-   * - nie jest całym Hero
-   */
-
-  let node = shopifyButton;
-  let bestCard = shopifyButton;
-
-  for (let i = 0; i < 12; i++) {
-    if (!node.parentElement) break;
-
-    const parent = node.parentElement;
-
-    if (
-      parent.id === 'root' ||
-      parent.tagName === 'BODY' ||
-      parent.tagName === 'MAIN'
-    ) {
-      break;
-    }
-
-    const rect = parent.getBoundingClientRect();
-
-    /*
-     * Pomijamy kontenery obejmujące praktycznie cały ekran.
-     * To właśnie one powodowały wcześniejsze wyskakiwanie
-     * panelu obok całego Hero.
-     */
-    const isWholeHero =
-      rect.width >= window.innerWidth * 0.9 &&
-      rect.height >= window.innerHeight * 0.7;
-
-    if (!isWholeHero) {
-      bestCard = parent;
-    }
-
-    node = parent;
-  }
-
-  return bestCard;
-}
-  }
-
-  /*
-   * Shopify Buy Button znajduje się wewnątrz
-   * prawej części karty produktu.
-   *
-   * Szukamy najwyższego sensownego kontenera,
-   * ale NIE wychodzimy do całego Hero.
-   */
-
-  let node = buyButton;
-
-  for (let i = 0; i < 8; i++) {
-    if (!node.parentElement) break;
-
-    const parent = node.parentElement;
-    const rect = parent.getBoundingClientRect();
-
-    if (
-      rect.width > 300 &&
-      rect.width < window.innerWidth * 0.75 &&
-      rect.height > 150
-    ) {
-      node = parent;
-    } else {
-      break;
-    }
-  }
-
-  return node;
-}
     const clickable = document.querySelectorAll('button, a');
     for (const el of clickable) {
       if (el.closest('[id*="injected"], [class*="injected"]')) continue;
-      const txt = el.textContent.trim();
-      if (/kup\s*teraz/i.test(txt) && txt.length < 60) {
+      const txt = el.textContent.trim().toLowerCase();
+      if ((txt.includes('kup teraz') || txt.includes('zamów')) && txt.length < 60) {
         let node = el;
         let depth = 0;
         while (node.parentElement && depth < 8) {
           node = node.parentElement;
           depth++;
-          if (node.querySelector('img')) return node;
+          if (node.querySelector('img') && node.offsetWidth > 200) return node;
         }
         return el.parentElement || el;
       }
     }
     return null;
   }
-function insertPurchaseBlock() {
-  const panelId = 'mog-purchase-enhancements-injected';
 
-  // Panel już istnieje — tylko podpinamy górny przycisk
-  if (document.getElementById(panelId)) {
-    bindTopQuickBuy(document.getElementById(panelId));
-    return;
+  function insertPurchaseBlock() {
+    const panelId = 'mog-purchase-enhancements-injected';
+    if (document.getElementById(panelId)) {
+      bindTopQuickBuy(document.getElementById(panelId));
+      return;
+    }
+
+    const target = document.querySelector('.shopify-buy-button') || findNativeBuyCard();
+    if (!target) return;
+
+    target.insertAdjacentHTML('afterend', purchaseBlockHTML);
+    
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+
+    panel.style.setProperty('display', 'block', 'important');
+    panel.style.setProperty('width', '100%', 'important');
+    panel.style.setProperty('clear', 'both', 'important');
+
+    bindSelector();
+    initStockCounter();
+    initRevealAnimation(panelId);
+    bindTopQuickBuy(panel);
   }
 
-  // To jest prawdziwy kontener Shopify Buy Button
-  const shopifyButton = document.querySelector('.shopify-buy-button');
-
-  if (!shopifyButton) {
-    return;
-  }
-
-  // Wstawiamy istniejące panele bezpośrednio po przycisku Shopify
-  shopifyButton.insertAdjacentHTML(
-    'afterend',
-    purchaseBlockHTML
-  );
-
-  const panel = document.getElementById(panelId);
-
-  if (!panel) {
-    return;
-  }
-
-  // Panel ma być pełną sekcją pod zakupem,
-  // a nie elementem stojącym obok karty
-  panel.style.setProperty('display', 'block', 'important');
-  panel.style.setProperty('width', '100%', 'important');
-  panel.style.setProperty('max-width', '100%', 'important');
-  panel.style.setProperty('position', 'relative', 'important');
-  panel.style.setProperty('left', 'auto', 'important');
-  panel.style.setProperty('right', 'auto', 'important');
-  panel.style.setProperty('top', 'auto', 'important');
-  panel.style.setProperty('bottom', 'auto', 'important');
-  panel.style.setProperty('float', 'none', 'important');
-  panel.style.setProperty('clear', 'both', 'important');
-  panel.style.setProperty('flex-basis', '100%', 'important');
-  panel.style.setProperty('grid-column', '1 / -1', 'important');
-
-  bindSelector();
-  initStockCounter();
-  initRevealAnimation(panelId);
-
-  // Górne "KUP TERAZ" przewija do panelu
-  bindTopQuickBuy(panel);
-}
-  
-  }
-
-  // Przycisk "Kup teraz" na samej górze strony (nad paskiem promo) ma
-  // przewijać dokładnie do tej natywnej karty zakupowej (zdjęcie nr 3),
-  // pod którą dokładamy nasze panele — a NIE do sekcji "Zamów teraz"
-  // na dole, bo to inny, odrębny blok dla tego samego produktu.
   function bindTopQuickBuy(card) {
     const btn = document.getElementById('mog-top-quickbuy-btn-injected');
     if (!btn || btn.dataset.bound) return;
     btn.dataset.bound = 'true';
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
       const target = card || findNativeBuyCard();
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+  }
+
+  function initStockCounter() {
+    const el = document.getElementById('mog-stock-count-injected');
+    if (!el) return;
+    let count = 14;
+    const interval = setInterval(() => {
+      if (count > 3) {
+        count -= Math.floor(Math.random() * 2);
+        el.textContent = count;
+      } else {
+        clearInterval(interval);
+      }
+    }, 15000 + Math.random() * 10000);
   }
 
   function initRevealAnimation(id) {
@@ -1693,23 +1600,19 @@ function insertPurchaseBlock() {
       const io = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('mog-reveal-visible-injected');
+            entry.target.style.opacity = '1';
             io.unobserve(entry.target);
           }
         });
       }, { threshold: 0.15 });
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.6s ease-out';
       io.observe(el);
-    } else {
-      el.classList.add('mog-reveal-visible-injected');
     }
   }
 
-  // React może wyczyścić ręcznie wstawione węzły DOM przy re-renderze
-  // (nie istnieją w jego Virtual DOM). Ten obserwator pilnuje bloku
-  // i odtwarza go natychmiast, jeśli zniknie.
   function watchAndHeal() {
-    const root = document.getElementById('root');
-    if (!root) return;
+    const root = document.getElementById('root') || document.body;
     let healTimeout = null;
     const observer = new MutationObserver(() => {
       const card = findNativeBuyCard();
@@ -1731,40 +1634,13 @@ function insertPurchaseBlock() {
       opt.addEventListener('click', () => {
         opts.forEach((o) => o.classList.remove('mog-active-injected'));
         opt.classList.add('mog-active-injected');
-        const price = opt.getAttribute('data-price');
         const label = opt.getAttribute('data-option') === 'double' ? '99,99 zł' : '69,99 zł';
         if (buyBtn) buyBtn.textContent = 'Kup teraz — ' + label;
       });
     });
-
-    if (buyBtn) {
-      buyBtn.addEventListener('click', () => {
-        console.log('Przejście do zakupu:', buyBtn.textContent);
-      });
-    }
-  }
-
-  function initStockCounter() {
-    const el = document.getElementById('mog-stock-count-injected');
-    if (!el || el.dataset.bound) return;
-    el.dataset.bound = 'true';
-    let count = parseInt(sessionStorage.getItem('mogStockCount') || '', 10);
-    if (!count || isNaN(count)) {
-      count = 12 + Math.floor(Math.random() * 4);
-    }
-    el.textContent = count;
-    sessionStorage.setItem('mogStockCount', count);
-    setInterval(() => {
-      if (count > 6) {
-        count -= 1;
-        el.textContent = count;
-        sessionStorage.setItem('mogStockCount', count);
-      }
-    }, 45000 + Math.random() * 30000);
   }
 
   const purchaseInterval = setInterval(insertPurchaseBlock, 500);
-  setTimeout(() => clearInterval(purchaseInterval), 12000);
   watchAndHeal();
 
 })();
