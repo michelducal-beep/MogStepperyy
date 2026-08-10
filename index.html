@@ -168,17 +168,60 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 .mog-nav-bound-injected { cursor: pointer !important; }
 
 /* ===== TOP BAR (dostawa gratis + e-book gratis + promo 2 pary) ===== */
-:root { --mog-topbar-h: 40px; }
-#mog-top-bar-injected { position: sticky; top: 0; z-index: 10001; width: 100%; box-sizing: border-box; background: linear-gradient(90deg, #FFC107, #FFE082, #FFC107); background-size: 200% 100%; animation: mogBarShift 5s linear infinite; color: #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; padding: 10px 16px; text-align: center; }
 @keyframes mogBarShift { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
-.mog-top-bar-track-injected { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; max-width: 1100px; margin: 0 auto; }
-.mog-top-bar-sep-injected { opacity: .5; }
-@media (max-width: 480px) { #mog-top-bar-injected { font-size: 11px; padding: 8px 10px; } .mog-top-bar-track-injected { gap: 6px 8px; } }
-.mog-header-offset-injected { position: sticky !important; z-index: 9999 !important; }
+
+/* ===== PROMO BANNER (Moved from Top Bar) ===== */
+.mog-promo-banner-injected {
+  max-width: 480px;
+  margin: 0 auto 16px;
+  background: linear-gradient(90deg, #FFC107, #FFE082, #FFC107);
+  background-size: 200% 100%;
+  animation: mogBarShift 5s linear infinite;
+  color: #000;
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.mog-promo-item-injected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.mog-promo-sep-injected {
+  width: 40px;
+  height: 1px;
+  background: rgba(0,0,0,0.1);
+  margin: 2px auto;
+}
 
 /* ===== TOP "KUP TERAZ" QUICK-ACCESS BUTTON ===== */
-#mog-top-quickbuy-injected { display: flex; justify-content: center; padding: 10px 16px 0; background: var(--dark-bg); }
-#mog-top-quickbuy-injected button { background: var(--primary-yellow); color: #000; border: none; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; padding: 10px 20px; border-radius: 999px; cursor: pointer; }
+#mog-top-quickbuy-injected { display: flex; justify-content: center; padding: 20px 16px 10px; background: var(--dark-bg); position: relative; z-index: 100; }
+#mog-top-quickbuy-injected button { 
+  background: var(--primary-yellow); 
+  color: #000; 
+  border: none; 
+  font-family: 'Space Grotesk', sans-serif; 
+  font-weight: 800; 
+  font-size: 14px; 
+  padding: 14px 28px; 
+  border-radius: 999px; 
+  cursor: pointer; 
+  box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#mog-top-quickbuy-injected button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(255, 193, 7, 0.4);
+}
 
 /* ===== KOMUNIKAT O NISKIM STANIE MAGAZYNOWYM ===== */
 .mog-stock-notice-injected { display: flex; align-items: center; justify-content: center; gap: 6px; color: #ffb020; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; background: rgba(255, 176, 32, 0.08); border: 1px solid rgba(255, 176, 32, 0.3); border-radius: 999px; padding: 8px 16px; max-width: 420px; margin: 0 auto 16px; text-align: center; }
@@ -239,15 +282,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 </style>
 </head>
 <body>
-<div id="mog-top-bar-injected">
-  <div class="mog-top-bar-track-injected">
-    <span>🚚 Darmowa dostawa na wszystko!</span>
-    <span class="mog-top-bar-sep-injected">|</span>
-    <span>🎁 Do każdego zamówienia e-book „Pewność Siebie” GRATIS!</span>
-    <span class="mog-top-bar-sep-injected">|</span>
-    <span>👟 2 wkładki za 99,99 zł (zamiast 139,98 zł)!</span>
-  </div>
-</div>
+
 <div id="mog-top-quickbuy-injected">
   <button id="mog-top-quickbuy-btn-injected" type="button">Kup teraz — przejdź do zamówienia ↓</button>
 </div>
@@ -256,87 +291,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
 
-<!-- ============ OFFSET PASKA PROMO WZGLĘDEM HEADERA (wersja odporna) ============ -->
-<script>
-(function() {
-  // Ten skrypt dba o to, żeby pasek promo (#mog-top-bar-injected) NIGDY
-  // nie zakrywał nagłówka strony z logo "MogSteppery" i menu.
-  //
-  // Poprzednia wersja polegała wyłącznie na selektorze CSS "header",
-  // co zawodzi, jeśli skompilowany bundle Reacta (index-BW_yiXVd.js)
-  // renderuje logo w innym elemencie (div/nav bez tagu <header>) albo
-  // nadpisuje inline style przy każdym renderze. Ta wersja:
-  //  1) szuka prawdziwego nagłówka po tagu <header>, a jeśli go nie ma —
-  //     szuka najmniejszego elementu zawierającego tekst "MogSteppery"
-  //     i traktuje jego najbliższego "sekcyjnego" rodzica jako nagłówek;
-  //  2) wymusza pozycję przez klasę + inline style z !important;
-  //  3) pilnuje tego w pętli requestAnimationFrame (bez limitu czasu)
-  //     oraz przez MutationObserver na atrybucie style/class nagłówka,
-  //     więc nawet jeśli React nadpisze styl przy re-renderze, wracamy
-  //     do poprawnej pozycji w kolejnej klatce.
 
-  let headerEl = null;
-  let headerObserver = null;
-
-  function findHeaderEl() {
-    const native = document.querySelector('header');
-    if (native) return native;
-
-    // Fallback: znajdź element z tekstem "MogSteppery" i wyjdź w górę
-    // do najbliższego rozsądnego kontenera (max 6 poziomów).
-    const all = document.querySelectorAll('div, nav, section, span, a');
-    for (const el of all) {
-      if (el.closest('[id*="injected"], [class*="injected"]')) continue;
-      if (el.children.length > 3) continue; // pomijamy duże kontenery
-      if (/MogSteppery/.test(el.textContent || '') && el.textContent.trim().length < 40) {
-        let node = el;
-        let depth = 0;
-        while (node.parentElement && depth < 6) {
-          node = node.parentElement;
-          depth++;
-          if (node.parentElement && node.parentElement.id === 'root') return node;
-        }
-        return node;
-      }
-    }
-    return null;
-  }
-
-  function applyOffset() {
-    const bar = document.getElementById('mog-top-bar-injected');
-    if (!bar) return;
-    const h = bar.getBoundingClientRect().height;
-    document.documentElement.style.setProperty('--mog-topbar-h', h + 'px');
-
-    if (!headerEl || !document.body.contains(headerEl)) {
-      headerEl = findHeaderEl();
-      if (headerEl && 'MutationObserver' in window) {
-        if (headerObserver) headerObserver.disconnect();
-        headerObserver = new MutationObserver(() => forceHeaderStyle(h));
-        headerObserver.observe(headerEl, { attributes: true, attributeFilter: ['style', 'class'] });
-      }
-    }
-    if (headerEl) forceHeaderStyle(h);
-  }
-
-  function forceHeaderStyle(h) {
-    if (!headerEl) return;
-    headerEl.classList.add('mog-header-offset-injected');
-    headerEl.style.setProperty('position', 'sticky', 'important');
-    headerEl.style.setProperty('top', h + 'px', 'important');
-    headerEl.style.setProperty('z-index', '9999', 'important');
-  }
-
-  let rafRunning = true;
-  function rafLoop() {
-    if (!rafRunning) return;
-    applyOffset();
-    requestAnimationFrame(rafLoop);
-  }
-  rafLoop();
-  window.addEventListener('resize', applyOffset);
-})();
-</script>
 <script defer src="/_vercel/insights/script.js"></script>
 
 <!-- ============ SLIDER PRZED/PO ============ -->
@@ -1253,7 +1208,15 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
   const fmt = (n) => n.toFixed(2).replace('.', ',') + ' zł';
 
   const purchaseBlockHTML = `
-<div id="mog-purchase-enhancements-injected" class="mog-panels-anchor-injected">
+  <div id="mog-purchase-enhancements-injected" class="mog-panels-anchor-injected">
+    <div class="mog-promo-banner-injected">
+      <div class="mog-promo-item-injected">🚚 Darmowa dostawa na wszystko!</div>
+      <div class="mog-promo-sep-injected"></div>
+      <div class="mog-promo-item-injected">🎁 E-book „Pewność Siebie” GRATIS!</div>
+      <div class="mog-promo-sep-injected"></div>
+      <div class="mog-promo-item-injected">👟 2 wkładki za 99,99 zł (zamiast 139,98 zł)!</div>
+    </div>
+
     <div class="mog-stock-notice-injected" id="mog-stock-notice-injected">
       ⚡ Zostało tylko <span id="mog-stock-count-injected">14</span> szt. w tej cenie promocyjnej w bieżącej dostawie
     </div>
@@ -1458,17 +1421,31 @@ function insertPurchaseBlock() {
   
   }
 
-  // Przycisk "Kup teraz" na samej górze strony (nad paskiem promo) ma
-  // przewijać dokładnie do tej natywnej karty zakupowej (zdjęcie nr 3),
-  // pod którą dokładamy nasze panele — a NIE do sekcji "Zamów teraz"
-  // na dole, bo to inny, odrębny blok dla tego samego produktu.
+  // Przycisk "Kup teraz" na samej górze strony ma
+  // przewijać do panelu zakupu.
   function bindTopQuickBuy(card) {
     const btn = document.getElementById('mog-top-quickbuy-btn-injected');
-    if (!btn || btn.dataset.bound) return;
-    btn.dataset.bound = 'true';
-    btn.addEventListener('click', () => {
-      const target = card || findNativeBuyCard();
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!btn) return;
+    
+    // Usuwamy stare listenery jeśli były
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    
+    newBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.getElementById('mog-purchase-enhancements-injected') || card || findNativeBuyCard();
+      if (target) {
+        const offset = 80; // offset dla sticky header
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = target.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
     });
   }
 
