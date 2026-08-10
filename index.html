@@ -1317,95 +1317,206 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 
   const fmt = (n) => n.toFixed(2).replace('.', ',') + ' zł';
 
-  const purchaseBlockHTML = `
-<div class="mog-ultimate-panels-wrapper">
-    <!-- PANEL EBOOK -->
-    <div class="mog-promo-card">
-        <div class="mog-tag mog-tag-gold">Bonus Gratis</div>
-        <div class="mog-visual-container">
-            <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663680829151/sylPoNlKRNwvXDVu.png" class="mog-ebook-img" alt="Mentalny Gigant">
-        </div>
-        <h3 class="mog-card-title">MENTALNY GIGANT</h3>
-        <p class="mog-card-desc">Buduj status i pewność siebie. <span style="color:#FFC107; font-weight:700;">GRATIS do każdego zamówienia!</span></p>
-        <div class="mog-price-row">
-            <span class="mog-old-price">39,99 zł</span>
-            <span class="mog-new-price">0 zł</span>
-            <span class="mog-discount-badge">100% TANIEJ</span>
-        </div>
+ const purchaseBlockHTML = `
+<style>
+    #mog-purchase-enhancements-injected {
+        font-family: 'Inter', sans-serif;
+        color: #fff;
+        margin-top: 20px;
+    }
+    .mog-stock-notice-injected {
+        background: rgba(255, 193, 7, 0.1);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        border-radius: 12px;
+        padding: 12px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: #ffcc00;
+        margin-bottom: 20px;
+    }
+    .mog-selector-label-injected {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #fff;
+        font-family: 'Space Grotesk', sans-serif;
+    }
+    .mog-selector-grid-injected {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .mog-option-injected {
+        background: #111;
+        border: 2px solid #333;
+        border-radius: 16px;
+        padding: 15px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+    .mog-option-injected.mog-active-injected {
+        border-color: #ffcc00;
+        background: rgba(255, 204, 0, 0.05);
+    }
+    .mog-option-badge-injected {
+        position: absolute;
+        top: -10px;
+        right: 10px;
+        background: #ffcc00;
+        color: #000;
+        font-size: 9px;
+        font-weight: 900;
+        padding: 2px 6px;
+        border-radius: 10px;
+        text-transform: uppercase;
+    }
+    .mog-option-name-injected {
+        font-weight: 700;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    .mog-option-price-injected {
+        font-size: 18px;
+        font-weight: 900;
+        color: #ffcc00;
+    }
+
+    /* PANELE DODATKÓW (ADD-ONS) */
+    .mog-ultimate-panels-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        width: 100%;
+        margin: 25px 0;
+    }
+    @media (max-width: 768px) {
+        .mog-ultimate-panels-wrapper {
+            grid-template-columns: 1fr;
+        }
+    }
+    .mog-promo-card {
+        background: rgba(25, 25, 25, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 204, 0, 0.3);
+        border-radius: 24px;
+        padding: 25px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+    .mog-tag {
+        font-size: 10px;
+        font-weight: 900;
+        padding: 4px 12px;
+        border-radius: 100px;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        align-self: flex-start;
+    }
+    .mog-tag-gold { background: #ffcc00; color: #000; }
+    .mog-tag-red { border: 1px solid #ff3333; color: #ff3333; }
+    .mog-card-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+    .mog-card-desc { font-size: 13px; color: #b0b0b0; line-height: 1.5; margin-bottom: 20px; }
+    .mog-visual-container {
+        height: 160px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .mog-ebook-img {
+        height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+        animation: mogFloat 4s ease-in-out infinite;
+    }
+    @keyframes mogFloat {
+        0%, 100% { transform: translateY(0) rotate(2deg); }
+        50% { transform: translateY(-10px) rotate(-2deg); }
+    }
+    .mog-price-row { margin-top: auto; display: flex; align-items: baseline; gap: 10px; }
+    .mog-old-price { font-size: 16px; color: #888; text-decoration: line-through; }
+    .mog-new-price { font-size: 32px; font-weight: 900; color: #ffcc00; }
+    .mog-discount-badge { background: #ff3333; color: #fff; font-size: 12px; font-weight: 900; padding: 2px 8px; border-radius: 6px; }
+    .mog-benefit-list { list-style: none; padding: 0; margin: 15px 0; }
+    .mog-benefit-item { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 8px; color: #ddd; }
+    .mog-benefit-item svg { color: #ffcc00; flex-shrink: 0; }
+    .mog-stock-bar-wrap { margin-top: 15px; }
+    .mog-stock-label { display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-bottom: 5px; font-weight: 700; }
+    .mog-stock-bar { height: 5px; background: #333; border-radius: 10px; overflow: hidden; }
+    .mog-stock-fill { height: 100%; background: linear-gradient(90deg, #ffcc00, #ff9900); width: 94%; box-shadow: 0 0 10px #ffcc00; }
+</style>
+
+<div id="mog-purchase-enhancements-injected">
+    <!-- 1. LICZNIK -->
+    <div class="mog-stock-notice-injected">
+      ⚡ Zostało tylko <span id="mog-stock-count-injected">14</span> szt. w tej cenie promocyjnej
     </div>
 
-    <!-- PANEL 2 PARY -->
-    <div class="mog-promo-card">
-        <div class="mog-tag mog-tag-red">🔥 Limitowana Oferta</div>
-        <h3 class="mog-card-title">PAKIET 2 PARY</h3>
-        <p class="mog-card-desc">Pełna gotowość w każdych butach. Oszczędzasz czas i pieniądze.</p>
-        <ul class="mog-benefit-list">
-            <li class="mog-benefit-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Oszczędzasz 40 zł</li>
-            <li class="mog-benefit-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Wygoda i higiena</li>
-            <li class="mog-benefit-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Darmowa dostawa</li>
-        </ul>
-        <div class="mog-price-row">
-            <span class="mog-old-price">139,98 zł</span>
-            <span class="mog-new-price">99,99 zł</span>
-            <span class="mog-discount-badge">-29%</span>
-        </div>
-        <div class="mog-stock-bar-wrap">
-            <div class="mog-stock-label"><span>Dostępność:</span><span>Ostatnie 8 sztuk</span></div>
-            <div class="mog-stock-bar"><div class="mog-stock-fill"></div></div>
-        </div>
-    </div>
-</div>
-
-<div id="mog-purchase-enhancements-injected" class="mog-panels-anchor-injected">
-    <div class="mog-stock-notice-injected" id="mog-stock-notice-injected">
-      ⚡ Zostało tylko <span id="mog-stock-count-injected">14</span> szt. w tej cenie promocyjnej w bieżącej dostawie
-    </div>
-
+    <!-- 2. SELEKTOR WARIANTÓW -->
     <div class="mog-selector-wrap-injected" id="mog-selector-wrap-injected">
-      <div class="mog-selector-label-injected">Wybierz swój pakiet</div>
+      <div class="mog-selector-label-injected">Wybierz swój pakiet:</div>
       <div class="mog-selector-grid-injected">
         <div class="mog-option-injected" data-option="single" data-price="69.99">
           <div class="mog-option-name-injected">Pojedyncza para</div>
           <div class="mog-option-price-injected">69,99 zł</div>
-          <div class="mog-option-perks-injected">Darmowa dostawa<br>E-book PDF gratis</div>
         </div>
         <div class="mog-option-injected mog-active-injected" data-option="double" data-price="99.99">
           <span class="mog-option-badge-injected">Najczęściej wybierane</span>
           <div class="mog-option-name-injected">Pakiet 2 pary</div>
-          <div class="mog-option-oldprice-injected">139,98 zł</div>
           <div class="mog-option-price-injected">99,99 zł</div>
-          <div class="mog-option-save-injected">Oszczędzasz 39,99 zł</div>
-          <div class="mog-option-perks-injected">Darmowa dostawa<br>E-book PDF gratis</div>
         </div>
       </div>
     </div>
 
-    <div class="mog-ebook-mockup-injected">
-      <div class="mog-ebook-device-injected">
-        <div class="mog-ebook-device-screen-injected">
-          <span class="mog-ebook-pdf-badge-injected">PDF</span>
-          <span class="mog-ebook-icon-lines-injected"></span>
-          <span class="mog-ebook-icon-lines-injected" style="width:20px;"></span>
+    <!-- 3. DODATKI (NOWE PANELE) -->
+    <div class="mog-ultimate-panels-wrapper">
+        <div class="mog-promo-card">
+            <div class="mog-tag mog-tag-gold">Bonus Gratis</div>
+            <div class="mog-visual-container">
+                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663680829151/sylPoNlKRNwvXDVu.png" class="mog-ebook-img" alt="Mentalny Gigant">
+            </div>
+            <h3 class="mog-card-title">MENTALNY GIGANT</h3>
+            <p class="mog-card-desc">Kompletny przewodnik budowania statusu i pewności siebie. <span style="color:#ffcc00; font-weight:700;">GRATIS do każdego zamówienia!</span></p>
+            <div class="mog-price-row">
+                <span class="mog-old-price">39,99 zł</span>
+                <span class="mog-new-price">0 zł</span>
+                <span class="mog-discount-badge">100% TANIEJ</span>
+            </div>
         </div>
-      </div>
-      <div class="mog-ebook-text-injected">
-        <div class="mog-ebook-title-injected">E-book „Jak zyskać pewność siebie”</div>
-        <div class="mog-ebook-desc-injected">Gratis do każdego zamówienia — wysyłamy od razu na Twój e-mail.</div>
-        <span class="mog-ebook-tag-injected">✓ Wartość 49 zł — GRATIS</span>
-      </div>
+
+        <div class="mog-promo-card">
+            <div class="mog-tag mog-tag-red">Limitowana Oferta</div>
+            <h3 class="mog-card-title">PAKIET 2 PARY</h3>
+            <p class="mog-card-desc">Pełna gotowość w każdych butach. Oszczędzasz czas na przekładaniu wkładek i pieniądze na zestawie.</p>
+            <ul class="mog-benefit-list">
+                <li class="mog-benefit-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Oszczędzasz 40 zł na zestawie</li>
+                <li class="mog-benefit-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Wygoda i higiena użytkowania</li>
+                <li class="mog-benefit-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Darmowa dostawa w pakiecie</li>
+            </ul>
+            <div class="mog-price-row">
+                <span class="mog-old-price">139,98 zł</span>
+                <span class="mog-new-price">99,99 zł</span>
+                <span class="mog-discount-badge">-29%</span>
+            </div>
+            <div class="mog-stock-bar-wrap">
+                <div class="mog-stock-label"><span>Dostępność pakietów:</span><span>Ostatnie 8 sztuk</span></div>
+                <div class="mog-stock-bar"><div class="mog-stock-fill"></div></div>
+            </div>
+        </div>
     </div>
 
-    <div class="mog-final-box-injected">
-      <button class="cta" id="buyBtn" style="display: block; width: 100%; margin-bottom: 15px; background: var(--primary-yellow); color: #000; border: none; font-size: 15px; font-weight: 700; padding: 14px; border-radius: 12px; cursor: pointer; text-align: center; font-family: 'Space Grotesk', sans-serif;">Kup teraz — 99,99 zł</button>
-      <div class="mog-final-shipping-injected">Darmowa dostawa</div>
-      <ul class="mog-final-bullets-injected">
-        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Wysyłka InPost 24h z Polski</li>
-        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Darmowa dostawa</li>
-        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> W zestawie: E-book „Jak zyskać pewność siebie” (PDF na maila)</li>
-      </ul>
+    <!-- 4. PRZYCISK ZAKUPU -->
+    <div class="mog-final-box-injected" style="background:rgba(255,193,7,0.05); border:1px solid rgba(255,193,7,0.2); border-radius:20px; padding:20px;">
+        <button class="cta" id="buyBtn" style="display: block; width: 100%; margin-bottom: 12px; background: #ffcc00; color: #000; border: none; font-size: 16px; font-weight: 800; padding: 16px; border-radius: 12px; cursor: pointer; text-align: center; text-transform: uppercase; letter-spacing: 0.5px;">Kup teraz — 99,99 zł</button>
+        <div style="text-align:center; font-size:12px; color:#888; font-weight:600; text-transform:uppercase; letter-spacing:1px;">✓ Darmowa dostawa & E-book Gratis</div>
     </div>
-  </div>
-  `;
+</div>
+`;
 
   // Znajduje natywną kartę zakupową (obrazek + nazwa + cena + "Kup teraz"),
   // dokładnie taką jak na zrzucie ekranu nr 3 od klienta.
