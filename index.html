@@ -23,11 +23,6 @@
 <link rel="icon" type="image/webp" href="favicon.webp">
 <link rel="apple-touch-icon" href="favicon.webp">
 <style>
-/* ============================================================
-   MOGSTEPPERY — ULEPSZONE CSS PANELI
-   Nowoczesny, czysty design z doskonałym rozmieszczeniem
-   ============================================================ */
-
 :root {
   --slider-pos: 50%;
   --primary-yellow: #FFC107;
@@ -39,9 +34,6 @@
   --accent-orange: #ffb020;
 }
 
-/* ============================================================
-   TOP BAR — PASKA PROMOCYJNEGO
-   ============================================================ */
 #mog-top-bar-injected {
   position: sticky;
   top: 0;
@@ -100,9 +92,6 @@
   }
 }
 
-/* ============================================================
-   GÓRNY PRZYCISK "KUP TERAZ"
-   ============================================================ */
 #mog-top-quickbuy-injected {
   display: flex;
   justify-content: center;
@@ -147,9 +136,6 @@
   }
 }
 
-/* ============================================================
-   KOMUNIKAT O STANIE MAGAZYNOWYM
-   ============================================================ */
 .mog-stock-notice-injected {
   display: flex;
   align-items: center;
@@ -193,9 +179,6 @@
   }
 }
 
-/* ============================================================
-   SELEKTOR PAKIETÓW
-   ============================================================ */
 .mog-selector-wrap-injected {
   max-width: 100%;
   width: 100%;
@@ -352,9 +335,6 @@
   }
 }
 
-/* ============================================================
-   BLOK PANELI DOSTARCZANY POD NATYWNYM PANELEM SPRZEDAŻY
-   ============================================================ */
 .mog-panels-anchor-injected {
   width: 100%;
   box-sizing: border-box;
@@ -364,9 +344,6 @@
   border-bottom: 1px solid var(--border-color);
 }
 
-/* ============================================================
-   WIZUALIZACJA E-BOOKA
-   ============================================================ */
 .mog-ebook-mockup-injected {
   display: flex;
   align-items: center;
@@ -476,9 +453,6 @@
   }
 }
 
-/* ============================================================
-   FINALNY BOX ZAKUPOWY
-   ============================================================ */
 .mog-final-box-injected {
   max-width: 600px;
   margin: 16px auto;
@@ -582,9 +556,6 @@
   }
 }
 
-/* ============================================================
-   PRZYCISK ZAKUPU
-   ============================================================ */
 .mog-final-box-injected button.cta {
   background: linear-gradient(135deg, var(--primary-yellow), #FFD54F) !important;
   color: #000 !important;
@@ -623,9 +594,6 @@
   }
 }
 
-/* ============================================================
-   LIVE SALES POPUPS (TOASTY)
-   ============================================================ */
 #mog-toast-container-injected {
   position: fixed;
   left: 16px;
@@ -721,9 +689,6 @@
   }
 }
 
-/* ============================================================
-   ANIMACJA WEJŚCIA
-   ============================================================ */
 .mog-reveal-injected {
   opacity: 0;
   transform: translateY(16px);
@@ -735,9 +700,6 @@
   transform: translateY(0);
 }
 
-/* ============================================================
-   PANEL CTA (CALL-TO-ACTION)
-   ============================================================ */
 #cro-cta-panel-injected {
   max-width: 100%;
   width: 100%;
@@ -751,6 +713,8 @@
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   box-sizing: border-box;
+  position: relative;
+  z-index: 1;
 }
 
 #cro-cta-panel-injected:hover {
@@ -845,9 +809,6 @@
   }
 }
 
-/* ============================================================
-   RESPONSYWNE DOSTOSOWANIE
-   ============================================================ */
 @media (max-width: 768px) {
   .mog-header-offset-injected {
     position: sticky !important;
@@ -855,15 +816,11 @@
   }
 }
 
-/* ============================================================
-   UTRZYMANIE SPÓJNOŚCI Z RESZTĄ STRONY
-   ============================================================ */
 html, body {
   max-width: 100%;
   overflow-x: hidden;
 }
 
-/* Zapewnienie, że panele nie wychodzą poza ekran */
 .mog-panels-anchor-injected,
 .mog-selector-wrap-injected,
 .mog-final-box-injected,
@@ -891,32 +848,20 @@ html, body {
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
 
-<!-- ============ OFFSET PASKA PROMO WZGLĘDEM HEADERA (wersja odporna) ============ -->
+<!-- ============ OFFSET PASKA PROMO WZGLĘDEM HEADERA (wersja bezpieczna) ============ -->
+<!-- NAPRAWIONO: usunięto niebezpieczną heurystykę zgadywania "headera" po treści tekstowej
+     (szukanie elementu zawierającego napis "MogSteppery"), która regularnie trafiała na
+     przypadkowe elementy (np. sam tytuł H1) i wymuszała na nich position:sticky + wysoki
+     z-index. To właśnie powodowało "zjeżdżanie"/nachodzenie nagłówka na resztę strony
+     widoczne na zrzucie ekranu. Teraz skrypt działa WYŁĄCZNIE na prawdziwym <header>. -->
 <script>
 (function() {
   let headerEl = null;
   let headerObserver = null;
 
   function findHeaderEl() {
-    const native = document.querySelector('header');
-    if (native) return native;
-
-    const all = document.querySelectorAll('div, nav, section, span, a');
-    for (const el of all) {
-      if (el.closest('[id*="injected"], [class*="injected"]')) continue;
-      if (el.children.length > 3) continue;
-      if (/MogSteppery/.test(el.textContent || '') && el.textContent.trim().length < 40) {
-        let node = el;
-        let depth = 0;
-        while (node.parentElement && depth < 6) {
-          node = node.parentElement;
-          depth++;
-          if (node.parentElement && node.parentElement.id === 'root') return node;
-        }
-        return node;
-      }
-    }
-    return null;
+    // Działamy tylko na realnym, semantycznym <header> — bez zgadywania po tekście.
+    return document.querySelector('header');
   }
 
   function applyOffset() {
@@ -1067,7 +1012,6 @@ html, body {
 </script>
 
 <script>
-  // Automatyczna podmiana danych Shopify na nowe
   window.ShopifyBuyData = {
     domain: 'haxif6-uz.myshopify.com',
     token: 'a1248dd39ee4f72637d6023e518fdde1',
@@ -1142,9 +1086,15 @@ html, body {
         }
       }
     }
+    // NAPRAWIONO: pomijamy przyciski/linki znajdujące się w <header>/<nav>, żeby nie
+    // "porwać" przypadkowego przycisku z nagłówka strony i nie owijać go potem panelem
+    // CTA w miejscu, gdzie nie powinien się znaleźć (to powodowało nachodzący, ucięty
+    // panel widoczny na górze ekranu, zasłaniający pasek promocyjny i nagłówek).
     const clickable = document.querySelectorAll('button, a');
     clickable.forEach((el) => {
       if (el.closest('#injected-legal-bar') || el.closest('#injected-seller-trust')) return;
+      if (el.closest('header, nav')) return;
+      if (el.closest('[id*="injected"], [class*="injected"]')) return;
       const txt = el.textContent.trim();
       if (OLD_CTA_PATTERN.test(txt) && txt.length < 40) {
         el.textContent = CTA_LABEL;
@@ -1163,6 +1113,9 @@ html, body {
     if (!ctaAnchorEl) return;
     if (document.getElementById('cro-cta-panel-injected')) return;
     if (ctaAnchorEl.closest('#cro-cta-panel-injected')) return;
+    // Zabezpieczenie dodatkowe: nigdy nie owijamy przycisku, jeśli w międzyczasie
+    // okazało się, że siedzi on w headerze/nav (np. po ponownym renderze Reacta).
+    if (ctaAnchorEl.closest('header, nav')) { ctaAnchorEl = null; return; }
 
     const panel = document.createElement('div');
     panel.id = 'cro-cta-panel-injected';
@@ -1532,17 +1485,29 @@ html, body {
     return el.parentElement;
   }
 
+  // NAPRAWIONO: to była najgroźniejsza funkcja w całym pliku i główna przyczyna
+  // zniknięcia paneli ("zostały same napisy"). Wcześniej KAŻDY pojedynczy element
+  // (span/div/p/h1-h5) zawierający dokładnie słowo "PRODUKT" albo "OPINIE" — a takie
+  // słowa bardzo często występują też jako linki w menu/nawigacji! — powodował ukrycie
+  // (display:none) całego rodzica-sekcji, nawet jeśli to był fragment nagłówka/nawigacji,
+  // a nie prawdziwy panel z obrazkiem. Teraz:
+  //  1) pomijamy elementy wewnątrz <header>/<nav>/<footer>,
+  //  2) ukrywamy blok WYŁĄCZNIE, jeśli faktycznie zawiera obrazek/tło (czyli faktycznie
+  //     jest tym natywnym panelem z grafiką, który chcieliśmy zduplikować, a nie linkiem).
   function hideNativeDuplicateSections() {
     const candidates = document.querySelectorAll('span, div, p, h1, h2, h3, h4, h5');
     candidates.forEach((el) => {
       if (el.children.length !== 0) return;
       if (el.closest('[id*="injected"]') || el.closest('[class*="injected"]')) return;
+      if (el.closest('header, nav, footer')) return;
       const txt = el.textContent.trim().toUpperCase();
       if (!NATIVE_PANEL_LABELS.includes(txt)) return;
       const block = getBlockAncestor(el);
       if (!block || block.dataset.mogHiddenByInjected) return;
+      if (block.closest('header, nav, footer')) return;
       const imgUrl = findImageInBlock(block);
-      if (imgUrl) window.__mogNativeImages[txt] = imgUrl;
+      if (!imgUrl) return;
+      window.__mogNativeImages[txt] = imgUrl;
       block.dataset.mogHiddenByInjected = 'true';
       block.style.display = 'none';
     });
@@ -1569,7 +1534,7 @@ html, body {
   }
 
   const fillVisualsInterval = setInterval(fillCapturedVisuals, 500);
-  setTimeout(() => clearInterval(fillVisualsInterval), 1000);
+  setTimeout(() => clearInterval(fillVisualsInterval), 10000);
 
   const NAV_TARGETS = [
     { match: /^opinie$/i, targetId: 'cro-testimonials-injected' },
@@ -1853,9 +1818,6 @@ html, body {
 </script>
 
 <!-- ============ SELEKTOR PAKIETÓW + STOCK — DOKLEJANE POD NATYWNYM PANELEM ZAKUPOWYM + WIZUALIZACJA E-BOOKA I FINALNY BOX ZAKUPOWY ============ -->
-<!-- ============ NAPRAWIONO: usunięto zdublowany/uszkodzony fragment funkcji findNativeBuyCard(),
-     który zawierał instrukcję return poza jakąkolwiek funkcją (SyntaxError) i wysadzał
-     cały ten blok skryptu — dlatego panel wcześniej w ogóle się nie renderował. ============ -->
 <script>
 (function() {
 
@@ -1921,8 +1883,6 @@ html, body {
   </div>
   `;
 
-  // Znajduje natywną kartę zakupową (kontener otaczający Shopify Buy Button),
-  // pomijając kontenery obejmujące praktycznie cały ekran (np. całe Hero).
   function findNativeBuyCard() {
     const shopifyButton = document.querySelector('.shopify-buy-button');
     if (!shopifyButton) return null;
@@ -1945,7 +1905,6 @@ html, body {
 
       const rect = parent.getBoundingClientRect();
 
-      // Pomijamy kontenery obejmujące praktycznie cały ekran (całe Hero).
       const isWholeHero =
         rect.width >= window.innerWidth * 0.9 &&
         rect.height >= window.innerHeight * 0.7;
@@ -1963,23 +1922,19 @@ html, body {
   function insertPurchaseBlock() {
     const panelId = 'mog-purchase-enhancements-injected';
 
-    // Panel już istnieje — tylko podpinamy górny przycisk
     if (document.getElementById(panelId)) {
       bindTopQuickBuy(document.getElementById(panelId));
       return;
     }
 
-    // To jest prawdziwy kontener Shopify Buy Button
     const shopifyButton = document.querySelector('.shopify-buy-button');
     if (!shopifyButton) return;
 
-    // Wstawiamy panele bezpośrednio po przycisku Shopify
     shopifyButton.insertAdjacentHTML('afterend', purchaseBlockHTML);
 
     const panel = document.getElementById(panelId);
     if (!panel) return;
 
-    // Panel ma być pełną sekcją pod zakupem, a nie elementem stojącym obok karty
     panel.style.setProperty('display', 'block', 'important');
     panel.style.setProperty('width', '100%', 'important');
     panel.style.setProperty('max-width', '100%', 'important');
@@ -1997,13 +1952,9 @@ html, body {
     initStockCounter();
     initRevealAnimation(panelId);
 
-    // Górne "KUP TERAZ" przewija do panelu
     bindTopQuickBuy(panel);
   }
 
-  // Przycisk "Kup teraz" na samej górze strony (nad paskiem promo) ma
-  // przewijać dokładnie do natywnej karty zakupowej, pod którą dokładamy
-  // nasze panele.
   function bindTopQuickBuy(card) {
     const btn = document.getElementById('mog-top-quickbuy-btn-injected');
     if (!btn || btn.dataset.bound) return;
@@ -2032,9 +1983,6 @@ html, body {
     }
   }
 
-  // React może wyczyścić ręcznie wstawione węzły DOM przy re-renderze
-  // (nie istnieją w jego Virtual DOM). Ten obserwator pilnuje bloku
-  // i odtwarza go natychmiast, jeśli zniknie.
   function watchAndHeal() {
     const root = document.getElementById('root');
     if (!root) return;
@@ -2167,6 +2115,5 @@ html, body {
 
 })();
 </script>
-
 </body>
 </html>
