@@ -184,14 +184,14 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
 .mog-stock-notice-injected { display: flex; align-items: center; justify-content: center; gap: 6px; color: #ffb020; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; background: rgba(255, 176, 32, 0.08); border: 1px solid rgba(255, 176, 32, 0.3); border-radius: 999px; padding: 8px 16px; max-width: 420px; margin: 0 auto 16px; text-align: center; }
 
 /* ===== PRODUCT SELECTOR (pojedyncza para / pakiet 2 pary) ===== */
-.mog-selector-wrap-injected { max-width: 480px; margin: 0 auto 8px; display: flex; flex-direction: column; gap: 10px; font-family: 'Space Grotesk', sans-serif; }
+.mog-selector-wrap-injected { max-width: 500px; margin: 32px auto 20px; padding: 0 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; font-family: 'Space Grotesk', sans-serif; }
 .mog-selector-label-injected { color: var(--text-gray); font-size: 11.5px; text-transform: uppercase; letter-spacing: .8px; font-weight: 700; text-align: center; margin-bottom: 2px; }
-.mog-selector-grid-injected { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.mog-option-injected { position: relative; background: #111; border: 1.5px solid var(--border-color); border-radius: 14px; padding: 18px 12px 14px; cursor: pointer; transition: all .2s ease; text-align: center; }
+.mog-selector-grid-injected { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+.mog-option-injected { position: relative; background: #111; border: 1.5px solid var(--border-color); border-radius: 14px; padding: 22px 16px 18px; cursor: pointer; transition: all .2s ease; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100%; box-sizing: border-box; }
 .mog-option-injected:hover { border-color: rgba(255,193,7,.5); }
 .mog-option-injected.mog-active-injected { border-color: var(--primary-yellow); background: rgba(255,193,7,.07); box-shadow: 0 0 0 1px var(--primary-yellow) inset; }
 .mog-option-badge-injected { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--primary-yellow); color: #000; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
-.mog-option-name-injected { color: var(--text-light); font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.mog-option-name-injected { color: var(--text-light); font-size: 14px; font-weight: 600; margin-bottom: 8px; }
 .mog-option-oldprice-injected { color: var(--text-gray); font-size: 12px; text-decoration: line-through; }
 .mog-option-price-injected { color: var(--primary-yellow); font-size: 21px; font-weight: 700; line-height: 1.2; }
 .mog-option-save-injected { color: #5fd76a; font-size: 11px; font-weight: 700; margin-top: 4px; }
@@ -245,7 +245,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
         gap: 15px; 
         width: 100%; 
         max-width: 500px; 
-        margin: 20px auto; 
+        margin: 32px auto; 
         padding: 0 10px;
         box-sizing: border-box;
     }
@@ -1510,7 +1510,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     </div>
 
     <!-- 4. PRZYCISK ZAKUPU -->
-    <div class="mog-final-box-injected" style="background:rgba(255,193,7,0.05); border:1px solid rgba(255,193,7,0.2); border-radius:20px; padding:20px;">
+    <div class="mog-final-box-injected" style="background:rgba(255,193,7,0.05); border:1px solid rgba(255,193,7,0.2); border-radius:20px; padding:20px; margin-top: 24px;">
         <button class="cta" id="buyBtn" style="display: block; width: 100%; margin-bottom: 12px; background: #ffcc00; color: #000; border: none; font-size: 16px; font-weight: 800; padding: 16px; border-radius: 12px; cursor: pointer; text-align: center; text-transform: uppercase; letter-spacing: 0.5px;">Kup teraz — 99,99 zł</button>
         <div style="text-align:center; font-size:12px; color:#888; font-weight:600; text-transform:uppercase; letter-spacing:1px;">✓ Darmowa dostawa & E-book Gratis</div>
         <div style="text-align:center; margin-top: 15px;">
