@@ -1385,17 +1385,33 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     }
     /* PANELE DODATKÓW (ADD-ONS) */
     .mog-ultimate-panels-wrapper {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        width: 100%;
-        margin: 25px 0;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 14px !important;
+    width: 100% !important;
+    margin: 100px 0 35px !important;
+    padding: 0 8px !important;
+    box-sizing: border-box !important;
+    clear: both !important;
+    position: relative !important;
+    z-index: 20 !important;
+}
+
+.mog-promo-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 768px) {
+    .mog-ultimate-panels-wrapper {
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        margin: 100px 0 35px !important;
+        padding: 0 4px !important;
+        gap: 14px !important;
     }
-    @media (max-width: 768px) {
-        .mog-ultimate-panels-wrapper {
-            grid-template-columns: 1fr;
-        }
-    }
+}
     .mog-promo-card {
         background: rgba(25, 25, 25, 0.8);
         backdrop-filter: blur(10px);
