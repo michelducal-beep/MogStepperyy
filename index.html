@@ -1589,7 +1589,6 @@ target.parentElement.insertAdjacentHTML('afterend', purchaseBlockHTML);
     panel.style.setProperty('clear', 'both', 'important');
 
 bindSelector();
-bindBottomBuyButton();
 initStockCounter();
 initRevealAnimation(panelId);
   }
@@ -1675,18 +1674,7 @@ initRevealAnimation(panelId);
     });
   });
 
-  buyBtn.addEventListener('click', () => {
-    const native = document.querySelector('.shopify-buy-button');
-
-    if (!native) {
-      console.log('Nie znaleziono natywnego Shopify Buy Button');
-      return;
-    }
-
-    native.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
-    });
+  
 
     setTimeout(() => {
       const button = native.querySelector('button');
