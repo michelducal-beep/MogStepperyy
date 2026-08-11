@@ -1652,20 +1652,54 @@ bindTopQuickBuy(panel);
   }
 
   function bindSelector() {
-    const wrap = document.getElementById('mog-selector-wrap-injected');
-    const buyBtn = document.getElementById('buyBtn');
-    if (!wrap || wrap.dataset.bound) return;
-    wrap.dataset.bound = 'true';
-    const opts = wrap.querySelectorAll('.mog-option-injected');
-    opts.forEach((opt) => {
-      opt.addEventListener('click', () => {
-        opts.forEach((o) => o.classList.remove('mog-active-injected'));
-        opt.classList.add('mog-active-injected');
-        const label = opt.getAttribute('data-option') === 'double' ? '99,99 zł' : '69,99 zł';
-        if (buyBtn) buyBtn.textContent = 'Kup teraz — ' + label;
-      });
+  const wrap = document.getElementById('mog-selector-wrap-injected');
+  const buyBtn = document.getElementById('buyBtn');
+
+  if (!wrap || !buyBtn || wrap.dataset.bound) return;
+
+  wrap.dataset.bound = 'true';
+
+  const opts = wrap.querySelectorAll('.mog-option-injected');
+
+  opts.forEach((opt) => {
+    opt.addEventListener('click', () => {
+      opts.forEach((o) => o.classList.remove('mog-active-injected'));
+      opt.classList.add('mog-active-injected');
+
+      const isDouble = opt.getAttribute('data-option') === 'double';
+
+      buyBtn.textContent = isDouble
+        ? 'Kup teraz — 99,99 zł'
+        : 'Kup teraz — 69,99 zł';
+
+      buyBtn.dataset.quantity = isDouble ? '2' : '1';
     });
-  }
+  });
+
+  buyBtn.addEventListener('click', () => {
+    const native = document.querySelector('.shopify-buy-button');
+
+    if (!native) {
+      console.log('Nie znaleziono natywnego Shopify Buy Button');
+      return;
+    }
+
+    native.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+
+    setTimeout(() => {
+      const button = native.querySelector('button');
+
+      if (button) {
+        button.click();
+      } else {
+        console.log('Shopify kontener istnieje, ale nie znaleziono przycisku');
+      }
+    }, 300);
+  });
+}
   document.addEventListener('click', function(e) {
   const buyBtn = e.target.closest('#buyBtn');
 
