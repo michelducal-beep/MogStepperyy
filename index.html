@@ -1666,33 +1666,23 @@ bindTopQuickBuy(panel);
       });
     });
   }
-  function bindBottomBuyButton() {
-    const buyBtn = document.getElementById('buyBtn');
+  document.addEventListener('click', function(e) {
+  const buyBtn = e.target.closest('#buyBtn');
 
-    if (!buyBtn || buyBtn.dataset.bound) return;
+  if (!buyBtn) return;
 
-    buyBtn.dataset.bound = 'true';
+  e.preventDefault();
+  e.stopPropagation();
 
-    buyBtn.addEventListener('click', function(e) {
-      e.preventDefault();
+  const shopifyBtn = document.querySelector('.shopify-buy__btn');
 
-      const shopifyButton = document.querySelector('.shopify-buy-button');
-
-      if (!shopifyButton) {
-        console.log('Shopify Buy Button nie znaleziony');
-        return;
-      }
-
-      const realButton = shopifyButton.querySelector('button');
-
-      if (!realButton) {
-        console.log('Przycisk Shopify nie znaleziony');
-        return;
-      }
-
-      realButton.click();
-    });
+  if (!shopifyBtn) {
+    console.log('Nie znaleziono przycisku Shopify');
+    return;
   }
+
+  shopifyBtn.click();
+});
   const purchaseInterval = setInterval(insertPurchaseBlock, 500);
   watchAndHeal();
 
