@@ -245,7 +245,7 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
         gap: 20px !important; 
         width: 100% !important; 
         max-width: 100% !important; 
-        margin: 25px 0 35px !important;
+        margin: 40px 0 !important; 
         padding: 0 20px !important; 
         box-sizing: border-box !important;
         clear: both !important;
@@ -1332,7 +1332,10 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     float: none !important;
     transform: none !important;
 }#mog-purchase-enhancements-injected > * { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
-        
+        font-family: 'Inter', sans-serif;
+        color: #fff;
+        margin-top: 20px;
+    }
     .mog-stock-notice-injected {
         background: rgba(255, 193, 7, 0.1);
         border: 1px solid rgba(255, 193, 7, 0.3);
@@ -1397,14 +1400,12 @@ header .bestseller-badge, .hero-bestseller-badge, [data-badge="bestseller"]:not(
     grid-template-columns: 1fr 1fr !important;
     gap: 14px !important;
     width: 100% !important;
-    margin: 25px 0 35px !important;
+    margin: 100px 0 35px !important;
     padding: 0 8px !important;
     box-sizing: border-box !important;
     clear: both !important;
     position: relative !important;
     z-index: 20 !important;
-    visibility: visible !important;
-opacity: 1 !important;
 }
 
 .mog-promo-card {
@@ -1578,7 +1579,7 @@ opacity: 1 !important;
     const target = document.querySelector('.shopify-buy-button') || findNativeBuyCard();
     if (!target) return;
 
-target.insertAdjacentHTML('afterend', purchaseBlockHTML);
+target.parentElement.insertAdjacentHTML('afterend', purchaseBlockHTML);
     
     const panel = document.getElementById(panelId);
     if (!panel) return;
@@ -1590,6 +1591,7 @@ target.insertAdjacentHTML('afterend', purchaseBlockHTML);
     bindSelector();
     bindBottomBuyButton();
     initStockCounter();
+    initRevealAnimation(panelId);
     bindTopQuickBuy(panel);
   }
 
@@ -1651,7 +1653,7 @@ target.insertAdjacentHTML('afterend', purchaseBlockHTML);
 
   let selectedQuantity = 2;
 
-function bindBottomBuyButton() {
+function bindSelector() function bindBottomBuyButton() {
   const buyBtn = document.getElementById('buyBtn');
 
   if (!buyBtn || buyBtn.dataset.shopifyBound) return;
@@ -1671,9 +1673,18 @@ function bindBottomBuyButton() {
     const realButton = shopifyButton.querySelector('button');
 
     if (!realButton) {
-      console.warn('Nie znaleziono przycisku Shopify');
+      console.warn('Nie znaleziono przycisku wewnątrz Shopify Buy Button');
+      shopifyButton.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
       return;
     }
+
+    /*
+     * Shopify Buy Button może mieć własny input ilości.
+     * Jeśli istnieje — ustawiamy wybraną ilość.
+     */
 
     const quantityInput =
       shopifyButton.querySelector('input[type="number"]') ||
@@ -1694,8 +1705,7 @@ function bindBottomBuyButton() {
     realButton.click();
   });
 }
-
-function bindSelector() {
+{
   const wrap = document.getElementById('mog-selector-wrap-injected');
   const buyBtn = document.getElementById('buyBtn');
 
@@ -1714,8 +1724,7 @@ function bindSelector() {
 
       opt.classList.add('mog-active-injected');
 
-      const isDouble =
-        opt.getAttribute('data-option') === 'double';
+      const isDouble = opt.getAttribute('data-option') === 'double';
 
       selectedQuantity = isDouble ? 2 : 1;
 
