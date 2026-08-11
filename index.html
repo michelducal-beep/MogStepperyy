@@ -1649,7 +1649,7 @@ target.insertAdjacentHTML('afterend', purchaseBlockHTML);
 
   let selectedQuantity = 2;
 
-function bindSelector() function bindBottomBuyButton() {
+function bindBottomBuyButton() {
   const buyBtn = document.getElementById('buyBtn');
 
   if (!buyBtn || buyBtn.dataset.shopifyBound) return;
@@ -1669,18 +1669,9 @@ function bindSelector() function bindBottomBuyButton() {
     const realButton = shopifyButton.querySelector('button');
 
     if (!realButton) {
-      console.warn('Nie znaleziono przycisku wewnątrz Shopify Buy Button');
-      shopifyButton.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      });
+      console.warn('Nie znaleziono przycisku Shopify');
       return;
     }
-
-    /*
-     * Shopify Buy Button może mieć własny input ilości.
-     * Jeśli istnieje — ustawiamy wybraną ilość.
-     */
 
     const quantityInput =
       shopifyButton.querySelector('input[type="number"]') ||
@@ -1701,7 +1692,8 @@ function bindSelector() function bindBottomBuyButton() {
     realButton.click();
   });
 }
-{
+
+function bindSelector() {
   const wrap = document.getElementById('mog-selector-wrap-injected');
   const buyBtn = document.getElementById('buyBtn');
 
@@ -1720,7 +1712,8 @@ function bindSelector() function bindBottomBuyButton() {
 
       opt.classList.add('mog-active-injected');
 
-      const isDouble = opt.getAttribute('data-option') === 'double';
+      const isDouble =
+        opt.getAttribute('data-option') === 'double';
 
       selectedQuantity = isDouble ? 2 : 1;
 
