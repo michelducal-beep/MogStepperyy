@@ -1677,16 +1677,23 @@ bindTopQuickBuy(panel);
   });
 
   buyBtn.addEventListener('click', () => {
-    const native = document.querySelector('.shopify-buy-button');
+  const quantity = buyBtn.dataset.quantity || '1';
 
-    if (!native) {
-      console.log('Nie znaleziono natywnego Shopify Buy Button');
-      return;
-    }
+  const shopifyButton = document.querySelector('.shopify-buy-button');
 
-    native.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
+  if (!shopifyButton) {
+    console.log('Shopify Buy Button nie znaleziony');
+    return;
+  }
+
+  console.log('Wybrano ilość:', quantity);
+
+  const cartToggle = document.querySelector('.shopify-buy__cart-toggle');
+
+  if (cartToggle) {
+    cartToggle.click();
+  }
+});
     });
 
     setTimeout(() => {
