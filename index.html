@@ -1588,10 +1588,11 @@ target.parentElement.insertAdjacentHTML('afterend', purchaseBlockHTML);
     panel.style.setProperty('width', '100%', 'important');
     panel.style.setProperty('clear', 'both', 'important');
 
-    bindSelector();
-    initStockCounter();
-    initRevealAnimation(panelId);
-    bindTopQuickBuy(panel);
+bindSelector();
+bindBottomBuyButton();
+initStockCounter();
+initRevealAnimation(panelId);
+bindTopQuickBuy(panel);
   }
 
   function bindTopQuickBuy(card) {
@@ -1665,7 +1666,33 @@ target.parentElement.insertAdjacentHTML('afterend', purchaseBlockHTML);
       });
     });
   }
+  function bindBottomBuyButton() {
+    const buyBtn = document.getElementById('buyBtn');
 
+    if (!buyBtn || buyBtn.dataset.bound) return;
+
+    buyBtn.dataset.bound = 'true';
+
+    buyBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      const shopifyButton = document.querySelector('.shopify-buy-button');
+
+      if (!shopifyButton) {
+        console.log('Shopify Buy Button nie znaleziony');
+        return;
+      }
+
+      const realButton = shopifyButton.querySelector('button');
+
+      if (!realButton) {
+        console.log('Przycisk Shopify nie znaleziony');
+        return;
+      }
+
+      realButton.click();
+    });
+  }
   const purchaseInterval = setInterval(insertPurchaseBlock, 500);
   watchAndHeal();
 
