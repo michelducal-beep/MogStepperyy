@@ -1592,7 +1592,6 @@ bindSelector();
 bindBottomBuyButton();
 initStockCounter();
 initRevealAnimation(panelId);
-bindTopQuickBuy(panel);
   }
 
   function bindTopQuickBuy(card) {
@@ -1700,23 +1699,7 @@ bindTopQuickBuy(panel);
     }, 300);
   });
 }
-  document.addEventListener('click', function(e) {
-  const buyBtn = e.target.closest('#buyBtn');
-
-  if (!buyBtn) return;
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  const shopifyBtn = document.querySelector('.shopify-buy__btn');
-
-  if (!shopifyBtn) {
-    console.log('Nie znaleziono przycisku Shopify');
-    return;
-  }
-
-  shopifyBtn.click();
-});
+  
   const purchaseInterval = setInterval(insertPurchaseBlock, 500);
   watchAndHeal();
 
